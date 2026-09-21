@@ -308,3 +308,25 @@ html[data-theme="light"] .liveFeedCard p{color:#627985}
 html[data-theme="light"] .liveFeedControls button{background:#fff;color:#54707d;border-color:rgba(37,101,134,.15)}
 @media(max-width:1050px){.liveFeedGrid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:760px){.liveFeedHeading{display:block}.liveFeedControls{margin-top:12px;justify-content:space-between}.liveFeedGrid{grid-template-columns:1fr}.liveFeedImage{height:170px}}
+
+
+.liveCountdown{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:5px 8px;
+  border:1px solid rgba(73,170,224,.12);
+  border-radius:999px;
+  background:rgba(45,160,220,.055);
+  color:#708c9c;
+}
+.liveCountdown strong{
+  color:#43b8f5;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:.04em;
+}
+html[data-theme="light"] .liveCountdown{
+  background:rgba(255,255,255,.72);
+  border-color:rgba(37,101,134,.12);
+  color:#607985;
+}
