@@ -148,7 +148,7 @@ export default function GlobalPediaHome() {
 
   useEffect(() => {
     void loadLiveNews();
-    const timer = window.setInterval(() => void loadLiveNews(), 10 * 60 * 1000);
+    const timer = window.setInterval(() => void loadLiveNews(), 5 * 60 * 1000);
     return () => window.clearInterval(timer);
   }, []);
   useEffect(() => {
@@ -207,6 +207,8 @@ export default function GlobalPediaHome() {
             ["Explore", "/explore"],
             ["Categories", "/categories"],
             ["Countries", "/countries"],
+            ["Sports", "/sports"],
+            ["Games", "/games"],
             ["Random", "/random"],
             ["About", "/about"],
           ].map(([label, href], index) => (
