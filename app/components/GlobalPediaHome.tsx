@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { categories, entries, regions } from "../data/entries";
 
 type IconName = "countries" | "history" | "science" | "technology" | "culture" | "nature" | "health" | "arts";
 
-const iconMap: Record<IconName, JSX.Element> = {
+const iconMap: Record<IconName, ReactNode> = {
   countries: <><circle cx="12" cy="12" r="8.5"/><path d="M3.8 9h16.4M3.8 15h16.4M12 3.5c2.2 2.3 3.4 5.1 3.4 8.5S14.2 18.2 12 20.5C9.8 18.2 8.6 15.4 8.6 12S9.8 5.8 12 3.5Z"/></>,
   history: <><path d="M5 20h14M7 17V9m4 8V9m4 8V9M4 7h16M6 5h12"/><path d="m7 7 5-3 5 3"/></>,
   science: <><circle cx="12" cy="12" r="2"/><path d="M12 3c2.3 0 4.1 4 4.1 9s-1.8 9-4.1 9-4.1-4-4.1-9S9.7 3 12 3Z"/><path d="M4.2 7c1.2-2 5.5-.2 9.2 3s5.9 6.8 4.7 8.8-5.5.2-9.2-3S3 9 4.2 7Z" transform="rotate(120 12 12)"/></>,
@@ -163,3 +163,4 @@ export default function GlobalPediaHome() {
     </main>
   );
 }
+
