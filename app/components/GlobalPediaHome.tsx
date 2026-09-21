@@ -1,75 +1,30 @@
 "use client";
 
-import { useMemo, useState } from "react";
-
-type Entry = {
-  category: string;
-  number: string;
-  title: string;
-  description: string;
-  meta: string;
-  accent: string;
-  featured?: boolean;
-};
-
-const categories = ["All", "Science", "History", "Technology", "Geography", "Culture", "Space"];
-
-const entries: Entry[] = [
-  {
-    category: "Space",
-    number: "01",
-    title: "The universe is still getting larger",
-    description: "A visual introduction to cosmic expansion, dark energy, and the strange geometry of space-time.",
-    meta: "12 min read · Updated Sep 2026",
-    accent: "violet",
-    featured: true,
-  },
-  {
-    category: "Technology",
-    number: "02",
-    title: "Inside the architecture of modern AI",
-    description: "How transformers, data, training and inference turned research ideas into everyday tools.",
-    meta: "9 min read · Technology",
-    accent: "green",
-  },
-  {
-    category: "History",
-    number: "03",
-    title: "Why cities became civilization's engines",
-    description: "Trade routes, rivers, migration and institutions helped cities become the organizing systems of human life.",
-    meta: "11 min read · History",
-    accent: "amber",
-  },
-  {
-    category: "Science",
-    number: "04",
-    title: "What makes a living system alive?",
-    description: "A tour from cells and metabolism to adaptation, information and the edge of biology.",
-    meta: "8 min read · Science",
-    accent: "cyan",
-  },
-  {
-    category: "Geography",
-    number: "05",
-    title: "The invisible map beneath every country",
-    description: "Climate, terrain, oceans and resources shape the world long before borders are drawn.",
-    meta: "7 min read · Geography",
-    accent: "blue",
-  },
-  {
-    category: "Culture",
-    number: "06",
-    title: "How ideas travel between cultures",
-    description: "Languages, food, art and stories constantly cross borders, mutate and become something new.",
-    meta: "10 min read · Culture",
-    accent: "rose",
-  },
-];
+import Link from "next/link";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { categories, entries } from "../data/entries";
 
 export default function GlobalPediaHome() {
   const [query, setQuery] = useState("");
   const [active, setActive] = useState("All");
   const [menuOpen, setMenuOpen] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "/" && document.activeElement?.tagName !== "INPUT") {
+        event.preventDefault();
+        inputRef.current?.focus();
+      }
+      if (event.key === "Escape") {
+        inputRef.current?.blur();
+        setMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
 
   const filtered = useMemo(() => {
     const normalized = query.trim().toLowerCase();
@@ -84,12 +39,13 @@ export default function GlobalPediaHome() {
 
   return (
     <main>
+      <a className="skipLink" href="#main-content">Skip to content</a>
       <div className="noise" aria-hidden="true" />
       <header className="topbar">
-        <a className="brand" href="#top" aria-label="GlobalPedia home">
+        <Link className="brand" href="#top" aria-label="GlobalPedia home">
           <span className="brandMark">G</span>
           <span>GLOBALPEDIA</span>
-        </a>
+        </Link>
         <nav className={`topnav ${menuOpen ? "open" : ""}`} aria-label="Main navigation">
           <a href="#explore" onClick={() => setMenuOpen(false)}>Explore</a>
           <a href="#featured" onClick={() => setMenuOpen(false)}>Featured</a>
@@ -97,24 +53,24 @@ export default function GlobalPediaHome() {
         </nav>
         <div className="topbarActions">
           <a href="#explore" className="textButton">Browse</a>
-          <button className="menuButton" onClick={() => setMenuOpen((open) => !open)} aria-label="Toggle navigation">☰</button>
+          <button className="menuButton" onClick={() => setMenuOpen((open) => !open)} aria-expanded={menuOpen} aria-label="Toggle navigation">☰</button>
         </div>
       </header>
 
-      <section id="top" className="hero">
+      <section id="top" className="hero" aria-labelledby="hero-title">
         <div className="heroGrid" aria-hidden="true" />
         <div className="heroHalo haloOne" aria-hidden="true" />
         <div className="heroHalo haloTwo" aria-hidden="true" />
-        <div className="heroCopy">
+        <div className="heroCopy" id="main-content">
           <div className="eyebrow"><span /> THE OPEN KNOWLEDGE INDEX</div>
-          <h1>Know more.<br /><span>See farther.</span></h1>
+          <h1 id="hero-title">Know more.<br /><span>See farther.</span></h1>
           <p className="heroLead">A cinematic, human-friendly encyclopedia for the questions that keep you awake, curious, and occasionally lost at 2 a.m.</p>
           <div className="searchShell">
-            <div className="searchIcon">⌕</div>
-            <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search science, history, cities, ideas..." aria-label="Search knowledge" />
+            <div className="searchIcon" aria-hidden="true">⌕</div>
+            <input ref={inputRef} value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search science, history, cities, ideas..." aria-label="Search knowledge" />
             <span className="searchHint">Press /</span>
           </div>
-          <div className="heroStats">
+          <div className="heroStats" aria-label="GlobalPedia overview">
             <span><b>06</b> domains</span>
             <span><b>∞</b> questions</span>
             <span><b>01</b> place to start</span>
@@ -139,33 +95,33 @@ export default function GlobalPediaHome() {
           </div>
           <p>Six doors into the same enormous room. Humans named things so they could understand them. We kept the useful part.</p>
         </div>
-        <div className="categoryRail" role="tablist" aria-label="Knowledge categories">
+        <div className="categoryRail" role="group" aria-label="Knowledge categories">
           {categories.map((category) => (
-            <button key={category} className={active === category ? "active" : ""} onClick={() => setActive(category)} role="tab" aria-selected={active === category}>
+            <button key={category} className={active === category ? "active" : ""} onClick={() => setActive(category)} aria-pressed={active === category}>
               {category}
             </button>
           ))}
         </div>
       </section>
 
-      <section id="featured" className="library sectionWrap">
+      <section id="featured" className="library sectionWrap" aria-labelledby="featured-title">
         <div className="sectionBar">
           <div>
             <div className="eyebrow muted"><span /> CURATED KNOWLEDGE</div>
-            <h2>Worth your attention.</h2>
+            <h2 id="featured-title">Worth your attention.</h2>
           </div>
-          <span className="resultCount">{filtered.length.toString().padStart(2, "0")} stories</span>
+          <span className="resultCount" aria-live="polite">{filtered.length.toString().padStart(2, "0")} stories</span>
         </div>
 
         <div className="storyGrid">
           {filtered.map((entry) => (
-            <article key={entry.number} className={`storyCard ${entry.featured ? "featured" : ""} accent-${entry.accent}`}>
+            <article key={entry.slug} className={`storyCard ${entry.featured ? "featured" : ""} accent-${entry.accent}`}>
               <div className="storyTexture" aria-hidden="true" />
               <div className="storyTop"><span>{entry.number}</span><span>{entry.category}</span></div>
               <div className="storyBody">
                 <h3>{entry.title}</h3>
                 <p>{entry.description}</p>
-                <div className="storyFooter"><span>{entry.meta}</span><button aria-label={`Open ${entry.title}`}>↗</button></div>
+                <div className="storyFooter"><span>{entry.meta}</span><Link href={`/articles/${entry.slug}`} aria-label={`Read ${entry.title}`}>↗</Link></div>
               </div>
             </article>
           ))}
@@ -192,7 +148,7 @@ export default function GlobalPediaHome() {
       </section>
 
       <footer className="footer">
-        <div className="brand footerBrand"><span className="brandMark">G</span><span>GLOBALPEDIA</span></div>
+        <Link className="brand footerBrand" href="#top"><span className="brandMark">G</span><span>GLOBALPEDIA</span></Link>
         <div className="footerMeta"><span>KNOWLEDGE WITHOUT BOUNDARIES.</span><span>© 2026 GLOBALPEDIA</span></div>
       </footer>
     </main>

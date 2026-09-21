@@ -1,9 +1,22 @@
-<!-- BEGIN:nextjs-agent-rules -->
+# GlobalPedia Project Working Rules
 
-# This is NOT the Next.js you know
+This repository is a production project, not a demo. Preserve working behavior before redesigning it. Inspect the existing architecture first, make focused changes, avoid destructive rewrites, keep secrets/config out of source, and verify changes before claiming completion.
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+## Frontend standard
+- Premium, custom, restrained dark editorial design. Avoid generic SaaS/template styling.
+- Use near-black/charcoal surfaces with the brand accent as a selective highlight, not a blanket color.
+- Prioritize hierarchy, spacing, typography, responsive composition, accessibility, and purposeful motion.
+- Keep animations subtle, usually 160-320ms for interaction, and respect `prefers-reduced-motion`.
+- Never ship fake controls: search, navigation, CTAs, cards, forms, and settings must perform their stated action.
+- Every meaningful page needs useful loading, empty, error, and not-found behavior where applicable.
+- Check desktop and mobile behavior, overflow, keyboard access, metadata, links, and runtime errors.
 
-This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+## Engineering standard
+- Prefer existing components, utilities, routes, data models, and design patterns over needless rewrites.
+- Avoid unnecessary dependencies and fragile hacks.
+- Keep async/network work bounded and failures graceful.
+- Preserve databases, credentials, environment variables, authentication, integrations, and user data.
+- Never hardcode secrets.
 
-<!-- END:nextjs-agent-rules -->
+## Delivery standard
+Distinguish source review, local verification, and live deployment verification. A successful compile alone is not proof that the deployed product is correct.
