@@ -1,8 +1,16 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { categories, entries, regions } from "../data/entries";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+  type MouseEvent,
+  type ReactNode,
+} from "react";
+import { entries, regions } from "../data/entries";
 
 type IconName =
   | "countries"
@@ -23,6 +31,36 @@ type NewsItem = {
   publishedAt: string;
   category: string;
 };
+
+const categoryCards: {
+  label: string;
+  sub: string;
+  icon: IconName;
+  tone: string;
+}[] = [
+  { label: "Countries", sub: "195+ nations", icon: "countries", tone: "blue" },
+  { label: "History", sub: "Civilizations & eras", icon: "history", tone: "orange" },
+  { label: "Science", sub: "Ideas & discovery", icon: "science", tone: "violet" },
+  { label: "Technology", sub: "Future & innovation", icon: "technology", tone: "blue2" },
+  { label: "Culture", sub: "People & traditions", icon: "culture", tone: "pink" },
+  { label: "Nature", sub: "Planet & wildlife", icon: "nature", tone: "teal" },
+  { label: "Health", sub: "Life & wellbeing", icon: "health", tone: "red" },
+  { label: "Arts", sub: "Creativity & expression", icon: "arts", tone: "purple" },
+];
+
+const heroImage =
+  "https://images.unsplash.com/photo-1634176866089-b633f4aec882?auto=format&fit=crop&fm=jpg&q=90&w=2400";
+
+const universeImage =
+  "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=88&w=1800";
+
+const worldImages = [
+  "https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&q=88&w=1200",
+  "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&q=88&w=1200",
+  "https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&q=88&w=1200",
+  "https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&q=88&w=1200",
+];
+
 const iconMap: Record<IconName, ReactNode> = {
   countries: (
     <>
@@ -40,10 +78,7 @@ const iconMap: Record<IconName, ReactNode> = {
     <>
       <circle cx="12" cy="12" r="2" />
       <path d="M12 3c2.3 0 4.1 4 4.1 9s-1.8 9-4.1 9-4.1-4-4.1-9S9.7 3 12 3Z" />
-      <path
-        d="M4.2 7c1.2-2 5.5-.2 9.2 3s5.9 6.8 4.7 8.8-5.5.2-9.2-3S3 9 4.2 7Z"
-        transform="rotate(120 12 12)"
-      />
+      <path d="M4.2 7c1.2-2 5.5-.2 9.2 3s5.9 6.8 4.7 8.8-5.5.2-9.2-3S3 9 4.2 7Z" transform="rotate(120 12 12)" />
     </>
   ),
   technology: (
@@ -66,9 +101,7 @@ const iconMap: Record<IconName, ReactNode> = {
       <path d="M12 15c5-1 7-4 7-7-3 0-6 1-7 4" />
     </>
   ),
-  health: (
-    <path d="M20 8.5C20 14 12 20 12 20S4 14 4 8.5A4.5 4.5 0 0 1 12 6a4.5 4.5 0 0 1 8 2.5Z" />
-  ),
+  health: <path d="M20 8.5C20 14 12 20 12 20S4 14 4 8.5A4.5 4.5 0 0 1 12 6a4.5 4.5 0 0 1 8 2.5Z" />,
   arts: (
     <>
       <circle cx="12" cy="12" r="8.5" />
@@ -80,53 +113,82 @@ const iconMap: Record<IconName, ReactNode> = {
   ),
 };
 
-const categoryCards: {
-  label: string;
-  sub: string;
-  icon: IconName;
-  tone: string;
-}[] = [
-  { label: "Countries", sub: "195+", icon: "countries", tone: "blue" },
-  { label: "History", sub: "Explore past", icon: "history", tone: "orange" },
-  { label: "Science", sub: "Discover more", icon: "science", tone: "violet" },
-  {
-    label: "Technology",
-    sub: "Future & innovation",
-    icon: "technology",
-    tone: "blue2",
-  },
-  {
-    label: "Culture",
-    sub: "People & traditions",
-    icon: "culture",
-    tone: "pink",
-  },
-  { label: "Nature", sub: "Our planet", icon: "nature", tone: "teal" },
-  { label: "Health", sub: "Live better", icon: "health", tone: "red" },
-  { label: "Arts", sub: "Creativity & more", icon: "arts", tone: "purple" },
-];
+function tiltStyle(
+  event: MouseEvent<HTMLElement>,
+  strength = 7,
+): CSSProperties & Record<string, string> {
+  const rect = event.currentTarget.getBoundingClientRect();
+  const x = (event.clientX - rect.left) / rect.width - 0.5;
+  const y = (event.clientY - rect.top) / rect.height - 0.5;
+  return {
+    "--rx": `${(-y * strength).toFixed(2)}deg`,
+    "--ry": `${(x * strength).toFixed(2)}deg`,
+    "--mx": `${((x + 0.5) * 100).toFixed(1)}%`,
+    "--my": `${((y + 0.5) * 100).toFixed(1)}%`,
+  };
+}
 
-const heroImage =
-  "https://images.unsplash.com/photo-1634176866089-b633f4aec882?auto=format&fit=crop&fm=jpg&q=88&w=1800";
+function TiltCard({
+  children,
+  className = "",
+  href,
+}: {
+  children: ReactNode;
+  className?: string;
+  href?: string;
+}) {
+  const [style, setStyle] = useState<CSSProperties & Record<string, string>>({});
+  const content = <div className={className} style={style}>{children}</div>;
+
+  const handlers = {
+    onMouseMove: (event: MouseEvent<HTMLDivElement>) => setStyle(tiltStyle(event)),
+    onMouseLeave: () =>
+      setStyle({
+        "--rx": "0deg",
+        "--ry": "0deg",
+        "--mx": "50%",
+        "--my": "50%",
+      }),
+  };
+
+  if (href) {
+    return (
+      <Link
+        href={href}
+        className="tiltLink"
+        onMouseMove={handlers.onMouseMove}
+        onMouseLeave={handlers.onMouseLeave}
+      >
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <div onMouseMove={handlers.onMouseMove} onMouseLeave={handlers.onMouseLeave}>
+      {content}
+    </div>
+  );
+}
 
 export default function GlobalPediaHome() {
   const [query, setQuery] = useState("");
   const [active, setActive] = useState("All");
   const [menuOpen, setMenuOpen] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
   const [liveNews, setLiveNews] = useState<NewsItem[]>([]);
   const [newsUpdatedAt, setNewsUpdatedAt] = useState("");
   const [newsLoading, setNewsLoading] = useState(true);
   const [newsRefreshing, setNewsRefreshing] = useState(false);
   const [newsError, setNewsError] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+  const shellRef = useRef<HTMLElement>(null);
 
   const loadLiveNews = async (manual = false) => {
     try {
       setNewsError("");
       if (manual) setNewsRefreshing(true);
       const response = await fetch("/api/news", { cache: "no-store" });
-      if (!response.ok)
-        throw new Error(`News request failed: ${response.status}`);
+      if (!response.ok) throw new Error("News request failed");
       const data = (await response.json()) as {
         news?: NewsItem[];
         updatedAt?: string;
@@ -142,10 +204,33 @@ export default function GlobalPediaHome() {
   };
 
   useEffect(() => {
+    const onScroll = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = max > 0 ? window.scrollY / max : 0;
+      document.documentElement.style.setProperty("--scroll-progress", progress.toFixed(4));
+      shellRef.current?.style.setProperty("--scroll-y", window.scrollY.toFixed(1));
+    };
+    const onPointer = (event: PointerEvent) => {
+      const x = event.clientX / window.innerWidth - 0.5;
+      const y = event.clientY / window.innerHeight - 0.5;
+      document.documentElement.style.setProperty("--pointer-x", x.toFixed(4));
+      document.documentElement.style.setProperty("--pointer-y", y.toFixed(4));
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("pointermove", onPointer, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("pointermove", onPointer);
+    };
+  }, []);
+
+  useEffect(() => {
     void loadLiveNews();
     const timer = window.setInterval(() => void loadLiveNews(), 10 * 60 * 1000);
     return () => window.clearInterval(timer);
   }, []);
+
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "/" && document.activeElement?.tagName !== "INPUT") {
@@ -177,173 +262,199 @@ export default function GlobalPediaHome() {
     });
   }, [active, query]);
 
-  const featured = filtered.length ? filtered.slice(0, 3) : entries.slice(0, 3);
+  const featured = filtered.length ? filtered.slice(0, 6) : entries.slice(0, 6);
+  const lead = featured[0] ?? entries[0];
+  const secondary = featured.slice(1, 4);
+  const timestamp = newsUpdatedAt
+    ? new Date(newsUpdatedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+    : "Syncing";
+
+  const scrollTo = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setMenuOpen(false);
+  };
 
   return (
-    <main>
-      <a className="skipLink" href="#main-content">
-        Skip to content
-      </a>
-      <div className="noise" aria-hidden="true" />
+    <main ref={shellRef} className="gpExperience" id="top">
+      <div className="scrollProgress"><span /></div>
+      <div className="cursorGlow" aria-hidden="true" />
+      <div className="ambientNoise" aria-hidden="true" />
+      <div className="gridAtmosphere" aria-hidden="true" />
 
-      <header className="topbar">
-        <Link className="brand" href="#top" aria-label="GlobalPedia home">
-          <span className="brandMark globeMark">â—Ž</span>
-          <span>
-            Global<span className="brandBlue">Pedia</span>
-          </span>
+      <a className="skipLink" href="#main-content">Skip to content</a>
+
+      <header className="gpNav">
+        <Link href="#top" className="gpBrand" aria-label="GlobalPedia home">
+          <span className="brandGlyph">◎</span>
+          <span>Global<span>Pedia</span></span>
         </Link>
-        <nav
-          className={`topnav ${menuOpen ? "open" : ""}`}
-          aria-label="Main navigation"
-        >
+
+        <nav className={`gpNavLinks ${menuOpen ? "open" : ""}`} aria-label="Main navigation">
           {[
-            ["Home", "#top"],
-            ["Explore", "#categories"],
-            ["Categories", "#categories"],
-            ["Countries", "#regions"],
-            ["Random", "#featured"],
-            ["About", "#about"],
-          ].map(([label, href], index) => (
-            <a
-              className={index === 0 ? "active" : ""}
-              key={label}
-              href={href}
-              onClick={() => setMenuOpen(false)}
-            >
+            ["Home", "top"],
+            ["Explore", "explore"],
+            ["Live", "latest-news"],
+            ["World", "regions"],
+            ["Stories", "featured"],
+            ["About", "about"],
+          ].map(([label, id], index) => (
+            <button className={index === 0 ? "active" : ""} key={label} onClick={() => scrollTo(id)}>
               {label}
-            </a>
+            </button>
           ))}
         </nav>
-        <div className="topbarActions">
-          <button
-            className="iconButton"
-            onClick={() => inputRef.current?.focus()}
-            aria-label="Focus search"
-          >
-            âŒ•
-          </button>
-          <a className="signButton" href="/sign-in">
-            Sign In
-          </a>
-          <button
-            className="menuButton"
-            onClick={() => setMenuOpen((open) => !open)}
-            aria-expanded={menuOpen}
-            aria-label="Toggle navigation"
-          >
-            â˜°
-          </button>
+
+        <div className="gpNavActions">
+          <button className="navSearch" onClick={() => inputRef.current?.focus()} aria-label="Focus search">⌕</button>
+          <Link href="/sign-in" className="signButton">Sign In</Link>
+          <button className="menuButton" onClick={() => setMenuOpen((value) => !value)} aria-expanded={menuOpen}>☰</button>
         </div>
       </header>
 
-      <section id="top" className="heroMain">
-        <img
-          className="heroImage"
-          src={heroImage}
-          alt="Earth viewed from space at night"
-          fetchPriority="high"
-        />
-        <div className="heroOverlay" />
-        <div className="starField" aria-hidden="true" />
-        <div className="heroContent" id="main-content">
-          <div className="heroTag">
-            ONE WORLD <span>â€¢</span> ENDLESS KNOWLEDGE
+      <section className="cinematicHero" id="main-content">
+        <img className="cinematicHeroImage" src={heroImage} alt="Earth from orbit" fetchPriority="high" />
+        <div className="heroVignette" />
+        <div className="heroAurora auroraOne" />
+        <div className="heroAurora auroraTwo" />
+
+        <div className="heroParticles" aria-hidden="true">
+          {Array.from({ length: 20 }, (_, index) => <i key={index} style={{ "--i": index } as CSSProperties} />)}
+        </div>
+
+        <div className="heroOrbit orbitOne" aria-hidden="true" />
+        <div className="heroOrbit orbitTwo" aria-hidden="true" />
+
+        <div className="heroInner">
+          <div className="heroCopy">
+            <span className="eyebrow">ONE WORLD <b>•</b> ENDLESS KNOWLEDGE</span>
+            <h1>
+              The world,
+              <br />
+              <span>decoded.</span>
+            </h1>
+            <p>
+              Explore people, places, history, science and ideas through a cinematic knowledge experience built to make curiosity impossible to ignore.
+            </p>
+
+            <div className="heroSearchBox">
+              <span>⌕</span>
+              <input
+                ref={inputRef}
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Search countries, events, science, people..."
+                aria-label="Search GlobalPedia"
+              />
+              <kbd>/</kbd>
+              <button onClick={() => scrollTo("featured")} aria-label="Open search results">↗</button>
+            </div>
+
+            <div className="heroActions">
+              <button className="primaryCta" onClick={() => scrollTo("explore")}>Start Exploring <span>↗</span></button>
+              <button className="ghostCta" onClick={() => scrollTo("latest-news")}>See what&apos;s happening <span>↓</span></button>
+            </div>
+
+            <div className="heroStats">
+              <span><strong>195+</strong> countries</span>
+              <span><strong>50K+</strong> knowledge nodes</span>
+              <span><strong>24/7</strong> live signals</span>
+            </div>
           </div>
-          <h1>
-            Global<span>Pedia</span>
-          </h1>
-          <h2>Discover. Learn. Explore.</h2>
-          <p>
-            GlobalPedia is your source for reliable, visual and human-friendly
-            knowledge about the world, from countries and cultures to history,
-            science and technology.
-          </p>
-          <div className="heroSearch">
-            <span className="searchGlyph">âŒ•</span>
-            <input
-              ref={inputRef}
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search for countries, people, events, science..."
-              aria-label="Search GlobalPedia"
-            />
-            <span className="slashHint">/</span>
-            <button aria-label="Search">â†’</button>
+
+          <div className="heroDepthPanel">
+            <div className="depthCard depthCardBack">
+              <span>LIVE INDEX</span>
+              <strong>WORLD</strong>
+              <small>Every direction leads somewhere.</small>
+            </div>
+            <div className="depthCard depthCardMain">
+              <div className="depthImageWrap">
+                <img src={universeImage} alt="" />
+                <span className="liveDot">LIVE</span>
+              </div>
+              <div className="depthCardCopy">
+                <span>DISCOVER NEXT</span>
+                <strong>The mysteries of the universe</strong>
+                <small>Science · 7 min read</small>
+              </div>
+            </div>
+            <div className="depthCard depthCardFront">
+              <span>SCROLL TO EXPLORE</span>
+              <strong>↓</strong>
+            </div>
           </div>
-          <div className="popular">
-            <span>Popular:</span>
-            {[
-              "Pakistan",
-              "Space",
-              "World War II",
-              "Technology",
-              "Ancient History",
-            ].map((item) => (
-              <button key={item} onClick={() => setQuery(item)}>
-                {item}
+        </div>
+
+        <div className="heroBottom">
+          <button onClick={() => scrollTo("explore")} className="scrollHint"><span /> Scroll to explore</button>
+          <span className="heroCoordinate">24.8607° N · 67.0011° E · 2026</span>
+        </div>
+      </section>
+
+      <div className="marqueeBand" aria-hidden="true">
+        <div>
+          <span>COUNTRIES</span><b>✦</b><span>HISTORY</span><b>✦</b><span>SCIENCE</span><b>✦</b><span>TECHNOLOGY</span><b>✦</b><span>CULTURE</span><b>✦</b><span>NATURE</span><b>✦</b><span>ARTS</span><b>✦</b>
+          <span>COUNTRIES</span><b>✦</b><span>HISTORY</span><b>✦</b><span>SCIENCE</span><b>✦</b><span>TECHNOLOGY</span><b>✦</b>
+        </div>
+      </div>
+
+      <section className="depthSection exploreSection" id="explore">
+        <div className="sectionIntro">
+          <div>
+            <span className="sectionNumber">01</span>
+            <span className="eyebrow">ENTER THE INDEX</span>
+          </div>
+          <h2>Pick a direction.<br /><em>Go deeper.</em></h2>
+          <p>Eight portals into the living map of human knowledge. Hover, scroll, click. Humanity has apparently decided all three are necessary.</p>
+        </div>
+
+        <div className="categoryStage">
+          <div className="categoryOrb" aria-hidden="true" />
+          <div className="categoryGrid3d">
+            {categoryCards.map((item, index) => (
+              <button
+                key={item.label}
+                className={`category3dCard tone-${item.tone} ${active === item.label ? "selected" : ""}`}
+                onClick={() => {
+                  setActive(item.label);
+                  scrollTo("featured");
+                }}
+                onMouseMove={(event) => {
+                  const target = event.currentTarget;
+                  const values = tiltStyle(event, 10);
+                  Object.entries(values).forEach(([key, value]) => target.style.setProperty(key, value));
+                }}
+                onMouseLeave={(event) => {
+                  event.currentTarget.style.setProperty("--rx", "0deg");
+                  event.currentTarget.style.setProperty("--ry", "0deg");
+                }}
+                style={{ "--delay": `${index * 45}ms` } as CSSProperties}
+              >
+                <span className="categoryGlow" />
+                <span className="categoryIcon3d">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                    {iconMap[item.icon]}
+                  </svg>
+                </span>
+                <strong>{item.label}</strong>
+                <small>{item.sub}</small>
+                <span className="categoryArrow">↗</span>
               </button>
             ))}
           </div>
         </div>
-        <div className="heroAside" aria-hidden="true">
-          <p>
-            A whole world
-            <br />
-            of knowledge<span>.</span>
-          </p>
-          <div className="scribble" />
-        </div>
-        <div className="heroOrbital orbA" aria-hidden="true" />
-        <div className="heroOrbital orbB" aria-hidden="true" />
       </section>
 
-      <section id="categories" className="categorySection sectionWrap">
-        <div className="categoryGrid">
-          {categoryCards.map((item) => (
-            <button
-              key={item.label}
-              className={`categoryCard tone-${item.tone}`}
-              onClick={() => setActive(item.label)}
-              aria-pressed={active === item.label}
-            >
-              <span className="categoryIcon">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  {iconMap[item.icon]}
-                </svg>
-              </span>
-              <strong>{item.label}</strong>
-              <small>{item.sub}</small>
-            </button>
-          ))}
-        </div>
-      </section>
-      <section id="latest-news" className="liveNewsSection sectionWrap">
-        <div className="sectionHeading">
-          <div className="liveNewsTitle">
-            <span className="sectionKicker livePulse">â—</span>
-            <h2>Latest News</h2>
-            <span className="liveBadge">LIVE</span>
+      <section className="newsSection depthSection" id="latest-news">
+        <div className="sectionHeaderLine">
+          <div>
+            <span className="liveStatus"><i /> LIVE</span>
+            <h2>What&apos;s happening now</h2>
           </div>
-          <div className="newsControls">
-            <span>
-              {newsUpdatedAt
-                ? `Updated ${new Date(newsUpdatedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`
-                : "Updating..."}
-            </span>
-            <button
-              onClick={() => void loadLiveNews(true)}
-              disabled={newsRefreshing}
-              aria-label="Refresh latest news"
-            >
-              {newsRefreshing ? "Refreshingâ€¦" : "â†» Refresh"}
+          <div className="newsMeta">
+            <span>Updated {timestamp}</span>
+            <button onClick={() => void loadLiveNews(true)} disabled={newsRefreshing}>
+              {newsRefreshing ? "Refreshing..." : "↻ Refresh"}
             </button>
           </div>
         </div>
@@ -351,161 +462,147 @@ export default function GlobalPediaHome() {
         {newsError ? (
           <div className="newsState">{newsError}</div>
         ) : newsLoading ? (
-          <div className="newsGrid">
-            {[1, 2, 3, 4, 5, 6].map((item) => (
-              <div className="newsSkeleton" key={item} />
-            ))}
-          </div>
-        ) : liveNews.length ? (
-          <div className="newsGrid">
-            {liveNews.slice(0, 12).map((item) => (
-              <a
-                className="liveNewsCard"
-                href={item.link}
-                target="_blank"
-                rel="noreferrer"
-                key={item.id}
-              >
-                <div className="liveNewsTop">
-                  <span className="liveNewsCategory">{item.category}</span>
-                  <span className="liveNewsTime">
-                    {new Date(item.publishedAt).toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </span>
-                </div>
-                <h3>{item.title}</h3>
-                <p>{item.description}</p>
-                <div className="liveNewsBottom">
-                  <span>{item.source}</span>
-                  <span>Read story â†—</span>
-                </div>
-              </a>
-            ))}
+          <div className="newsMosaic">
+            {Array.from({ length: 6 }, (_, index) => <div className="newsSkeleton" key={index} />)}
           </div>
         ) : (
-          <div className="newsState">No live stories available right now.</div>
+          <div className="newsMosaic">
+            {(liveNews.length ? liveNews.slice(0, 6) : []).map((item, index) => (
+              <a key={item.id} className={`newsMosaicCard newsCard-${index}`} href={item.link} target="_blank" rel="noreferrer">
+                <span className="newsCardTop">{item.category} · {item.source}</span>
+                <h3>{item.title}</h3>
+                <p>{item.description}</p>
+                <span className="newsCardBottom">Read story ↗</span>
+              </a>
+            ))}
+            {!liveNews.length && <div className="newsState">No live stories available right now.</div>}
+          </div>
         )}
       </section>
-      <section id="featured" className="contentSection sectionWrap">
-        <div className="sectionHeading">
+
+      <section className="featureUniverse depthSection" id="featured">
+        <div className="featureUniverseHead">
           <div>
-            <span className="sectionKicker">âœ¦</span>
-            <h2>Featured Articles</h2>
+            <span className="sectionNumber">02</span>
+            <span className="eyebrow">THE STORY UNIVERSE</span>
           </div>
-          <a href="#featured">View All â†’</a>
+          <h2>Knowledge with<br /><em>depth.</em></h2>
+          <p>Scroll through a selection of stories. Each one opens into its own world.</p>
         </div>
-        <div className="contentColumns">
-          <div className="articleGrid">
-            {featured.map((entry) => (
-              <Link
-                href={`/articles/${entry.slug}`}
-                key={entry.slug}
-                className="articleCard"
-              >
-                <div className="articleImageWrap">
-                  <img src={entry.image} alt="" loading="lazy" />
-                  <div className={`articleTag tag-${entry.accent}`}>
-                    {entry.category.toUpperCase()}
-                  </div>
-                </div>
-                <div className="articleText">
-                  <h3>{entry.title}</h3>
-                  <p>{entry.description}</p>
-                  <div className="articleMeta">
-                    <span>â—· {entry.meta.split(" Â· ")[0]}</span>
-                    <span>â—´ {entry.meta.split(" Â· ")[1]}</span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-          <aside className="factsPanel">
-            <div className="panelHeader">
-              <span>âœ¦</span>
-              <h3>Quick Facts</h3>
+
+        <div className="featureLead">
+          <Link href={`/articles/${lead.slug}`} className="featureHeroCard">
+            <img src={lead.image} alt="" />
+            <div className="featureShade" />
+            <div className="featureHeroCopy">
+              <span>{lead.category.toUpperCase()} · {lead.meta}</span>
+              <h3>{lead.title}</h3>
+              <p>{lead.description}</p>
+              <strong>Open story ↗</strong>
             </div>
-            {[
-              ["Total Articles", "50,000+"],
-              ["Countries", "195+"],
-              ["Languages", "20+"],
-              ["Last Updated", "Sep 10, 2026"],
-            ].map(([label, value]) => (
-              <div className="factRow" key={label}>
-                <span>{label}</span>
-                <strong>{value}</strong>
-              </div>
+          </Link>
+
+          <div className="featureStack">
+            {secondary.map((entry, index) => (
+              <TiltCard href={`/articles/${entry.slug}`} key={entry.slug} className="featureStackCard">
+                <img src={entry.image} alt="" />
+                <div className="featureStackShade" />
+                <div className="featureStackCopy">
+                  <span>0{index + 2} · {entry.category}</span>
+                  <h3>{entry.title}</h3>
+                  <small>{entry.meta}</small>
+                </div>
+              </TiltCard>
             ))}
-          </aside>
+          </div>
         </div>
-        <div className="worldPanel">
-          <div>
-            <span className="sectionKicker">â—ˆ</span>
-            <h3>Explore the World</h3>
-            <p>Jump from one corner of the planet to another.</p>
-          </div>
-          <div className="worldMap" aria-hidden="true">
-            <div className="mapDots" />
-          </div>
-          <a href="#regions">View All Countries â†’</a>
+
+        <div className="articleRail">
+          {featured.map((entry, index) => (
+            <TiltCard href={`/articles/${entry.slug}`} className="railCard" key={entry.slug}>
+              <span className="railIndex">0{index + 1}</span>
+              <img src={entry.image} alt="" />
+              <div className="railOverlay" />
+              <div className="railCopy">
+                <span>{entry.category}</span>
+                <h3>{entry.title}</h3>
+                <small>{entry.meta}</small>
+              </div>
+            </TiltCard>
+          ))}
         </div>
       </section>
 
-      <section id="regions" className="regionSection sectionWrap">
-        <div className="sectionHeading">
+      <section className="worldSection depthSection" id="regions">
+        <div className="worldCopy">
           <div>
-            <h2>Explore by Region</h2>
+            <span className="sectionNumber">03</span>
+            <span className="eyebrow">THE WORLD, IN MOTION</span>
           </div>
-          <a href="#regions">View All â†’</a>
+          <h2>Every place<br /><em>has a story.</em></h2>
+          <p>Move across regions, then drop into the stories, cultures and landscapes that make them distinct.</p>
+          <button className="primaryCta" onClick={() => scrollTo("about")}>Explore the atlas <span>↗</span></button>
         </div>
-        <div className="regionGrid">
-          {regions.map((region) => (
-            <a className="regionCard" href="#featured" key={region.name}>
-              <img src={region.image} alt="" loading="lazy" />
+
+        <div className="globeStage">
+          <div className="globeGlow" />
+          <div className="globe">
+            <img src={worldImages[0]} alt="" />
+            <div className="globeLines" />
+            <div className="globePin pinA" />
+            <div className="globePin pinB" />
+            <div className="globePin pinC" />
+          </div>
+          <div className="globeRing ringA" />
+          <div className="globeRing ringB" />
+          <div className="globeRing ringC" />
+          <div className="globeLabel labelA">ASIA <small>48% INDEX</small></div>
+          <div className="globeLabel labelB">EUROPE <small>31% INDEX</small></div>
+          <div className="globeLabel labelC">AFRICA <small>26% INDEX</small></div>
+        </div>
+
+        <div className="regionOrbit">
+          {regions.map((region, index) => (
+            <a href="#about" key={region.name} className={`regionOrbitCard orbitCard-${index}`}>
+              <img src={region.image} alt="" />
               <span>{region.name}</span>
             </a>
           ))}
         </div>
       </section>
 
-      <section id="about" className="aboutSection sectionWrap">
-        <div className="aboutCopy">
-          <span className="heroTag">
-            GLOBALPEDIA <span>â€¢</span> THE IDEA
-          </span>
-          <h2>
-            Knowledge should feel
-            <br />
-            <em>worth exploring.</em>
-          </h2>
-          <p>
-            Not a wall of text. Not a maze of links. A visual, searchable map of
-            the world with room for the details humans inevitably insist on
-            arguing about.
-          </p>
+      <section className="aboutImmersive depthSection" id="about">
+        <div className="aboutBackground" />
+        <div className="aboutGrid">
+          <div className="aboutStatement">
+            <span className="eyebrow">04 · THE IDEA</span>
+            <h2>Knowledge should feel <em>alive.</em></h2>
+            <p>
+              GlobalPedia turns a reference library into an explorable world. Visual context, fast search, live signals and deep stories all belong in the same experience.
+            </p>
+          </div>
+          <div className="aboutNumbers">
+            <div><strong>01</strong><span>ONE WORLD INDEX</span></div>
+            <div><strong>∞</strong><span>ENDLESS QUESTIONS</span></div>
+            <div><strong>24/7</strong><span>LIVE SIGNALS</span></div>
+          </div>
         </div>
-        <div className="aboutStat">
-          <strong>01</strong>
-          <span>
-            WORLD
-            <br />
-            INDEX
-          </span>
+        <div className="aboutGallery">
+          {[...worldImages, ...entries.slice(0, 4).map((entry) => entry.image)].map((image, index) => (
+            <div className={`galleryTile gallery-${index}`} key={image + index}>
+              <img src={image} alt="" loading="lazy" />
+            </div>
+          ))}
         </div>
       </section>
 
-      <footer className="footer">
-        <Link className="brand" href="#top">
-          <span className="brandMark globeMark">â—Ž</span>
-          <span>
-            Global<span className="brandBlue">Pedia</span>
-          </span>
+      <footer className="gpFooter">
+        <Link href="#top" className="gpBrand">
+          <span className="brandGlyph">◎</span>
+          <span>Global<span>Pedia</span></span>
         </Link>
-        <div>
-          <span>ONE WORLD â€¢ ENDLESS KNOWLEDGE</span>
-          <span>Â© 2026 GLOBALPEDIA</span>
-        </div>
+        <div className="footerCenter">ONE WORLD · ENDLESS KNOWLEDGE</div>
+        <div className="footerRight">© 2026 GLOBALPEDIA · BUILT FOR CURIOSITY</div>
       </footer>
     </main>
   );
