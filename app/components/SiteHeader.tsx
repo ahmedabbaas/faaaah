@@ -11,6 +11,8 @@ const links = [
   ["Explore", "/explore"],
   ["Categories", "/categories"],
   ["Countries", "/countries"],
+  ["Sports", "/sports"],
+  ["Games", "/games"],
   ["Random", "/random"],
   ["About", "/about"],
 ] as const;
