@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { categories, entries, regions } from "../data/entries";
 import ThemeToggle from "./ThemeToggle";
 import WorldKnowledgeHub from "./WorldKnowledgeHub";
+import AccountHud from "./AccountHud";
 
 type IconName =
   | "countries"
@@ -227,9 +228,8 @@ export default function GlobalPediaHome() {
           >
             âŒ•
           </button>
-          <a className="signButton" href="/sign-in">
-            Sign In
-          </a>
+          <AccountHud />
+          <ThemeToggle />
           <button
             className="menuButton"
             onClick={() => setMenuOpen((open) => !open)}
