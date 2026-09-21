@@ -30,6 +30,7 @@ export default function LiveNewsFeed({
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState("");
   const [secondsUntilRefresh, setSecondsUntilRefresh] = useState(600);
+  const [refreshNotice, setRefreshNotice] = useState("");
 
   const load = useCallback(async (manual = false) => {
     try {
@@ -38,7 +39,13 @@ export default function LiveNewsFeed({
       const response = await fetch(`/api/news?mode=${encodeURIComponent(mode)}&ts=${Date.now()}`, { cache: "no-store" });
       if (!response.ok) throw new Error("feed");
       const data = (await response.json()) as { news?: NewsItem[]; updatedAt?: string };
-      setItems(Array.isArray(data.news) ? data.news : []);
+      const nextItems = Array.isArray(data.news) ? data.news : [];
+      setRefreshNotice(
+        manual
+          ? `${nextItems.filter((item) => !items.some((old) => old.id === item.id)).length} new ${nextItems.length === 1 ? "story" : "stories"} found`
+          : ""
+      );
+      setItems(nextItems);
       setUpdatedAt(data.updatedAt || new Date().toISOString());
       setSecondsUntilRefresh(600);
     } catch {
@@ -80,6 +87,7 @@ export default function LiveNewsFeed({
         <div className="liveFeedControls">
           <span>{updatedAt ? `Updated ${new Date(updatedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}` : "Updating..."}</span>
           <span className="liveCountdown" aria-live="polite">Next update <strong>{countdown}</strong></span>
+          {refreshNotice && <span className="liveRefreshNotice">{refreshNotice}</span>}
           <button onClick={() => void load(true)} disabled={refreshing}>
             {refreshing ? "Refreshing…" : "↻ Refresh"}
           </button>
