@@ -239,3 +239,24 @@ html[data-theme="light"] .countryTile small,html[data-theme="light"] .signalCard
 @media(prefers-reduced-motion:reduce){.earthSphere,.earthTexture,.earthGlow,.earthPin,.earthOrbit{animation:none!important}}
 .authToolbar{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px}.authToolbar .authBrand{justify-self:start}.authToolbar .themeToggle{margin-left:auto}
 @media(max-width:760px){.authToolbar{padding:0 4px}.authToolbar .themeToggle{margin-left:auto}}
+
+/* AUTHENTICATED ACCOUNT HUD */
+.accountHud{min-width:235px;display:flex;align-items:center;gap:9px;padding:5px 7px 5px 6px;border:1px solid rgba(105,181,232,.15);border-radius:13px;background:rgba(9,26,40,.72);backdrop-filter:blur(14px);box-shadow:0 12px 30px rgba(0,0,0,.16)}
+.accountIdentity{min-width:0;display:flex;align-items:center;gap:8px;flex:1}
+.accountAvatar{width:30px;height:30px;flex:0 0 30px;border-radius:50%;overflow:hidden;border:1px solid rgba(70,181,242,.36);background:#102534;box-shadow:0 0 18px rgba(34,168,255,.1)}
+.accountAvatar img{width:100%;height:100%;display:block;object-fit:cover}
+.accountText{min-width:0;display:grid;gap:2px}
+.accountText strong{font-size:9px;color:#edf7fc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:110px}
+.accountText span{font-size:7px;color:#718895;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px}
+.accountClock{display:grid;gap:2px;padding-left:9px;border-left:1px solid rgba(128,181,210,.12);min-width:67px}
+.accountClock strong{font-size:9px;letter-spacing:.02em;color:#58c6ff}
+.accountClock span{font-size:6px;color:#6a8291;white-space:nowrap}
+.accountHud .cl-userButtonBox{display:flex}.accountHud .gpUserAvatar{width:27px!important;height:27px!important}
+.accountHud .gpUserPopover{background:#071724!important;border:1px solid rgba(104,181,220,.2)!important;border-radius:16px!important;box-shadow:0 30px 70px rgba(0,0,0,.38)!important}
+.accountHud .gpUserAction{color:#bed1dc!important}
+.accountHud .gpUserAction:hover{background:rgba(57,173,239,.08)!important}
+.accountLoading{min-width:42px;justify-content:center}.accountPulse{width:8px;height:8px;border-radius:50%;background:#48b8ff;box-shadow:0 0 15px #48b8ff;animation:accountPulse 1.2s ease-in-out infinite}
+html[data-theme="light"] .accountHud{background:rgba(255,255,255,.76);border-color:rgba(40,101,132,.13)}html[data-theme="light"] .accountText strong{color:#18303e}html[data-theme="light"] .accountText span,html[data-theme="light"] .accountClock span{color:#69808d}html[data-theme="light"] .accountClock{border-color:rgba(40,101,132,.12)}html[data-theme="light"] .accountHud .gpUserPopover{background:#ffffff!important;border-color:rgba(40,101,132,.16)!important}
+@keyframes accountPulse{50%{transform:scale(1.25);opacity:.5}}
+@media(max-width:1100px){.accountHud{min-width:205px}.accountText span{display:none}.accountClock{display:none}}
+@media(max-width:760px){.accountHud{min-width:36px;width:36px;height:36px;padding:0;justify-content:center;border-radius:11px;background:rgba(10,28,42,.74)}.accountIdentity,.accountClock{display:none}.accountHud .gpUserAvatar{width:29px!important;height:29px!important}.gpNavActions .themeToggle{width:36px;justify-content:center;padding:0}.gpNavActions .themeToggle small{display:none}}
