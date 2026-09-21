@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
@@ -203,21 +203,21 @@ export default function GlobalPediaHome() {
           aria-label="Main navigation"
         >
           {[
-            ["Home", "#top"],
-            ["Explore", "#categories"],
-            ["Categories", "#categories"],
-            ["Countries", "#regions"],
-            ["Random", "#featured"],
-            ["About", "#about"],
+            ["Home", "/"],
+            ["Explore", "/explore"],
+            ["Categories", "/categories"],
+            ["Countries", "/countries"],
+            ["Random", "/random"],
+            ["About", "/about"],
           ].map(([label, href], index) => (
-            <a
+            <Link
               className={index === 0 ? "active" : ""}
               key={label}
               href={href}
               onClick={() => setMenuOpen(false)}
             >
               {label}
-            </a>
+            </Link>
           ))}
         </nav>
         <div className="topbarActions">
@@ -405,7 +405,7 @@ export default function GlobalPediaHome() {
             <span className="sectionKicker">âœ¦</span>
             <h2>Featured Articles</h2>
           </div>
-          <a href="#featured">View All â†’</a>
+          <Link href="/explore">View All →</Link>
         </div>
         <div className="contentColumns">
           <div className="articleGrid">
@@ -459,7 +459,7 @@ export default function GlobalPediaHome() {
           <div className="worldMap" aria-hidden="true">
             <div className="mapDots" />
           </div>
-          <a href="#regions">View All Countries â†’</a>
+          <Link href="/countries">View All Countries →</Link>
         </div>
       </section>
 
@@ -468,7 +468,7 @@ export default function GlobalPediaHome() {
           <div>
             <h2>Explore by Region</h2>
           </div>
-          <a href="#regions">View All â†’</a>
+          <Link href="/countries">View All →</Link>
         </div>
         <div className="regionGrid">
           {regions.map((region) => (
