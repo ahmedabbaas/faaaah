@@ -1,4 +1,5 @@
 import PageChrome from "../components/PageChrome";
+import LiveNewsFeed from "../components/LiveNewsFeed";
 import WorldKnowledgeHub from "../components/WorldKnowledgeHub";
 
 export const metadata = {
@@ -17,6 +18,11 @@ export default function CountriesPage() {
           the global signals layer.
         </p>
       </section>
+      <LiveNewsFeed
+        mode="countries"
+        title="Countries Live Updates"
+        subtitle="International and regional headlines to keep country profiles anchored in current context."
+      />
       <WorldKnowledgeHub />
     </PageChrome>
   );
