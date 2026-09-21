@@ -877,3 +877,89 @@ html[data-theme="light"] .knowledgeHub{
 @media(prefers-reduced-motion:reduce){
   .livePulse,.newsSkeleton{animation:none!important}
 }
+
+
+/* COUNTRY DATA CARDS */
+.countryTile{
+  display:grid!important;
+  grid-template-columns:38px minmax(0,1fr) 22px!important;
+  grid-template-rows:auto auto!important;
+  align-items:start!important;
+  gap:10px 10px!important;
+  padding:13px!important;
+  text-align:left!important;
+}
+.countryTile>img{
+  width:38px!important;
+  height:25px!important;
+  object-fit:cover!important;
+  border-radius:5px!important;
+  border:1px solid rgba(255,255,255,.10);
+  grid-row:1;
+}
+.countryTileIdentity{
+  min-width:0;
+  display:grid!important;
+  gap:4px;
+  align-self:center;
+}
+.countryTileIdentity>strong{
+  font-size:12px!important;
+  line-height:1.1;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.countryTileIdentity>small{
+  color:#718895!important;
+  font-size:8px!important;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.countryTileArrow{
+  justify-self:end;
+  color:#49bdf9!important;
+  font-size:12px!important;
+  transition:transform .25s ease;
+}
+.countryTile:hover .countryTileArrow{transform:translate(2px,-2px)}
+.countryTileFacts{
+  grid-column:1 / -1;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:6px;
+  padding-top:8px;
+  border-top:1px solid rgba(111,166,195,.10);
+}
+.countryTileFacts span{
+  min-width:0;
+  display:grid;
+  gap:3px;
+}
+.countryTileFacts small{
+  color:#617987;
+  font-size:7px;
+  text-transform:uppercase;
+  letter-spacing:.09em;
+}
+.countryTileFacts strong{
+  color:#b8ccd6;
+  font-size:8px;
+  line-height:1.25;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+html[data-theme="light"] .countryTileIdentity>small{color:#718792!important}
+html[data-theme="light"] .countryTileFacts{border-top-color:rgba(45,101,127,.10)}
+html[data-theme="light"] .countryTileFacts small{color:#78909b}
+html[data-theme="light"] .countryTileFacts strong{color:#294b5b}
+@media(max-width:1050px){
+  .countryTileFacts strong{font-size:7.5px}
+}
+@media(max-width:760px){
+  .countryTile{grid-template-columns:36px minmax(0,1fr) 18px!important}
+  .countryTileFacts{gap:5px}
+  .countryTileFacts strong{font-size:8px}
+}
