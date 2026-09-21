@@ -1,4 +1,5 @@
 import { SignUp } from "@clerk/nextjs";
+import ThemeToggle from "../../components/ThemeToggle";
 
 export default function Page() {
   return (
