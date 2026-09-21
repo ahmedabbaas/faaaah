@@ -1,4 +1,5 @@
 import PageChrome from "../components/PageChrome";
+import LiveNewsFeed from "../components/LiveNewsFeed";
 import WorldKnowledgeHub from "../components/WorldKnowledgeHub";
 
 export const metadata = {
@@ -17,6 +18,11 @@ export default function GamesPage() {
           gaming headlines in one dedicated radar.
         </p>
       </section>
+      <LiveNewsFeed
+        mode="games"
+        title="Live Gaming Updates"
+        subtitle="Fresh game announcements, release news, Rockstar signals and platform headlines."
+      />
       <WorldKnowledgeHub initialTab="games" />
     </PageChrome>
   );
