@@ -1,4 +1,5 @@
 import PageChrome from "../components/PageChrome";
+import LiveNewsFeed from "../components/LiveNewsFeed";
 import WorldKnowledgeHub from "../components/WorldKnowledgeHub";
 
 export const metadata = {
@@ -17,6 +18,11 @@ export default function SportsPage() {
           prominent sporting activity without turning the page into a scoreboard for national pride.
         </p>
       </section>
+      <LiveNewsFeed
+        mode="sports"
+        title="Live Sports Updates"
+        subtitle="Fresh football, cricket and global sports headlines with the original source linked on every card."
+      />
       <WorldKnowledgeHub initialTab="sports" />
     </PageChrome>
   );
