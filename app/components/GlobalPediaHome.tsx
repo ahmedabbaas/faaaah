@@ -125,6 +125,7 @@ export default function GlobalPediaHome() {
   const [newsRefreshing, setNewsRefreshing] = useState(false);
   const [newsError, setNewsError] = useState("");
   const [secondsUntilRefresh, setSecondsUntilRefresh] = useState(600);
+  const [newsRefreshNotice, setNewsRefreshNotice] = useState("");
 
   const loadLiveNews = async (manual = false) => {
     try {
@@ -137,7 +138,13 @@ export default function GlobalPediaHome() {
         news?: NewsItem[];
         updatedAt?: string;
       };
-      setLiveNews(Array.isArray(data.news) ? data.news : []);
+      const nextNews = Array.isArray(data.news) ? data.news : [];
+      setNewsRefreshNotice(
+        manual
+          ? `${nextNews.filter((item) => !liveNews.some((old) => old.id === item.id)).length} new ${nextNews.length === 1 ? "story" : "stories"} found`
+          : ""
+      );
+      setLiveNews(nextNews);
       setNewsUpdatedAt(data.updatedAt || new Date().toISOString());
       setSecondsUntilRefresh(600);
     } catch {
@@ -363,6 +370,7 @@ export default function GlobalPediaHome() {
             <span className="liveCountdown" aria-live="polite">
               Next update <strong>{newsCountdown}</strong>
             </span>
+            {newsRefreshNotice && <span className="liveRefreshNotice">{newsRefreshNotice}</span>}
             <button
               onClick={() => void loadLiveNews(true)}
               disabled={newsRefreshing}
