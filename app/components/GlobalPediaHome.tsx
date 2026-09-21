@@ -24,6 +24,8 @@ type NewsItem = {
   source: string;
   publishedAt: string;
   category: string;
+  image?: string;
+  topic?: string;
 };
 const iconMap: Record<IconName, ReactNode> = {
   countries: (
