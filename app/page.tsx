@@ -1,69 +1,104 @@
-import Image from "next/image";
+const categories = ["Science", "History", "Technology", "Geography", "Culture", "Space"];
+
+const articles = [
+  {
+    category: "SCIENCE",
+    title: "How the universe keeps expanding",
+    text: "A visual journey through cosmic expansion, dark energy, and the structure of space-time.",
+  },
+  {
+    category: "TECHNOLOGY",
+    title: "The architecture of modern AI",
+    text: "From neural networks to large language models, explore the systems shaping intelligent software.",
+  },
+  {
+    category: "HISTORY",
+    title: "How cities became centers of civilization",
+    text: "Discover how trade, geography, power, and human migration transformed cities into global hubs.",
+  },
+];
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <main>
+      <nav className="nav">
+        <div className="brand">GLOBAL<span>PEDIA</span></div>
+        <div className="navLinks">
+          <a href="#explore">Explore</a>
+          <a href="#featured">Featured</a>
+          <a href="#about">About</a>
+        </div>
+        <button className="navButton">Explore Knowledge</button>
+      </nav>
+
+      <section className="hero">
+        <div className="orb orbOne" />
+        <div className="orb orbTwo" />
+        <div className="heroContent">
+          <p className="eyebrow">THE WORLD, EXPLAINED</p>
+          <h1>Knowledge<br /><em>without boundaries.</em></h1>
+          <p className="heroText">
+            Explore science, history, technology, culture, geography, and the universe through a modern encyclopedia built for curious minds.
           </p>
+          <div className="search">
+            <span>⌕</span>
+            <input placeholder="Search anything..." aria-label="Search GlobalPedia" />
+            <kbd>⌘ K</kbd>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      <section id="explore" className="section">
+        <div className="sectionHead">
+          <div>
+            <p className="eyebrow">EXPLORE</p>
+            <h2>Choose a world.</h2>
+          </div>
+          <p>Thousands of ideas, places, discoveries and stories waiting to be explored.</p>
         </div>
-      </main>
-    </div>
+        <div className="categories">
+          {categories.map((category, index) => (
+            <article className="categoryCard" key={category}>
+              <span>0{index + 1}</span>
+              <h3>{category}</h3>
+              <p>Discover more →</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section id="featured" className="section featuredSection">
+        <div className="sectionHead">
+          <div>
+            <p className="eyebrow">EDITORIAL</p>
+            <h2>Featured knowledge.</h2>
+          </div>
+        </div>
+        <div className="articleGrid">
+          {articles.map((article, index) => (
+            <article className={`articleCard article${index + 1}`} key={article.title}>
+              <div className="articleGlow" />
+              <div className="articleContent">
+                <p className="eyebrow">{article.category}</p>
+                <h3>{article.title}</h3>
+                <p>{article.text}</p>
+                <a href="#">Read article ↗</a>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section id="about" className="manifesto">
+        <p className="eyebrow">GLOBALPEDIA</p>
+        <h2>Curiosity is where<br /><em>everything begins.</em></h2>
+      </section>
+
+      <footer>
+        <div className="brand">GLOBAL<span>PEDIA</span></div>
+        <p>Knowledge without boundaries.</p>
+        <small>© 2026 GlobalPedia</small>
+      </footer>
+    </main>
   );
 }
