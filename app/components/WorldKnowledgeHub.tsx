@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 type Country = {
@@ -95,12 +96,12 @@ const localTime = (timezone: string) => {
   }
 };
 
-export default function WorldKnowledgeHub() {
+export default function WorldKnowledgeHub({ initialTab = "atlas" }: { initialTab?: "atlas" | "sports" | "games" }) {
   const [countries, setCountries] = useState<Country[]>([]);
   const [query, setQuery] = useState("");
   const [region, setRegion] = useState("All");
   const [selected, setSelected] = useState<Country | null>(null);
-  const [tab, setTab] = useState<"atlas" | "sports" | "games">("atlas");
+  const [tab, setTab] = useState<"atlas" | "sports" | "games">(initialTab);
   const [sportsNews, setSportsNews] = useState<NewsItem[]>([]);
   const [gameNews, setGameNews] = useState<NewsItem[]>([]);
 
@@ -162,15 +163,15 @@ export default function WorldKnowledgeHub() {
           </p>
         </div>
         <div className="hubTabs" role="tablist" aria-label="Knowledge sections">
-          <button className={tab === "atlas" ? "active" : ""} onClick={() => setTab("atlas")}>
+          <Link className={tab === "atlas" ? "active" : ""} href="/countries" role="tab">
             World Atlas
-          </button>
-          <button className={tab === "sports" ? "active" : ""} onClick={() => setTab("sports")}>
+          </Link>
+          <Link className={tab === "sports" ? "active" : ""} href="/sports" role="tab">
             Sports
-          </button>
-          <button className={tab === "games" ? "active" : ""} onClick={() => setTab("games")}>
+          </Link>
+          <Link className={tab === "games" ? "active" : ""} href="/games" role="tab">
             Games
-          </button>
+          </Link>
         </div>
       </div>
 
