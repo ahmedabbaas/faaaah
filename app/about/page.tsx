@@ -1,4 +1,5 @@
 import PageChrome from "../components/PageChrome";
+import LiveNewsFeed from "../components/LiveNewsFeed";
 
 export const metadata = {
   title: "About | GlobalPedia",
@@ -35,6 +36,12 @@ export default function AboutPage() {
           <p>The architecture is built to grow across countries, categories, live signals and deeper article pages.</p>
         </article>
       </section>
+
+      <LiveNewsFeed
+        mode="about"
+        title="GlobalPedia Live Desk"
+        subtitle="The live layer brings current headlines alongside the evergreen knowledge experience."
+      />
 
       <section className="aboutMission sectionWrap">
         <div>
