@@ -368,8 +368,15 @@ export default function GlobalPediaHome() {
                 rel="noreferrer"
                 key={item.id}
               >
+                <div className="liveNewsImage">
+                  <img
+                    src={item.image || "https://images.unsplash.com/photo-1521292270410-a8c4d7166c7c?auto=format&fit=crop&q=82&w=1000"}
+                    alt=""
+                    loading="lazy"
+                  />
+                </div>
                 <div className="liveNewsTop">
-                  <span className="liveNewsCategory">{item.category}</span>
+                  <span className="liveNewsCategory">LIVE NEWS · {item.source}</span>
                   <span className="liveNewsTime">
                     {new Date(item.publishedAt).toLocaleTimeString([], {
                       hour: "2-digit",
@@ -380,8 +387,8 @@ export default function GlobalPediaHome() {
                 <h3>{item.title}</h3>
                 <p>{item.description}</p>
                 <div className="liveNewsBottom">
-                  <span>{item.source}</span>
-                  <span>Read story â†—</span>
+                  <span>GlobalPedia brief · {item.topic || "World"}</span>
+                  <span>Read source ↗</span>
                 </div>
               </a>
             ))}
