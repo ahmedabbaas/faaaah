@@ -54,16 +54,6 @@ export default function AccountHud() {
         <strong>{formatTime(now)}</strong>
         <span>{formatDate(now)} · Local</span>
       </div>
-      <UserButton
-        afterSignOutUrl="/"
-        appearance={{
-          elements: {
-            avatarBox: "gpUserAvatar",
-            userButtonPopoverCard: "gpUserPopover",
-            userButtonPopoverActionButton: "gpUserAction",
-          },
-        }}
-      />
-    </div>
+      <UserButton />    </div>
   );
 }
