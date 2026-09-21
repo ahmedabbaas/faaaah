@@ -124,12 +124,13 @@ export default function GlobalPediaHome() {
   const [newsLoading, setNewsLoading] = useState(true);
   const [newsRefreshing, setNewsRefreshing] = useState(false);
   const [newsError, setNewsError] = useState("");
+  const [secondsUntilRefresh, setSecondsUntilRefresh] = useState(600);
 
   const loadLiveNews = async (manual = false) => {
     try {
       setNewsError("");
       if (manual) setNewsRefreshing(true);
-      const response = await fetch("/api/news", { cache: "no-store" });
+      const response = await fetch(`/api/news?ts=${Date.now()}`, { cache: "no-store" });
       if (!response.ok)
         throw new Error(`News request failed: ${response.status}`);
       const data = (await response.json()) as {
@@ -138,6 +139,7 @@ export default function GlobalPediaHome() {
       };
       setLiveNews(Array.isArray(data.news) ? data.news : []);
       setNewsUpdatedAt(data.updatedAt || new Date().toISOString());
+      setSecondsUntilRefresh(600);
     } catch {
       setNewsError("Live news is temporarily unavailable.");
     } finally {
@@ -148,9 +150,23 @@ export default function GlobalPediaHome() {
 
   useEffect(() => {
     void loadLiveNews();
-    const timer = window.setInterval(() => void loadLiveNews(), 5 * 60 * 1000);
+  }, []);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setSecondsUntilRefresh((previous) => {
+        if (previous <= 1) {
+          void loadLiveNews();
+          return 600;
+        }
+        return previous - 1;
+      });
+    }, 1000);
+
     return () => window.clearInterval(timer);
   }, []);
+
+  const newsCountdown = `${String(Math.floor(secondsUntilRefresh / 60)).padStart(2, "0")}:${String(secondsUntilRefresh % 60).padStart(2, "0")}`;
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "/" && document.activeElement?.tagName !== "INPUT") {
@@ -343,6 +359,9 @@ export default function GlobalPediaHome() {
               {newsUpdatedAt
                 ? `Updated ${new Date(newsUpdatedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`
                 : "Updating..."}
+            </span>
+            <span className="liveCountdown" aria-live="polite">
+              Next update <strong>{newsCountdown}</strong>
             </span>
             <button
               onClick={() => void loadLiveNews(true)}
