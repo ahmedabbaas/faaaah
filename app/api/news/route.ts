@@ -22,6 +22,62 @@ const gameFeeds: [string, string][] = [
   ["PlayStation", "https://news.google.com/rss/search?q=PlayStation+game+announcements&hl=en-US&gl=US&ceid=US:en"],
 ];
 
+const categoryFeeds: Record<string, [string, string][]> = {
+  categories: [
+    ["World", "https://news.google.com/rss/search?q=world+news+international&hl=en-US&gl=US&ceid=US:en"],
+    ["Science", "https://news.google.com/rss/search?q=science+research+news&hl=en-US&gl=US&ceid=US:en"],
+    ["Technology", "https://news.google.com/rss/search?q=technology+AI+news&hl=en-US&gl=US&ceid=US:en"],
+    ["Culture", "https://news.google.com/rss/search?q=culture+arts+heritage+news&hl=en-US&gl=US&ceid=US:en"],
+  ],
+  countries: [
+    ["World", "https://news.google.com/rss/search?q=international+country+news+geopolitics&hl=en-US&gl=US&ceid=US:en"],
+    ["Pakistan", "https://news.google.com/rss/search?q=Pakistan+latest+news&hl=en-US&gl=US&ceid=US:en"],
+    ["Asia", "https://news.google.com/rss/search?q=Asia+latest+news&hl=en-US&gl=US&ceid=US:en"],
+    ["Europe", "https://news.google.com/rss/search?q=Europe+latest+news&hl=en-US&gl=US&ceid=US:en"],
+  ],
+  history: [
+    ["History", "https://news.google.com/rss/search?q=history+archaeology+museum+discoveries&hl=en-US&gl=US&ceid=US:en"],
+    ["Heritage", "https://news.google.com/rss/search?q=cultural+heritage+archaeology&hl=en-US&gl=US&ceid=US:en"],
+  ],
+  science: [
+    ["Science", "https://news.google.com/rss/search?q=science+research+space+discovery&hl=en-US&gl=US&ceid=US:en"],
+    ["Space", "https://news.google.com/rss/search?q=space+NASA+astronomy+news&hl=en-US&gl=US&ceid=US:en"],
+  ],
+  technology: [
+    ["Technology", "https://news.google.com/rss/search?q=technology+AI+software+news&hl=en-US&gl=US&ceid=US:en"],
+    ["AI", "https://news.google.com/rss/search?q=artificial+intelligence+AI+news&hl=en-US&gl=US&ceid=US:en"],
+  ],
+  culture: [
+    ["Culture", "https://news.google.com/rss/search?q=culture+traditions+society+news&hl=en-US&gl=US&ceid=US:en"],
+    ["Arts", "https://news.google.com/rss/search?q=arts+music+film+culture+news&hl=en-US&gl=US&ceid=US:en"],
+  ],
+  nature: [
+    ["Nature", "https://news.google.com/rss/search?q=nature+wildlife+environment+news&hl=en-US&gl=US&ceid=US:en"],
+    ["Climate", "https://news.google.com/rss/search?q=climate+environment+news&hl=en-US&gl=US&ceid=US:en"],
+  ],
+  health: [
+    ["Health", "https://news.google.com/rss/search?q=health+medical+science+news&hl=en-US&gl=US&ceid=US:en"],
+    ["Medicine", "https://news.google.com/rss/search?q=medicine+public+health+news&hl=en-US&gl=US&ceid=US:en"],
+  ],
+  arts: [
+    ["Arts", "https://news.google.com/rss/search?q=arts+design+museum+news&hl=en-US&gl=US&ceid=US:en"],
+    ["Culture", "https://news.google.com/rss/search?q=film+music+literature+arts+news&hl=en-US&gl=US&ceid=US:en"],
+  ],
+  explore: [
+    ["World", "https://news.google.com/rss/search?q=world+breaking+news&hl=en-US&gl=US&ceid=US:en"],
+    ["Technology", "https://news.google.com/rss/search?q=technology+science+news&hl=en-US&gl=US&ceid=US:en"],
+    ["Pakistan", "https://news.google.com/rss/search?q=Pakistan+latest+news&hl=en-US&gl=US&ceid=US:en"],
+  ],
+  random: [
+    ["World", "https://news.google.com/rss/search?q=world+news+interesting+stories&hl=en-US&gl=US&ceid=US:en"],
+    ["Science", "https://news.google.com/rss/search?q=science+interesting+discoveries&hl=en-US&gl=US&ceid=US:en"],
+  ],
+  about: [
+    ["World", "https://news.google.com/rss/search?q=world+news+international&hl=en-US&gl=US&ceid=US:en"],
+    ["Global", "https://news.google.com/rss/search?q=global+affairs+news&hl=en-US&gl=US&ceid=US:en"],
+  ],
+};
+
 function decodeEntities(value: string) {
   return value
     .replace(/<!\[CDATA\[|\]\]>/g, "")
@@ -87,7 +143,9 @@ function parseItem(item: string, topic: string) {
 
 export async function GET(request: Request) {
   const mode = new URL(request.url).searchParams.get("mode");
-  const feeds = mode === "sports" ? sportsFeeds : mode === "games" ? gameFeeds : baseFeeds;
+  const feeds =
+    (mode && categoryFeeds[mode]) ||
+    (mode === "sports" ? sportsFeeds : mode === "games" ? gameFeeds : baseFeeds);
 
   const results = await Promise.allSettled(
     feeds.map(async ([topic, url]) => {
