@@ -1,5 +1,6 @@
 import Link from "next/link";
 import PageChrome from "../components/PageChrome";
+import LiveNewsFeed from "../components/LiveNewsFeed";
 import { entries } from "../data/entries";
 
 export const dynamic = "force-dynamic";
@@ -30,6 +31,11 @@ export default function RandomPage() {
           </article>
         </div>
       </section>
+      <LiveNewsFeed
+        mode="random"
+        title="Random Live Discoveries"
+        subtitle="A rotating mix of current world and science stories for the curious and the dangerously click-happy."
+      />
     </PageChrome>
   );
 }
