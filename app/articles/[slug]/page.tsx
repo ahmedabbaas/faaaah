@@ -13,10 +13,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const entry = getEntry(slug);
   if (!entry) return { title: "Article not found | GlobalPedia" };
-  return {
-    title: `${entry.title} | GlobalPedia`,
-    description: entry.description,
-  };
+  return { title: `${entry.title} | GlobalPedia`, description: entry.description };
 }
 
 export default async function ArticlePage({ params }: Props) {
@@ -25,24 +22,10 @@ export default async function ArticlePage({ params }: Props) {
   if (!entry) notFound();
 
   return (
-    <main className={`articlePage accent-${entry.accent}`}>
-      <div className="articleBackdrop" aria-hidden="true" />
-      <header className="articleHeader">
-        <Link className="brand" href="/" aria-label="GlobalPedia home">
-          <span className="brandMark">G</span>
-          <span>GLOBALPEDIA</span>
-        </Link>
-        <Link className="backLink" href="/#featured">← Back to index</Link>
-      </header>
-      <article className="articleRead">
-        <div className="eyebrow muted"><span /> {entry.category.toUpperCase()} · {entry.meta}</div>
-        <h1>{entry.title}</h1>
-        <p className="articleLead">{entry.description}</p>
-        <div className="articleRule" />
-        <div className="articleBody">
-          {entry.body.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-        </div>
-      </article>
+    <main className="articlePage">
+      <header className="articleHeader"><Link className="brand" href="/"><span className="brandMark globeMark">◎</span><span>Global<span className="brandBlue">Pedia</span></span></Link><Link className="backLink" href="/#featured">← Back</Link></header>
+      <div className="articleHero"><img src={entry.image} alt="" /><div className="articleHeroShade" /><div className="articleHeroText"><span className={`articleTag tag-${entry.accent}`}>{entry.category.toUpperCase()}</span><h1>{entry.title}</h1><div className="articleMeta"><span>◷ {entry.meta.split(" · ")[0]}</span><span>◴ {entry.meta.split(" · ")[1]}</span></div></div></div>
+      <article className="articleRead"><p className="articleLead">{entry.description}</p>{entry.body.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}<div className="articleActions"><button>♡ 235</button><button>◌ 12</button><button>⌁ Share</button></div></article>
     </main>
   );
 }
