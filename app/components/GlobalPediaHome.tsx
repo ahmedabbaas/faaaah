@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { categories, entries, regions } from "../data/entries";
+import ThemeToggle from "./ThemeToggle";
+import WorldKnowledgeHub from "./WorldKnowledgeHub";
 
 type IconName =
   | "countries"
@@ -469,7 +471,7 @@ export default function GlobalPediaHome() {
         </div>
       </section>
 
-      <section id="about" className="aboutSection sectionWrap">
+      <WorldKnowledgeHub />\n\n      <section id="about" className="aboutSection sectionWrap">
         <div className="aboutCopy">
           <span className="heroTag">
             GLOBALPEDIA <span>â€¢</span> THE IDEA
