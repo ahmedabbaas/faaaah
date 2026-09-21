@@ -1,4 +1,4 @@
-GLOBALPEDIA AUTH SETUP
+﻿GLOBALPEDIA AUTH SETUP
 
 This enables real Clerk-based authentication.
 
@@ -18,10 +18,11 @@ powershell -ExecutionPolicy Bypass -File .\enable-globalpedia-auth.ps1
 
 Then connect Clerk through the Vercel Marketplace so the required environment variables are available:
 - CLERK_SECRET_KEY
-- NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+- CLERK_PUBLISHABLE_KEY
 
 Then:
 npm run build
 git add .
 git commit -m "feat: enable GlobalPedia authentication"
 git push origin main
+
