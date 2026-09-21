@@ -29,32 +29,38 @@ export default function SiteHeader() {
   return (
     <header className="topbar">
       <Link className="brand" href="/" aria-label="GlobalPedia home">
-        <span className="brandMark globeMark">◎</span>
-        <span>
+        <span className="brandMark globeMark">
+          <span className="brandOrbit">◎</span>
+        </span>
+        <span className="brandWordmark">
           Global<span className="brandBlue">Pedia</span>
         </span>
       </Link>
 
-      <nav
-        className={`topnav ${menuOpen ? "open" : ""}`}
-        aria-label="Main navigation"
-      >
-        {links.map(([label, href]) => (
-          <Link
-            className={isActive(href) ? "active" : ""}
-            key={label}
-            href={href}
-            aria-current={isActive(href) ? "page" : undefined}
-            onClick={() => setMenuOpen(false)}
-          >
-            {label}
-          </Link>
-        ))}
-      </nav>
+      <div className="navCenter">
+        <nav
+          className={`topnav ${menuOpen ? "open" : ""}`}
+          aria-label="Main navigation"
+        >
+          {links.map(([label, href]) => (
+            <Link
+              className={isActive(href) ? "active" : ""}
+              key={label}
+              href={href}
+              aria-current={isActive(href) ? "page" : undefined}
+              onClick={() => setMenuOpen(false)}
+            >
+              <span>{label}</span>
+            </Link>
+          ))}
+        </nav>
+      </div>
 
       <div className="topbarActions">
-        <Link className="iconButton" href="/explore#search" aria-label="Search GlobalPedia" title="Search">
-          ⌕
+        <Link className="headerSearchButton" href="/explore#search" aria-label="Search GlobalPedia" title="Search">
+          <span>⌕</span>
+          <small>Search</small>
+          <kbd>/</kbd>
         </Link>
         <AccountHud />
         <ThemeToggle />
@@ -64,7 +70,9 @@ export default function SiteHeader() {
           aria-expanded={menuOpen}
           aria-label="Toggle navigation"
         >
-          ☰
+          <span />
+          <span />
+          <span />
         </button>
       </div>
     </header>
