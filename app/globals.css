@@ -151,3 +151,32 @@ main:before{
     animation:none!important;transform:none!important;
   }
 }
+
+/* GLOBALPEDIA LIVE NEWS */
+.liveNewsSection{position:relative;background:radial-gradient(circle at 82% 20%,rgba(31,158,245,.06),transparent 28%),#06121d;border-bottom:1px solid var(--line)}
+.liveNewsTitle{display:flex;align-items:center;gap:10px}
+.livePulse{font-size:9px;color:#2fe09a;text-shadow:0 0 14px rgba(47,224,154,.9);animation:livePulse 1.5s ease-in-out infinite}
+.liveBadge{padding:4px 7px;border:1px solid rgba(47,224,154,.25);border-radius:999px;color:#6ee7b7;background:rgba(47,224,154,.06);font-size:8px;font-weight:800;letter-spacing:.12em}
+.newsControls{display:flex;align-items:center;gap:10px;color:#718695;font-size:10px}
+.newsControls button{border:1px solid rgba(74,165,219,.2);border-radius:999px;padding:8px 12px;background:rgba(10,28,42,.72);color:#9fc1d3;transition:.25s ease}
+.newsControls button:hover:not(:disabled){transform:translateY(-2px);border-color:rgba(66,176,255,.55);color:#fff}
+.newsControls button:disabled{opacity:.5;cursor:wait}
+.newsGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.liveNewsCard{position:relative;display:block;min-height:190px;overflow:hidden;padding:16px;border:1px solid rgba(83,133,169,.14);border-radius:13px;background:linear-gradient(180deg,rgba(12,30,44,.94),rgba(8,22,34,.96));transition:transform .4s cubic-bezier(.2,.75,.2,1),border-color .35s,box-shadow .4s}
+.liveNewsCard:before{content:"";position:absolute;inset:-45%;background:radial-gradient(circle at 20% 0%,rgba(39,171,255,.13),transparent 28%);opacity:0;transition:opacity .35s;pointer-events:none}
+.liveNewsCard:hover{transform:translateY(-7px);border-color:rgba(61,173,255,.44);box-shadow:0 24px 55px rgba(0,0,0,.28)}
+.liveNewsCard:hover:before{opacity:1}
+.liveNewsTop,.liveNewsBottom{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.liveNewsCategory{color:#42b2ff;text-transform:uppercase;letter-spacing:.12em;font-size:8px;font-weight:800}
+.liveNewsTime{color:#61798a;font-size:9px}
+.liveNewsCard h3{position:relative;z-index:1;margin:15px 0 9px;color:#f2f7fb;font-size:17px;line-height:1.16;letter-spacing:-.03em}
+.liveNewsCard p{position:relative;z-index:1;margin:0;color:#8498a8;font-size:11px;line-height:1.55;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+.liveNewsBottom{position:absolute;left:16px;right:16px;bottom:15px;color:#6f8697;font-size:9px}
+.liveNewsBottom span:last-child{color:#32aaff}
+.newsState{padding:30px;border:1px dashed rgba(83,133,169,.2);border-radius:13px;color:#8196a6;text-align:center;background:rgba(8,23,35,.55)}
+.newsSkeleton{height:190px;border-radius:13px;border:1px solid rgba(83,133,169,.1);background:linear-gradient(110deg,#091a27 8%,#102738 18%,#091a27 33%);background-size:200% 100%;animation:newsShimmer 1.4s linear infinite}
+@keyframes livePulse{0%,100%{opacity:.55;transform:scale(.82)}50%{opacity:1;transform:scale(1.15)}}
+@keyframes newsShimmer{to{background-position-x:-200%}}
+@media(max-width:1050px){.newsGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.newsGrid{grid-template-columns:1fr}.newsControls{flex-wrap:wrap;justify-content:flex-end}.liveNewsCard{min-height:180px}}
+@media(prefers-reduced-motion:reduce){.livePulse,.newsSkeleton{animation:none!important}}

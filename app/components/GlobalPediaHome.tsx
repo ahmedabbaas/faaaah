@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
@@ -6,6 +6,15 @@ import { categories, entries, regions } from "../data/entries";
 
 type IconName = "countries" | "history" | "science" | "technology" | "culture" | "nature" | "health" | "arts";
 
+type NewsItem = {
+  id: string;
+  title: string;
+  description: string;
+  link: string;
+  source: string;
+  publishedAt: string;
+  category: string;
+};
 const iconMap: Record<IconName, ReactNode> = {
   countries: <><circle cx="12" cy="12" r="8.5"/><path d="M3.8 9h16.4M3.8 15h16.4M12 3.5c2.2 2.3 3.4 5.1 3.4 8.5S14.2 18.2 12 20.5C9.8 18.2 8.6 15.4 8.6 12S9.8 5.8 12 3.5Z"/></>,
   history: <><path d="M5 20h14M7 17V9m4 8V9m4 8V9M4 7h16M6 5h12"/><path d="m7 7 5-3 5 3"/></>,
@@ -35,7 +44,34 @@ export default function GlobalPediaHome() {
   const [active, setActive] = useState("All");
   const [menuOpen, setMenuOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const [liveNews, setLiveNews] = useState<NewsItem[]>([]);
+  const [newsUpdatedAt, setNewsUpdatedAt] = useState("");
+  const [newsLoading, setNewsLoading] = useState(true);
+  const [newsRefreshing, setNewsRefreshing] = useState(false);
+  const [newsError, setNewsError] = useState("");
 
+  const loadLiveNews = async (manual = false) => {
+    try {
+      setNewsError("");
+      if (manual) setNewsRefreshing(true);
+      const response = await fetch("/api/news", { cache: "no-store" });
+      if (!response.ok) throw new Error(`News request failed: ${response.status}`);
+      const data = (await response.json()) as { news?: NewsItem[]; updatedAt?: string };
+      setLiveNews(Array.isArray(data.news) ? data.news : []);
+      setNewsUpdatedAt(data.updatedAt || new Date().toISOString());
+    } catch {
+      setNewsError("Live news is temporarily unavailable.");
+    } finally {
+      setNewsLoading(false);
+      setNewsRefreshing(false);
+    }
+  };
+
+  useEffect(() => {
+    void loadLiveNews();
+    const timer = window.setInterval(() => void loadLiveNews(), 10 * 60 * 1000);
+    return () => window.clearInterval(timer);
+  }, []);
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "/" && document.activeElement?.tagName !== "INPUT") {
@@ -69,7 +105,7 @@ export default function GlobalPediaHome() {
 
       <header className="topbar">
         <Link className="brand" href="#top" aria-label="GlobalPedia home">
-          <span className="brandMark globeMark">◎</span>
+          <span className="brandMark globeMark">â—Ž</span>
           <span>Global<span className="brandBlue">Pedia</span></span>
         </Link>
         <nav className={`topnav ${menuOpen ? "open" : ""}`} aria-label="Main navigation">
@@ -78,9 +114,9 @@ export default function GlobalPediaHome() {
           ))}
         </nav>
         <div className="topbarActions">
-          <button className="iconButton" onClick={() => inputRef.current?.focus()} aria-label="Focus search">⌕</button>
+          <button className="iconButton" onClick={() => inputRef.current?.focus()} aria-label="Focus search">âŒ•</button>
           <button className="signButton">Sign In</button>
-          <button className="menuButton" onClick={() => setMenuOpen((open) => !open)} aria-expanded={menuOpen} aria-label="Toggle navigation">☰</button>
+          <button className="menuButton" onClick={() => setMenuOpen((open) => !open)} aria-expanded={menuOpen} aria-label="Toggle navigation">â˜°</button>
         </div>
       </header>
 
@@ -89,15 +125,15 @@ export default function GlobalPediaHome() {
         <div className="heroOverlay" />
         <div className="starField" aria-hidden="true" />
         <div className="heroContent" id="main-content">
-          <div className="heroTag">ONE WORLD <span>•</span> ENDLESS KNOWLEDGE</div>
+          <div className="heroTag">ONE WORLD <span>â€¢</span> ENDLESS KNOWLEDGE</div>
           <h1>Global<span>Pedia</span></h1>
           <h2>Discover. Learn. Explore.</h2>
           <p>GlobalPedia is your source for reliable, visual and human-friendly knowledge about the world, from countries and cultures to history, science and technology.</p>
           <div className="heroSearch">
-            <span className="searchGlyph">⌕</span>
+            <span className="searchGlyph">âŒ•</span>
             <input ref={inputRef} value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search for countries, people, events, science..." aria-label="Search GlobalPedia" />
             <span className="slashHint">/</span>
-            <button aria-label="Search">→</button>
+            <button aria-label="Search">â†’</button>
           </div>
           <div className="popular"><span>Popular:</span>{["Pakistan", "Space", "World War II", "Technology", "Ancient History"].map((item) => <button key={item} onClick={() => setQuery(item)}>{item}</button>)}</div>
         </div>
@@ -120,47 +156,86 @@ export default function GlobalPediaHome() {
           ))}
         </div>
       </section>
+      <section id="latest-news" className="liveNewsSection sectionWrap">
+        <div className="sectionHeading">
+          <div className="liveNewsTitle">
+            <span className="sectionKicker livePulse">â—</span>
+            <h2>Latest News</h2>
+            <span className="liveBadge">LIVE</span>
+          </div>
+          <div className="newsControls">
+            <span>{newsUpdatedAt ? `Updated ${new Date(newsUpdatedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}` : "Updating..."}</span>
+            <button onClick={() => void loadLiveNews(true)} disabled={newsRefreshing} aria-label="Refresh latest news">
+              {newsRefreshing ? "Refreshingâ€¦" : "â†» Refresh"}
+            </button>
+          </div>
+        </div>
 
+        {newsError ? (
+          <div className="newsState">{newsError}</div>
+        ) : newsLoading ? (
+          <div className="newsGrid">
+            {[1, 2, 3, 4, 5, 6].map((item) => <div className="newsSkeleton" key={item} />)}
+          </div>
+        ) : liveNews.length ? (
+          <div className="newsGrid">
+            {liveNews.slice(0, 12).map((item) => (
+              <a className="liveNewsCard" href={item.link} target="_blank" rel="noreferrer" key={item.id}>
+                <div className="liveNewsTop">
+                  <span className="liveNewsCategory">{item.category}</span>
+                  <span className="liveNewsTime">{new Date(item.publishedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
+                </div>
+                <h3>{item.title}</h3>
+                <p>{item.description}</p>
+                <div className="liveNewsBottom"><span>{item.source}</span><span>Read story â†—</span></div>
+              </a>
+            ))}
+          </div>
+        ) : (
+          <div className="newsState">No live stories available right now.</div>
+        )}
+      </section>
       <section id="featured" className="contentSection sectionWrap">
         <div className="sectionHeading">
-          <div><span className="sectionKicker">✦</span><h2>Featured Articles</h2></div>
-          <a href="#featured">View All →</a>
+          <div><span className="sectionKicker">âœ¦</span><h2>Featured Articles</h2></div>
+          <a href="#featured">View All â†’</a>
         </div>
         <div className="contentColumns">
           <div className="articleGrid">
             {featured.map((entry) => (
               <Link href={`/articles/${entry.slug}`} key={entry.slug} className="articleCard">
                 <div className="articleImageWrap"><img src={entry.image} alt="" loading="lazy" /><div className={`articleTag tag-${entry.accent}`}>{entry.category.toUpperCase()}</div></div>
-                <div className="articleText"><h3>{entry.title}</h3><p>{entry.description}</p><div className="articleMeta"><span>◷ {entry.meta.split(" · ")[0]}</span><span>◴ {entry.meta.split(" · ")[1]}</span></div></div>
+                <div className="articleText"><h3>{entry.title}</h3><p>{entry.description}</p><div className="articleMeta"><span>â—· {entry.meta.split(" Â· ")[0]}</span><span>â—´ {entry.meta.split(" Â· ")[1]}</span></div></div>
               </Link>
             ))}
           </div>
           <aside className="factsPanel">
-            <div className="panelHeader"><span>✦</span><h3>Quick Facts</h3></div>
+            <div className="panelHeader"><span>âœ¦</span><h3>Quick Facts</h3></div>
             {[['Total Articles','50,000+'],['Countries','195+'],['Languages','20+'],['Last Updated','Sep 10, 2026']].map(([label,value]) => <div className="factRow" key={label}><span>{label}</span><strong>{value}</strong></div>)}
           </aside>
         </div>
         <div className="worldPanel">
-          <div><span className="sectionKicker">◈</span><h3>Explore the World</h3><p>Jump from one corner of the planet to another.</p></div>
+          <div><span className="sectionKicker">â—ˆ</span><h3>Explore the World</h3><p>Jump from one corner of the planet to another.</p></div>
           <div className="worldMap" aria-hidden="true"><div className="mapDots" /></div>
-          <a href="#regions">View All Countries →</a>
+          <a href="#regions">View All Countries â†’</a>
         </div>
       </section>
 
       <section id="regions" className="regionSection sectionWrap">
-        <div className="sectionHeading"><div><h2>Explore by Region</h2></div><a href="#regions">View All →</a></div>
+        <div className="sectionHeading"><div><h2>Explore by Region</h2></div><a href="#regions">View All â†’</a></div>
         <div className="regionGrid">
           {regions.map((region) => <a className="regionCard" href="#featured" key={region.name}><img src={region.image} alt="" loading="lazy" /><span>{region.name}</span></a>)}
         </div>
       </section>
 
       <section id="about" className="aboutSection sectionWrap">
-        <div className="aboutCopy"><span className="heroTag">GLOBALPEDIA <span>•</span> THE IDEA</span><h2>Knowledge should feel<br /><em>worth exploring.</em></h2><p>Not a wall of text. Not a maze of links. A visual, searchable map of the world with room for the details humans inevitably insist on arguing about.</p></div>
+        <div className="aboutCopy"><span className="heroTag">GLOBALPEDIA <span>â€¢</span> THE IDEA</span><h2>Knowledge should feel<br /><em>worth exploring.</em></h2><p>Not a wall of text. Not a maze of links. A visual, searchable map of the world with room for the details humans inevitably insist on arguing about.</p></div>
         <div className="aboutStat"><strong>01</strong><span>WORLD<br />INDEX</span></div>
       </section>
 
-      <footer className="footer"><Link className="brand" href="#top"><span className="brandMark globeMark">◎</span><span>Global<span className="brandBlue">Pedia</span></span></Link><div><span>ONE WORLD • ENDLESS KNOWLEDGE</span><span>© 2026 GLOBALPEDIA</span></div></footer>
+      <footer className="footer"><Link className="brand" href="#top"><span className="brandMark globeMark">â—Ž</span><span>Global<span className="brandBlue">Pedia</span></span></Link><div><span>ONE WORLD â€¢ ENDLESS KNOWLEDGE</span><span>Â© 2026 GLOBALPEDIA</span></div></footer>
     </main>
   );
 }
+
 
