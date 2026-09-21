@@ -149,10 +149,14 @@ export async function GET(request: Request) {
 
   const results = await Promise.allSettled(
     feeds.map(async ([topic, url]) => {
-      const response = await fetch(url, {
+      const freshUrl = `${url}${url.includes("?") ? "&" : "?"}_gp_ts=${Date.now()}`;
+      const response = await fetch(freshUrl, {
         cache: "no-store",
         signal: AbortSignal.timeout(6500),
-        headers: { "user-agent": "GlobalPedia/1.0 news aggregator" },
+        headers: {
+          "user-agent": "GlobalPedia/1.0 news aggregator",
+          "cache-control": "no-cache",
+        },
       });
 
       if (!response.ok) throw new Error(`Feed error: ${response.status}`);
