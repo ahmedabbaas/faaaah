@@ -1,5 +1,6 @@
 import Link from "next/link";
 import PageChrome from "../components/PageChrome";
+import LiveNewsFeed from "../components/LiveNewsFeed";
 import { categories, entries } from "../data/entries";
 
 const descriptions: Record<string, string> = {
@@ -50,6 +51,12 @@ export default function CategoriesPage() {
           })}
         </div>
       </section>
+
+      <LiveNewsFeed
+        mode="categories"
+        title="Category Live Updates"
+        subtitle="Fresh headlines spanning the knowledge categories, with the original source linked on every card."
+      />
 
       <section className="categorySpotlight sectionWrap">
         <div>
