@@ -231,11 +231,25 @@ export default function WorldKnowledgeHub({ initialTab = "atlas" }: { initialTab
             {filtered.map((country) => (
               <button className="countryTile" key={country.code} onClick={() => setSelected(country)}>
                 <img src={country.flag} alt="" loading="lazy" />
-                <span>
+                <span className="countryTileIdentity">
                   <strong>{country.name}</strong>
-                  <small>{country.capital} · {country.region}</small>
+                  <small>{country.capital || "Capital unavailable"} · {country.region || "Region unavailable"}</small>
                 </span>
-                <b>↗</b>
+                <b className="countryTileArrow">↗</b>
+                <div className="countryTileFacts">
+                  <span>
+                    <small>Population</small>
+                    <strong>{formatPopulation(country.population)}</strong>
+                  </span>
+                  <span>
+                    <small>Languages</small>
+                    <strong>{country.languages.slice(0, 2).join(" · ") || "Not listed"}</strong>
+                  </span>
+                  <span>
+                    <small>Currency</small>
+                    <strong>{country.currencies.slice(0, 2).join(" · ") || "Not listed"}</strong>
+                  </span>
+                </div>
               </button>
             ))}
           </div>
@@ -323,9 +337,9 @@ export default function WorldKnowledgeHub({ initialTab = "atlas" }: { initialTab
             </div>
 
             <div className="countryStats">
-              <div><span>Population</span><strong>{formatPopulation(selected.population)}</strong></div>
-              <div><span>Currency</span><strong>{selected.currencies[0] || "—"}</strong></div>
-              <div><span>Languages</span><strong>{selected.languages.slice(0, 2).join(" · ") || "—"}</strong></div>
+              <div><span>Population</span><strong>{selected.population ? new Intl.NumberFormat("en").format(selected.population) : "—"}</strong></div>
+              <div><span>Currency</span><strong>{selected.currencies.join(" · ") || "—"}</strong></div>
+              <div><span>Languages</span><strong>{selected.languages.join(" · ") || "—"}</strong></div>
             </div>
 
             <div className="countryTimeGrid">
