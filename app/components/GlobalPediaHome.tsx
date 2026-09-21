@@ -3,9 +3,9 @@
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { categories, entries, regions } from "../data/entries";
-import ThemeToggle from "./ThemeToggle";
 import WorldKnowledgeHub from "./WorldKnowledgeHub";
-import AccountHud from "./AccountHud";
+import SiteHeader from "./SiteHeader";
+import SiteFooter from "./SiteFooter";
 
 type IconName =
   | "countries"
@@ -117,7 +117,6 @@ const heroImage =
 export default function GlobalPediaHome() {
   const [query, setQuery] = useState("");
   const [active, setActive] = useState("All");
-  const [menuOpen, setMenuOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [liveNews, setLiveNews] = useState<NewsItem[]>([]);
   const [newsUpdatedAt, setNewsUpdatedAt] = useState("");
@@ -180,10 +179,7 @@ export default function GlobalPediaHome() {
         event.preventDefault();
         inputRef.current?.focus();
       }
-      if (event.key === "Escape") {
-        inputRef.current?.blur();
-        setMenuOpen(false);
-      }
+      if (event.key === "Escape") inputRef.current?.blur();
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
@@ -214,57 +210,7 @@ export default function GlobalPediaHome() {
       </a>
       <div className="noise" aria-hidden="true" />
 
-      <header className="topbar">
-        <Link className="brand" href="#top" aria-label="GlobalPedia home">
-          <span className="brandMark globeMark">â—Ž</span>
-          <span>
-            Global<span className="brandBlue">Pedia</span>
-          </span>
-        </Link>
-        <nav
-          className={`topnav ${menuOpen ? "open" : ""}`}
-          aria-label="Main navigation"
-        >
-          {[
-            ["Home", "/"],
-            ["Explore", "/explore"],
-            ["Categories", "/categories"],
-            ["Countries", "/countries"],
-            ["Sports", "/sports"],
-            ["Games", "/games"],
-            ["Random", "/random"],
-            ["About", "/about"],
-          ].map(([label, href], index) => (
-            <Link
-              className={index === 0 ? "active" : ""}
-              key={label}
-              href={href}
-              onClick={() => setMenuOpen(false)}
-            >
-              {label}
-            </Link>
-          ))}
-        </nav>
-        <div className="topbarActions">
-          <button
-            className="iconButton"
-            onClick={() => inputRef.current?.focus()}
-            aria-label="Focus search"
-          >
-            âŒ•
-          </button>
-          <AccountHud />
-          <ThemeToggle />
-          <button
-            className="menuButton"
-            onClick={() => setMenuOpen((open) => !open)}
-            aria-expanded={menuOpen}
-            aria-label="Toggle navigation"
-          >
-            â˜°
-          </button>
-        </div>
-      </header>
+      <SiteHeader />
 
       <section id="top" className="heroMain">
         <img
@@ -535,18 +481,7 @@ export default function GlobalPediaHome() {
         </div>
       </section>
 
-      <footer className="footer">
-        <Link className="brand" href="#top">
-          <span className="brandMark globeMark">â—Ž</span>
-          <span>
-            Global<span className="brandBlue">Pedia</span>
-          </span>
-        </Link>
-        <div>
-          <span>ONE WORLD â€¢ ENDLESS KNOWLEDGE</span>
-          <span>Â© 2026 GLOBALPEDIA</span>
-        </div>
-      </footer>
+      <SiteFooter />
     </main>
   );
 }
