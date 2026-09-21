@@ -330,3 +330,11 @@ html[data-theme="light"] .liveCountdown{
   border-color:rgba(37,101,134,.12);
   color:#607985;
 }
+
+.liveRefreshNotice{
+  color:#58d6ab;
+  font-size:8px;
+  font-weight:800;
+  letter-spacing:.02em;
+}
+html[data-theme="light"] .liveRefreshNotice{color:#169466}
