@@ -141,7 +141,7 @@ function TiltCard({
   const content = <div className={className} style={style}>{children}</div>;
 
   const handlers = {
-    onMouseMove: (event: MouseEvent<HTMLDivElement>) => setStyle(tiltStyle(event)),
+    onMouseMove: (event: MouseEvent<HTMLElement>) => setStyle(tiltStyle(event)),
     onMouseLeave: () =>
       setStyle({
         "--rx": "0deg",
