@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import PageChrome from "../components/PageChrome";
+import LiveNewsFeed from "../components/LiveNewsFeed";
 import { categories, entries } from "../data/entries";
 
 export default function ExplorePage() {
@@ -35,7 +36,6 @@ export default function ExplorePage() {
         <div className="pageSearch" id="search">
           <span>⌕</span>
           <input
-            autoFocus={false}
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Search articles, topics, categories..."
@@ -82,6 +82,12 @@ export default function ExplorePage() {
           </div>
         )}
       </section>
+
+      <LiveNewsFeed
+        mode="explore"
+        title="Explore Live Updates"
+        subtitle="Current headlines related to the topics people are exploring across GlobalPedia."
+      />
     </PageChrome>
   );
 }
