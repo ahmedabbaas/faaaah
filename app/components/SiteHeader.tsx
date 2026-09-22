@@ -51,7 +51,7 @@ export default function SiteHeader() {
         </span>
       </Link>
 
-      <div className="navLabel">NAVIGATION</div><div className="navCenter">
+      <div className="navCenter">
         <nav className={"topnav " + (menuOpen ? "open" : "")} aria-label="Main navigation">
           {links.map(([label, href]) => (
             <Link
@@ -81,7 +81,7 @@ export default function SiteHeader() {
         </nav>
       </div>
 
-      <div className="railRule" /><div className="topbarActions">
+      <div className="topbarActions">
         <Link className="headerSearchButton" href="/search" aria-label="Search GlobalPedia" title="Search">
           <span>⌕</span><small>Search</small><kbd>/</kbd>
         </Link>
