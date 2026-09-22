@@ -9,12 +9,9 @@ import AccountHud from "./AccountHud";
 const links = [
   ["Home", "/"],
   ["Explore", "/explore"],
-  ["Categories", "/categories"],
   ["Countries", "/countries"],
   ["Sports", "/sports"],
   ["Games", "/games"],
-  ["Random", "/random"],
-  ["About", "/about"],
 ] as const;
 
 const moreLinks = [
