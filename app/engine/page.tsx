@@ -49,7 +49,10 @@ export default function GlobalEnginePage() {
     void Promise.all([
       fetch("/api/countries", { cache: "no-store" }).then((r) => r.json()).then((data) => setCountries(Array.isArray(data.countries) ? data.countries : [])),
       fetch("/api/news", { cache: "no-store" }).then((r) => r.json()).then((data) => setNews(Array.isArray(data.news) ? data.news : [])),
-    ]).catch(() => {});
+    ]).catch(() => {
+      setCountries([]);
+      setNews([]);
+    });
   }, []);
 
   const term = query.trim().toLowerCase();

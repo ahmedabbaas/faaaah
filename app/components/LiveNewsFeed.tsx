@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 type NewsItem = {
   id: string;
@@ -29,7 +29,6 @@ export default function LiveNewsFeed({
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState("");
-  const itemsRef = useRef<NewsItem[]>([]);
 
   const load = useCallback(async (manual = false) => {
     try {
@@ -39,7 +38,6 @@ export default function LiveNewsFeed({
       if (!response.ok) throw new Error("feed");
       const data = (await response.json()) as { news?: NewsItem[]; updatedAt?: string };
       const nextItems = Array.isArray(data.news) ? data.news : [];
-      itemsRef.current = nextItems;
       setItems(nextItems);
       setUpdatedAt(data.updatedAt || new Date().toISOString());
     } catch {
