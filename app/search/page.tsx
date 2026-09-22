@@ -44,6 +44,8 @@ export default function SearchPage() {
   const [recent, setRecent] = useState<string[]>([]);
 
   useEffect(() => {
+    const urlQuery = new URLSearchParams(window.location.search).get("q");
+    if (urlQuery) setQuery(urlQuery);
     fetch("/api/countries", { cache: "no-store" })
       .then((r) => r.json())
       .then((d) => setCountries(Array.isArray(d.countries) ? d.countries : []))
