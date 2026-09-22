@@ -5242,3 +5242,136 @@ html[data-theme="light"] .earthCityLabel{color:#34465e}
   .earthCanvas{min-height:520px}
   .earthControlsHint span:nth-child(n+3){display:none}
 }
+
+
+/* GLOBALPEDIA · HOMEPAGE 3D EARTH SHOWCASE */
+
+.earthExplorerCompact{
+  width:100%;
+  margin:0;
+}
+.earthExplorerCompact .earthExplorerHead{
+  margin-bottom:12px;
+}
+.earthExplorerCompact .earthExplorerHead>div:first-child>span{
+  display:none;
+}
+.earthExplorerCompact .earthExplorerHead h2{
+  font-size:0;
+  margin:0;
+}
+.earthExplorerCompact .earthExplorerHead h2 em{
+  font-size:0;
+}
+.earthExplorerCompact .earthExplorerHead p{
+  display:none;
+}
+.earthExplorerCompact .earthWorkspace{
+  grid-template-columns:1fr;
+  min-height:620px;
+  border-radius:20px;
+}
+.earthExplorerCompact .earthStage{
+  min-height:620px;
+  width:100%;
+}
+.earthExplorerCompact .earthCanvas{
+  min-height:620px;
+}
+.earthExplorerCompact .earthSidePanel{
+  display:none;
+}
+.earthExplorerCompact .earthControlsHint{
+  left:50%;
+  transform:translateX(-50%);
+  justify-content:center;
+}
+.earthExplorerCompact .earthHoverCard{
+  left:18px;
+}
+.earthHomeSection{
+  padding-top:18px;
+  padding-bottom:54px;
+}
+.earthHomeHeader{
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:24px;
+  margin-bottom:16px;
+}
+.earthHomeHeader>div{
+  display:grid;
+  gap:3px;
+}
+.earthHomeHeader .sectionKicker{
+  color:var(--accent-ui);
+}
+.earthHomeHeader .heroTag{
+  color:var(--accent-ui);
+  font-size:9px;
+  font-weight:800;
+  letter-spacing:.12em;
+}
+.earthHomeHeader h2{
+  margin:2px 0 4px;
+  color:var(--text-strong);
+  font-size:clamp(28px,3.5vw,46px);
+  line-height:1;
+  letter-spacing:-.04em;
+}
+.earthHomeHeader h2 em{
+  font-style:normal;
+  color:var(--accent-ui);
+}
+.earthHomeHeader p{
+  margin:0;
+  color:var(--text-body);
+  font-size:12px;
+  line-height:1.55;
+}
+.earthHomeLink{
+  flex:none;
+  display:inline-flex;
+  align-items:center;
+  min-height:36px;
+  padding:0 12px;
+  border:1px solid var(--border-soft);
+  border-radius:10px;
+  background:var(--surface-1);
+  color:var(--accent-ui);
+  font-size:10px;
+  font-weight:800;
+}
+.earthHomeLink:hover{
+  transform:translateY(-1px);
+}
+.earthHomeLoading{
+  min-height:620px;
+  display:grid;
+  place-items:center;
+  gap:8px;
+  align-content:center;
+  border:1px solid var(--border-soft);
+  border-radius:20px;
+  background:radial-gradient(circle at 50% 45%,#153a59 0,#091523 48%,#040911 90%);
+  color:#e6eef7;
+  font-size:11px;
+}
+html[data-theme="light"] .earthHomeLoading{
+  background:radial-gradient(circle at 50% 45%,#dcecff 0,#b6cae1 48%,#7891ab 90%);
+  color:#26364b;
+}
+@media(max-width:780px){
+  .earthHomeHeader{
+    align-items:flex-start;
+    flex-direction:column;
+  }
+  .earthHomeLink{align-self:flex-start}
+  .earthExplorerCompact .earthWorkspace,
+  .earthExplorerCompact .earthStage,
+  .earthExplorerCompact .earthCanvas,
+  .earthHomeLoading{
+    min-height:520px;
+  }
+}

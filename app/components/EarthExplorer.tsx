@@ -85,7 +85,7 @@ const normalize = (value: string) =>
     .replace(/[^a-z0-9]+/g, " ")
     .trim();
 
-export default function EarthExplorer() {
+export default function EarthExplorer({ compact = false }: { compact?: boolean }) {
   const mountRef = useRef<HTMLDivElement>(null);
   const globeRef = useRef<GlobeInstance | null>(null);
   const countriesRef = useRef<Country[]>([]);
@@ -377,17 +377,19 @@ export default function EarthExplorer() {
         onLoad={() => setScriptReady(true)}
       />
 
-      <section className="earthExplorer" aria-label="Interactive 3D Earth Explorer">
+      <section className={"earthExplorer" + (compact ? " earthExplorerCompact" : "")} aria-label="Interactive 3D Earth Explorer">
         <div className="earthExplorerHead">
           <div>
             <span>GLOBALPEDIA · 3D EARTH</span>
             <h2>Explore the planet in <em>real space.</em></h2>
             <p>Drag to rotate. Scroll to zoom. Click a country, then zoom closer to reveal its cities.</p>
           </div>
-          <div className="earthStatus">
-            <span className="earthLiveDot" />
-            <strong>{status}</strong>
-          </div>
+          {!compact && (
+            <div className="earthStatus">
+              <span className="earthLiveDot" />
+              <strong>{status}</strong>
+            </div>
+          )}
         </div>
 
         <div className="earthWorkspace">

@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { entries, regions } from "../data/entries";
@@ -7,6 +8,16 @@ import WorldKnowledgeHub from "./WorldKnowledgeHub";
 import SiteHeader from "./SiteHeader";
 import SiteFooter from "./SiteFooter";
 import WelcomeScreen from "./WelcomeScreen";
+
+const EarthExplorer = dynamic(() => import("./EarthExplorer"), {
+  ssr: false,
+  loading: () => (
+    <div className="earthHomeLoading">
+      <span className="earthLiveDot" />
+      <strong>Preparing the 3D Earth…</strong>
+    </div>
+  ),
+});
 
 type IconName =
   | "countries"
@@ -327,6 +338,19 @@ export default function GlobalPediaHome() {
             </Link>
           ))}
         </div>
+      </section>
+
+      <section className="earthHomeSection sectionWrap" aria-label="3D Earth preview">
+        <div className="earthHomeHeader">
+          <div>
+            <span className="sectionKicker">◎</span>
+            <span className="heroTag">GLOBALPEDIA · INTERACTIVE EARTH</span>
+            <h2>Explore the world in <em>3D.</em></h2>
+            <p>Rotate the planet, click a country and zoom closer until its cities appear.</p>
+          </div>
+          <Link href="/earth" className="earthHomeLink">Open full Earth Explorer ↗</Link>
+        </div>
+        <EarthExplorer compact />
       </section>
 
       <section className="topNewsPanel" aria-label="Live news updates">
