@@ -3475,3 +3475,327 @@ html[data-theme="dark"] .footer{color:#9aa7ba!important}
 @media(prefers-reduced-motion:reduce){
   *,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}
 }
+
+
+/* GLOBALPEDIA PRODUCT UI · clean iPhone-inspired interaction */
+
+:root{
+  --gp-bg:#f5f7fb;
+  --gp-surface:#ffffff;
+  --gp-surface-2:#f8f9fc;
+  --gp-text:#161b26;
+  --gp-muted:#687184;
+  --gp-line:#e3e7ef;
+  --gp-blue:#4f67e8;
+  --gp-blue-dark:#4058d7;
+  --gp-radius:16px;
+  --gp-shadow:0 8px 26px rgba(26,38,67,.055);
+}
+
+html[data-theme="light"]{
+  color-scheme:light;
+}
+body{
+  background:var(--gp-bg)!important;
+  color:var(--gp-text)!important;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;
+  -webkit-font-smoothing:antialiased!important;
+}
+h1,h2,h3,h4,h5,h6,button,input,textarea,select{
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Segoe UI",Roboto,Helvetica,Arial,sans-serif!important;
+}
+h1,h2,h3,h4,h5,h6{
+  letter-spacing:-.025em!important;
+}
+button,.iphoneButton{
+  -webkit-tap-highlight-color:transparent;
+}
+.iphoneButton{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  min-height:42px;
+  padding:0 16px;
+  border:1px solid rgba(22,27,38,.08);
+  border-radius:12px;
+  background:#f2f4f8;
+  color:#1b2230;
+  font-size:13px;
+  font-weight:600;
+  letter-spacing:-.01em;
+  box-shadow:0 1px 1px rgba(22,27,38,.03),inset 0 1px rgba(255,255,255,.85);
+  transition:transform .12s ease,background-color .16s ease,border-color .16s ease,box-shadow .16s ease;
+}
+.iphoneButton:hover{
+  background:#e9edf5;
+  border-color:#d7ddea;
+}
+.iphoneButton:active{
+  transform:scale(.97);
+}
+.iphoneButton:focus-visible{
+  outline:3px solid rgba(79,103,232,.16);
+  outline-offset:2px;
+}
+.iphoneButton.compact{
+  min-height:34px;
+  padding:0 12px;
+  border-radius:10px;
+  font-size:12px;
+}
+
+/* Welcome */
+.welcomeScreen{
+  min-height:100svh;
+  display:grid;
+  place-items:center;
+  padding:28px;
+  background:
+    radial-gradient(600px 340px at 50% 28%,rgba(100,118,238,.10),transparent 68%),
+    #f7f8fb;
+  color:#151a25;
+}
+.welcomeInner{
+  width:min(620px,100%);
+  text-align:center;
+}
+.welcomeMark{
+  width:64px;
+  height:64px;
+  margin:0 auto 24px;
+  display:grid;
+  place-items:center;
+  border-radius:20px;
+  border:1px solid #dfe5f1;
+  background:#fff;
+  color:#5269df;
+  font-size:42px;
+  box-shadow:0 12px 30px rgba(40,53,93,.08);
+}
+.welcomeEyebrow{
+  margin:0 0 13px;
+  color:#7a8497;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.16em;
+}
+.welcomeInner h1{
+  margin:0;
+  color:#141a26;
+  font-size:clamp(58px,9vw,94px);
+  font-weight:700;
+  line-height:.95;
+}
+.welcomeInner h1 span{
+  color:var(--gp-blue);
+}
+.welcomeLead{
+  max-width:560px;
+  margin:20px auto 0;
+  color:#687184;
+  font-size:16px;
+  line-height:1.7;
+}
+.welcomeButton{
+  margin-top:28px;
+  min-height:48px;
+  padding:0 19px 0 20px;
+  border-radius:14px;
+  background:#151a25;
+  border-color:#151a25;
+  color:#fff;
+  box-shadow:0 8px 20px rgba(21,26,37,.14);
+}
+.welcomeButton:hover{
+  background:#242b3a;
+  border-color:#242b3a;
+}
+.welcomeButton span{font-size:18px}
+.welcomeNote{
+  margin:15px 0 0;
+  color:#98a1b1;
+  font-size:12px;
+}
+
+/* Header refinements */
+.topbar{
+  background:rgba(255,255,255,.96)!important;
+  border-bottom-color:#e8ebf1!important;
+  box-shadow:0 3px 14px rgba(27,37,61,.04)!important;
+}
+.brandWordmark{
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif!important;
+  font-weight:700!important;
+}
+.topnav>a,.moreMenu>.moreTrigger{
+  font-weight:500!important;
+  transition:background-color .14s ease,color .14s ease,transform .12s ease!important;
+}
+.topnav>a:active,.moreMenu>.moreTrigger:active{transform:scale(.98)!important}
+.topbarActions .themeToggle,.topbarActions .signButton,.topbarActions .iconButton{
+  transition:transform .12s ease,background-color .16s ease,border-color .16s ease!important;
+}
+.topbarActions .themeToggle:active,.topbarActions .signButton:active,.topbarActions .iconButton:active{
+  transform:scale(.96)!important;
+}
+
+/* Simple home */
+.heroMain{
+  height:420px!important;
+  margin:18px auto 0!important;
+  box-shadow:0 12px 34px rgba(29,41,70,.06)!important;
+  border-radius:20px!important;
+}
+.heroContent{
+  padding:68px 48px!important;
+  width:min(690px,66%)!important;
+}
+.heroContent h1{
+  font-size:clamp(48px,5vw,72px)!important;
+  font-weight:700!important;
+  letter-spacing:-.055em!important;
+}
+.heroContent h2{font-size:22px!important;font-weight:500!important}
+.heroContent>p{font-size:14px!important}
+.heroSearch{
+  border-radius:13px!important;
+  box-shadow:0 7px 22px rgba(30,43,74,.06)!important;
+}
+.popular button{
+  min-height:34px;
+  border-radius:10px!important;
+  font-weight:500;
+}
+
+/* News panel directly under header */
+.topNewsPanel{
+  width:min(1280px,calc(100% - 40px));
+  margin:14px auto 0;
+  padding:11px 13px;
+  border:1px solid #e1e6ee;
+  border-radius:14px;
+  background:#fff;
+  box-shadow:0 5px 18px rgba(31,43,74,.045);
+}
+.topNewsIntro{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:9px;
+}
+.topNewsIntro>div{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-width:0;
+}
+.liveDot{
+  width:7px;
+  height:7px;
+  flex:0 0 auto;
+  border-radius:50%;
+  background:#34b875;
+}
+.topNewsIntro strong{font-size:12px;color:#202738}
+.topNewsUpdated{font-size:11px;color:#9099a8}
+.topNewsItems{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:8px;
+}
+.topNewsItem{
+  min-width:0;
+  display:grid;
+  gap:5px;
+  padding:10px 11px;
+  border:1px solid #edf0f4;
+  border-radius:10px;
+  background:#fafbfc;
+  transition:background-color .14s ease,border-color .14s ease,transform .12s ease;
+}
+.topNewsItem:hover{
+  background:#f5f7fb;
+  border-color:#dce2ec;
+  transform:translateY(-1px);
+}
+.topNewsItem:active{transform:scale(.985)}
+.topNewsSource{
+  font-size:9px;
+  color:#7d8797;
+  text-transform:uppercase;
+  letter-spacing:.07em;
+}
+.topNewsItem strong{
+  overflow:hidden;
+  display:-webkit-box;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+  color:#273146;
+  font-size:12px;
+  line-height:1.35;
+}
+.topNewsArrow{justify-self:end;color:#6578d5;font-size:14px}
+.topNewsLoading{padding:10px;color:#8b94a3;font-size:12px}
+
+/* Light-mode typography cleanup */
+html[data-theme="light"] body,
+html[data-theme="light"] button,
+html[data-theme="light"] input,
+html[data-theme="light"] p,
+html[data-theme="light"] span,
+html[data-theme="light"] small,
+html[data-theme="light"] strong{
+  text-shadow:none!important;
+}
+html[data-theme="light"] .heroContent h1,
+html[data-theme="light"] .heroContent h2,
+html[data-theme="light"] .sectionHeading h2,
+html[data-theme="light"] .aboutCopy h2,
+html[data-theme="light"] .platformCard h3,
+html[data-theme="light"] .articleText h3{
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,Arial,sans-serif!important;
+  color:#172033!important;
+}
+html[data-theme="light"] .sectionHeading h2{
+  font-weight:650!important;
+}
+html[data-theme="light"] .platformCard p,
+html[data-theme="light"] .articleText p,
+html[data-theme="light"] .aboutCopy p,
+html[data-theme="light"] .factRow,
+html[data-theme="light"] .worldPanel p{
+  color:#667184!important;
+}
+
+/* Keep dark mode readable */
+html[data-theme="dark"] body{
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Segoe UI",Roboto,Arial,sans-serif!important;
+}
+html[data-theme="dark"] .topNewsPanel{
+  background:#171d27;border-color:#293345;color:#edf1f7;
+}
+html[data-theme="dark"] .topNewsItem{
+  background:#1c2430;border-color:#2b3546;
+}
+html[data-theme="dark"] .topNewsItem strong{color:#e9edf4}
+html[data-theme="dark"] .topNewsSource,html[data-theme="dark"] .topNewsUpdated{color:#96a2b7}
+html[data-theme="dark"] .topNewsIntro strong{color:#edf1f7}
+
+/* Mobile */
+@media(max-width:760px){
+  .welcomeScreen{padding:22px}
+  .welcomeLead{font-size:15px}
+  .welcomeInner h1{font-size:54px}
+  .topNewsPanel{width:calc(100% - 20px);border-radius:12px}
+  .topNewsItems{grid-template-columns:1fr}
+  .topNewsItem:nth-child(n+3){display:none}
+  .heroMain{height:510px!important;width:calc(100% - 20px)!important}
+  .heroContent{width:100%!important;padding:60px 22px 230px!important}
+  .heroContent h1{font-size:52px!important}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .iphoneButton,.topnav>a,.moreMenu>.moreTrigger,.topNewsItem{transition:none!important}
+}
