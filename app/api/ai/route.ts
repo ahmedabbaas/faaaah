@@ -16,6 +16,7 @@ type Country = {
 export async function POST(request: Request) {
   const body = await request.json().catch(() => ({}));
   const q = String(body.question || "").trim();
+  const context = String(body.context || "").trim();
   if (!q) return NextResponse.json({ answer: "Ask me something about GlobalPedia." });
 
   const apiKey = process.env.OPENAI_API_KEY;
@@ -27,7 +28,7 @@ export async function POST(request: Request) {
         headers:{Authorization:"Bearer "+apiKey,"Content-Type":"application/json"},
         body:JSON.stringify({
           model,
-          input:"You are GlobalPedia AI. Answer clearly and briefly. Use only information you can support. User question: "+q,
+          input:"You are GlobalPedia AI. Answer clearly and briefly. Use only information you can support. If article context is supplied, answer from that context first and clearly separate broader knowledge. Article context: "+(context || "none")+"\nUser question: "+q,
           max_output_tokens:500
         }),
         signal:AbortSignal.timeout(15000)
@@ -62,8 +63,13 @@ export async function POST(request: Request) {
       const c = data[0];
       if (c) {
         return NextResponse.json({
-          answer:(c.name || q)+" is in "+(c.region || "—")+". Capital: "+(c.capital?.[0] || "—")+". Population: "+new Intl.NumberFormat("en").format(c.population || 0)+". Languages: "+Object.values(c.languages || {}).join(", ") || "—"+". Currency: "+Object.values(c.currencies || {}).map(x=>x.name || "").filter(Boolean).join(", ")+" .",
-          mode:"country"
+          const languages = Object.values(c.languages || {}).join(", ") || "—";
+          const currencies = Object.values(c.currencies || {}).map(x=>x.name || "").filter(Boolean).join(", ") || "—";
+          return NextResponse.json({
+            answer:(c.name || q)+" is in "+(c.region || "—")+". Capital: "+(c.capital?.[0] || "—")+". Population: "+new Intl.NumberFormat("en").format(c.population || 0)+". Languages: "+languages+". Currency: "+currencies+".",
+            source: { type: "country", name: c.name || q },
+            mode:"country"
+          });
         });
       }
     }
