@@ -19,9 +19,12 @@ const sportsFeeds: [string, string][] = [
 ];
 
 const gameFeeds: [string, string][] = [
-  ["Games", "https://news.google.com/rss/search?q=video+game+news+release+date+announcements&hl=en-US&gl=US&ceid=US:en"],
-  ["Rockstar", "https://news.google.com/rss/search?q=Rockstar+Games+GTA+VI+Red+Dead+news&hl=en-US&gl=US&ceid=US:en"],
-  ["PlayStation", "https://news.google.com/rss/search?q=PlayStation+game+announcements&hl=en-US&gl=US&ceid=US:en"],
+  ["GTA VI", "https://news.google.com/rss/search?q=GTA+VI+news&hl=en-US&gl=US&ceid=US:en"],
+  ["Upcoming Games", "https://news.google.com/rss/search?q=upcoming+games+2026+release+date&hl=en-US&gl=US&ceid=US:en"],
+  ["Nintendo", "https://news.google.com/rss/search?q=Nintendo+game+announcements+2026&hl=en-US&gl=US&ceid=US:en"],
+  ["PlayStation", "https://news.google.com/rss/search?q=PlayStation+game+announcements+2026&hl=en-US&gl=US&ceid=US:en"],
+  ["Xbox", "https://news.google.com/rss/search?q=Xbox+game+announcements+2026&hl=en-US&gl=US&ceid=US:en"],
+  ["PC Gaming", "https://news.google.com/rss/search?q=PC+gaming+new+games+2026&hl=en-US&gl=US&ceid=US:en"],
 ];
 
 const categoryFeeds: Record<string, [string, string][]> = {
@@ -103,8 +106,25 @@ function getAttr(xml: string, tag: string, attr: string) {
   return match ? match[1] : "";
 }
 
-function fallbackImage(topic: string) {
-  const images: Record<string, string> = {
+function getSource(xml: string) {
+  return getTag(xml, "source") || "Google News";
+}
+
+function extractImage(xml: string, topic: string) {
+  const direct =
+    getAttr(xml, "media:content", "url") ||
+    getAttr(xml, "media:thumbnail", "url") ||
+    getAttr(xml, "enclosure", "url");
+
+  if (direct) return direct.startsWith("//") ? `https:${direct}` : direct;
+
+  const description = xml.match(/<description[\s\S]*?<img[^>]+src=["']([^"']+)["']/i)?.[1];
+  if (description) return description.startsWith("//") ? `https:${description}` : description;
+
+  const content = xml.match(/<content:encoded[\s\S]*?<img[^>]+src=["']([^"']+)["']/i)?.[1];
+  if (content) return content.startsWith("//") ? `https:${content}` : content;
+
+  const fallback: Record<string, string> = {
     World: "https://images.unsplash.com/photo-1521292270410-a8c4d7166c7c?auto=format&fit=crop&q=82&w=1000",
     Pakistan: "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&q=82&w=1000",
     Technology: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=82&w=1000",
@@ -113,33 +133,33 @@ function fallbackImage(topic: string) {
     Cricket: "https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&q=82&w=1000",
     Sports: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&q=82&w=1000",
     Games: "https://images.unsplash.com/photo-1542751110-97427bbecf20?auto=format&fit=crop&q=82&w=1000",
-    Rockstar: "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&q=82&w=1000",
+    "GTA VI": "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&q=82&w=1000",
+    "Upcoming Games": "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=82&w=1000",
+    Nintendo: "https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?auto=format&fit=crop&q=82&w=1000",
     PlayStation: "https://images.unsplash.com/photo-1605901309584-818e25960a8f?auto=format&fit=crop&q=82&w=1000",
+    Xbox: "https://images.unsplash.com/photo-1621259182978-fbf93132d53d?auto=format&fit=crop&q=82&w=1000",
+    "PC Gaming": "https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?auto=format&fit=crop&q=82&w=1000",
   };
-  return images[topic] || images.World;
+
+  return fallback[topic] || fallback.Games;
 }
 
 function parseItem(item: string, topic: string) {
   const rawTitle = getTag(item, "title");
-  const parts = rawTitle.split(" - ");
+  const titleParts = rawTitle.split(" - ");
   const descriptionHtml = getTag(item, "description");
-  const image =
-    getTag(item, "media:content") ||
-    getAttr(item, "media:content", "url") ||
-    getAttr(item, "media:thumbnail", "url") ||
-    getAttr(item, "enclosure", "url") ||
-    ((descriptionHtml.match(/https?:\/\/[^"' <]+\.(?:jpg|jpeg|png|webp)/i) || [])[0] ?? fallbackImage(topic));
+  const link = getTag(item, "link") || getTag(item, "guid");
 
   return {
-    id: getTag(item, "link"),
-    title: parts.length > 1 ? parts.slice(0, -1).join(" - ") : rawTitle,
+    id: link || rawTitle,
+    title: titleParts.length > 1 ? titleParts.slice(0, -1).join(" - ") : rawTitle,
     description: descriptionHtml.slice(0, 220),
-    link: getTag(item, "link"),
-    source: parts.length > 1 ? parts[parts.length - 1] : "News",
-    publishedAt: getTag(item, "pubDate"),
+    link,
+    source: getSource(item) || (titleParts.length > 1 ? titleParts[titleParts.length - 1] : "News"),
+    publishedAt: getTag(item, "pubDate") || getTag(item, "dc:date"),
     category: "Live News",
     topic,
-    image,
+    image: extractImage(item, topic),
   };
 }
 
@@ -175,7 +195,7 @@ export async function GET(request: Request) {
     .flatMap((result) => (result.status === "fulfilled" ? result.value : []))
     .filter((item, index, array) => array.findIndex((x) => x.id === item.id) === index)
     .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
-    .slice(0, 30);
+    .slice(0, 36);
 
   return NextResponse.json(
     { news, updatedAt: new Date().toISOString(), mode: mode || "global" },

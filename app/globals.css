@@ -4189,3 +4189,241 @@ html[data-theme="dark"] .relatedArticleGrid span,html[data-theme="dark"] .articl
   .knowledgeGraphLinks{justify-content:flex-start}
   .todayFactStrip{align-items:flex-start;flex-direction:column}
 }
+
+
+/* GLOBALPEDIA READABILITY + PRODUCT POLISH */
+
+html { font-size: 120%; }
+body { font-size: 16px !important; }
+
+.welcomeScreen{
+  min-height:100svh!important;
+  width:100%!important;
+  display:grid!important;
+  place-items:center!important;
+  align-content:center!important;
+  justify-content:center!important;
+  padding:0 24px!important;
+}
+.welcomeInner{
+  width:min(700px,100%)!important;
+  margin:auto!important;
+  text-align:center!important;
+  transform:none!important;
+}
+.welcomeInner h1{font-size:clamp(64px,9vw,100px)!important}
+.welcomeLead{font-size:19px!important;line-height:1.65!important;color:#536071!important}
+.welcomeEyebrow{font-size:13px!important;color:#5f6b7c!important}
+.welcomeNote{font-size:13px!important;color:#727d8d!important}
+.welcomeButton{font-size:15px!important;min-height:52px!important}
+
+.authPage{
+  min-height:100svh!important;
+  padding:24px!important;
+  display:grid!important;
+  place-items:center!important;
+  align-content:center!important;
+  justify-content:center!important;
+}
+.authShell{
+  width:min(500px,calc(100vw - 32px))!important;
+  margin:auto!important;
+  gap:16px!important;
+  justify-items:stretch!important;
+}
+.authTop{display:flex;align-items:center;justify-content:space-between;gap:15px;width:100%}
+.authBrand{font-size:28px!important}
+.authIntro{width:100%;padding:0 4px}
+.authIntro>span{font-size:11px;color:#667286;font-weight:700;letter-spacing:.13em}
+.authIntro h1{margin:7px 0 4px;color:#172033;font-size:28px;line-height:1.05}
+.authIntro p{margin:0;color:#677386;font-size:14px;line-height:1.55}
+.authShell .cl-rootBox{width:100%!important}
+.authShell .cl-card{
+  width:100%!important;
+  padding:8px!important;
+  border-radius:22px!important;
+  background:#ffffff!important;
+  border:1px solid #dce3ec!important;
+  box-shadow:0 20px 60px rgba(24,39,65,.10)!important;
+  color:#172033!important;
+}
+.authShell .cl-headerTitle{font-size:25px!important;color:#172033!important}
+.authShell .cl-headerSubtitle,
+.authShell .cl-footerActionText,
+.authShell .cl-formFieldLabel,
+.authShell .cl-dividerText{color:#5d6879!important}
+.authShell .cl-formFieldInput{
+  color:#172033!important;
+  background:#fbfcfe!important;
+  border-color:#d8e0e9!important;
+}
+.authShell .cl-socialButtonsBlockButton{
+  background:#fff!important;
+  color:#253047!important;
+  border-color:#d9e1ea!important;
+}
+.authShell .cl-socialButtonsBlockButtonText{color:#253047!important}
+.authShell .cl-dividerLine{background:#dde4ec!important}
+.authShell .cl-footerActionLink{color:#4f65d4!important}
+.authShell .cl-formButtonPrimary{
+  background:#172033!important;
+  color:#fff!important;
+  box-shadow:0 8px 22px rgba(23,32,51,.14)!important;
+}
+html[data-theme="dark"] .authPage{background:#070c13!important}
+html[data-theme="dark"] .authShell .cl-card{background:#121923!important;border-color:#2c394a!important;color:#eef2f7!important}
+html[data-theme="dark"] .authIntro h1,
+html[data-theme="dark"] .authShell .cl-headerTitle,
+html[data-theme="dark"] .authShell .cl-formFieldLabel{color:#eef2f7!important}
+html[data-theme="dark"] .authIntro p,
+html[data-theme="dark"] .authIntro>span,
+html[data-theme="dark"] .authShell .cl-headerSubtitle,
+html[data-theme="dark"] .authShell .cl-footerActionText,
+html[data-theme="dark"] .authShell .cl-dividerText{color:#a8b3c1!important}
+
+.heroContent>p{font-size:18px!important;color:#d0dbe5!important}
+.heroContent .heroTag{font-size:13px!important}
+.heroContent h2{font-size:35px!important}
+.heroSearch input{font-size:18px!important}
+.popular span,.popular button{font-size:13px!important}
+.categoryCard strong{font-size:17px!important}
+.categoryCard small{font-size:13px!important}
+.sectionHeading h2{font-size:36px!important}
+.sectionHeading a{font-size:14px!important}
+.platformCard h3{font-size:18px!important}
+.platformCard p{font-size:14px!important;line-height:1.55!important}
+.topNewsSource{font-size:12px!important}
+.topNewsItem strong{font-size:16px!important;line-height:1.35!important}
+.topNewsItem{align-items:center!important}
+.topNewsThumb{width:62px;height:50px;object-fit:cover;border-radius:9px;flex:none}
+.topNewsCopy{display:grid;gap:4px;min-width:0}
+.articleText h3{font-size:20px!important}
+.articleText p{font-size:14px!important;line-height:1.6!important}
+.articleMeta{font-size:12px!important}
+.factRow span,.factRow strong{font-size:13px!important}
+.regionCard span{font-size:14px!important}
+.pageHero .heroTag{font-size:12px!important;color:#4f5d70!important}
+.pageHero h1{font-size:clamp(44px,5vw,70px)!important}
+.pageHero>p{font-size:18px!important;color:#4f5d70!important}
+.pageSearch input{font-size:17px!important}
+.pageSearch strong{font-size:12px!important}
+.searchFilters button,.todayCategoryFilters button{font-size:14px!important}
+.resultHeading h2{font-size:24px!important}
+.resultCard h3{font-size:19px!important}
+.resultCard p{font-size:14px!important;line-height:1.55!important}
+.searchRecentHeading h2{font-size:24px!important}
+.searchRecentHeading span,.todayLead>div>span{font-size:11px!important}
+.searchRecentList button{font-size:14px!important}
+.topnav>a,.moreMenu>.moreTrigger{font-size:14px!important}
+.headerSearchButton small{font-size:12px!important}
+.themeToggle small{font-size:12px!important}
+.moreDropdown a{font-size:13px!important}
+.aiMessage p{font-size:15px!important;line-height:1.65!important}
+.aiComposer input{font-size:16px!important}
+.aiComposer button{font-size:14px!important}
+.aiFooter{font-size:12px!important}
+.liveFeedHeading h2{font-size:34px!important}
+.liveFeedHeading p{font-size:15px!important}
+.liveFeedCard h3{font-size:18px!important}
+.liveFeedCard p{font-size:14px!important;line-height:1.55!important}
+.liveFeedMeta span,.liveFeedMeta time,.liveFeedSource{font-size:12px!important}
+.gameNewsGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}
+.gameNewsCard{display:grid;grid-template-columns:110px 1fr;gap:12px;align-items:center;padding:10px;border:1px solid #e2e7ee;border-radius:13px;background:#fff}
+.gameNewsCard img{width:110px;height:80px;object-fit:cover;border-radius:9px}
+.gameNewsCard span{display:block;font-size:10px;color:#5d6dcc;font-weight:700;text-transform:uppercase}
+.gameNewsCard strong{display:block;margin:4px 0;color:#253047;font-size:13px;line-height:1.25}
+.gameNewsCard small{font-size:10px;color:#7a8494}
+html[data-theme="dark"] .gameNewsCard{background:#1b2430;border-color:#2c3748}
+html[data-theme="dark"] .gameNewsCard strong{color:#eef2f7}
+html[data-theme="dark"] .gameNewsCard small{color:#aab5c4}
+.engineHero .engineSearch{display:flex;align-items:center;gap:10px;width:min(920px,100%);height:58px;margin-top:20px;padding:0 15px;border:1px solid #dbe3ed;border-radius:14px;background:#fff;box-shadow:0 12px 28px rgba(26,38,67,.06)}
+.engineSearch span{font-size:24px;color:#596bd0}
+.engineSearch input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:#172033;font-size:18px}
+.engineSearch kbd{padding:4px 7px;border:1px solid #dce3ea;border-radius:6px;background:#f4f6f9;color:#7a8495;font-size:11px}
+.engineFilters{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px}
+.engineFilters button{min-height:36px;padding:0 13px;border:1px solid #dde4ec;border-radius:10px;background:#f8f9fc;color:#5f6b7c;font-size:13px;font-weight:700}
+.engineFilters button.active{background:#172033;color:#fff;border-color:#172033}
+.enginePage{padding-top:26px;padding-bottom:80px}
+.engineStats{display:flex;justify-content:space-between;align-items:center;padding:12px 0;color:#697486;font-size:13px}
+.engineStats strong{font-size:18px;color:#253047}
+.engineBlock{margin-top:16px}
+.engineHeading{display:flex;align-items:center;gap:10px;margin-bottom:11px}
+.engineHeading span{color:#6574cf;font-size:11px;font-weight:800}
+.engineHeading h2{margin:0;font-size:25px;color:#243046}
+.engineHeading small{padding:3px 7px;border-radius:999px;background:#eef1f7;color:#758093;font-size:11px}
+.engineCards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.engineCard{position:relative;border:1px solid #e2e7ee;border-radius:14px;background:#fff;padding:16px}
+.engineCard>a{display:grid;gap:6px;padding-right:30px}
+.engineCard span{color:#6272cc;font-size:10px;font-weight:700}
+.engineCard h3{margin:0;color:#253047;font-size:17px}
+.engineCard p{margin:0;color:#707b8c;font-size:13px;line-height:1.55}
+.engineCard .bookmarkButton{position:absolute;top:10px;right:10px}
+.engineCountryCards{grid-template-columns:repeat(4,1fr)}
+.engineCountry{display:flex;gap:10px;align-items:center;padding:12px;border:1px solid #e2e7ee;border-radius:12px;background:#fff}
+.engineCountry img{width:38px;height:28px;object-fit:cover;border-radius:5px}
+.engineCountry div{display:grid;gap:3px}
+.engineCountry strong{font-size:13px;color:#253047}
+.engineCountry span{font-size:11px;color:#748094}
+.engineNewsGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.engineNews{display:grid;grid-template-columns:120px 1fr;gap:12px;padding:10px;border:1px solid #e2e7ee;border-radius:13px;background:#fff}
+.engineNews img{width:120px;height:88px;object-fit:cover;border-radius:9px}
+.engineNews div{display:grid;align-content:center;gap:5px}
+.engineNews span{font-size:10px;color:#6172cc;font-weight:700}
+.engineNews h3{margin:0;color:#253047;font-size:16px;line-height:1.3}
+.engineNews small{color:#7a8494;font-size:10px}
+.engineEmpty{display:grid;gap:7px;margin-top:20px;padding:25px;border:1px dashed #dce3ec;border-radius:14px;text-align:center}
+.engineEmpty strong{font-size:17px;color:#253047}
+.engineEmpty span{color:#6f7a8b;font-size:13px}
+.engineEmpty a{color:#5d6dcc;font-size:13px;font-weight:700}
+html[data-theme="dark"] .engineSearch,
+html[data-theme="dark"] .engineCard,
+html[data-theme="dark"] .engineCountry,
+html[data-theme="dark"] .engineNews,
+html[data-theme="dark"] .engineEmpty{background:#1a222d!important;border-color:#2c3747!important}
+html[data-theme="dark"] .engineSearch input,
+html[data-theme="dark"] .engineCard h3,
+html[data-theme="dark"] .engineCountry strong,
+html[data-theme="dark"] .engineNews h3,
+html[data-theme="dark"] .engineEmpty strong{color:#edf2f7!important}
+html[data-theme="dark"] .engineCard p,
+html[data-theme="dark"] .engineCountry span,
+html[data-theme="dark"] .engineNews small,
+html[data-theme="dark"] .engineEmpty span{color:#aab5c3!important}
+
+html[data-theme="light"] .topbar .topnav>a,
+html[data-theme="light"] .topbar .moreTrigger,
+html[data-theme="light"] .topbar .brandWordmark{color:#172033!important}
+html[data-theme="light"] .topbar .headerSearchButton,
+html[data-theme="light"] .topbar .signButton{color:#253047!important}
+html[data-theme="light"] .categoryCard strong,
+html[data-theme="light"] .categoryCard small,
+html[data-theme="light"] .platformCard h3,
+html[data-theme="light"] .platformCard p,
+html[data-theme="light"] .sectionHeading h2,
+html[data-theme="light"] .sectionHeading a,
+html[data-theme="light"] .articleText h3,
+html[data-theme="light"] .articleText p,
+html[data-theme="light"] .articleMeta,
+html[data-theme="light"] .factRow span,
+html[data-theme="light"] .factRow strong{color:#253047!important}
+html[data-theme="light"] .topNewsPanel{color:#253047!important}
+html[data-theme="light"] .topNewsItem{background:#fff!important;color:#253047!important;border-color:#dfe5ed!important}
+html[data-theme="light"] .topNewsSource{color:#5d6dcc!important}
+html[data-theme="light"] .topNewsItem strong{color:#202a3d!important}
+html[data-theme="dark"] .topNewsThumb{filter:saturate(.9) brightness(.88)}
+html[data-theme="dark"] .heroContent>p{color:#bcc8d4!important}
+html[data-theme="dark"] .pageHero .heroTag{color:#abb8c6!important}
+html[data-theme="dark"] .pageHero>p{color:#aeb9c8!important}
+
+@media(max-width:980px){
+  .gameNewsGrid{grid-template-columns:1fr 1fr}
+  .engineCards{grid-template-columns:1fr 1fr}
+  .engineCountryCards{grid-template-columns:1fr 1fr}
+}
+@media(max-width:720px){
+  .gameNewsGrid,.engineCards,.engineCountryCards,.engineNewsGrid{grid-template-columns:1fr}
+  .engineNews{grid-template-columns:95px 1fr}
+  .engineNews img{width:95px;height:75px}
+  .authShell{width:min(100%,480px)!important}
+  .welcomeLead{font-size:17px!important}
+}

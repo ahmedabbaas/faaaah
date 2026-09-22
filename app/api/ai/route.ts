@@ -5,27 +5,33 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 type Country = {
-  name:string;
-  capital?:string[];
-  region?:string;
-  population?:number;
-  languages?:Record<string,string>;
-  currencies?:Record<string,{name?:string}>;
+  name: string;
+  capital?: string[];
+  region?: string;
+  population?: number;
+  languages?: Record<string, string>;
+  currencies?: Record<string, { name?: string }>;
+};
+
+type AiBody = {
+  question?: unknown;
+  context?: unknown;
 };
 
 export async function POST(request: Request) {
-  const body = await request.json().catch(() => ({}));
+  const body = (await request.json().catch(() => ({}))) as AiBody;
   const q = String(body.question || "").trim();
   const context = String(body.context || "").trim();
 
   if (!q) {
-    return NextResponse.json({ answer: "Ask me something about GlobalPedia." });
+    return NextResponse.json({ answer: "Ask a specific question." });
   }
 
   const apiKey = process.env.OPENAI_API_KEY;
+
   if (apiKey) {
     try {
-      const model = process.env.OPENAI_MODEL || "gpt-4.1-mini";
+      const model = process.env.OPENAI_MODEL || "gpt-5.6-sol";
       const response = await fetch("https://api.openai.com/v1/responses", {
         method: "POST",
         headers: {
@@ -34,14 +40,17 @@ export async function POST(request: Request) {
         },
         body: JSON.stringify({
           model,
+          instructions:
+            "You are Global AI for GlobalPedia. Answer only the user's actual question. Do not add unrelated facts, filler, recommendations, or a generic introduction. Be direct and concise. When the question asks for current, latest, today's, or recent information, use web search and answer from current evidence. Never invent facts. If the user asks for a specific item, answer that item and stop. If article context is provided, use it when relevant but do not drift beyond the question.",
           input:
-            "You are GlobalPedia AI. Answer clearly and briefly. Use only information you can support. If article context is supplied, answer from that context first and clearly separate broader knowledge. Article context: " +
-            (context || "none") +
-            "\nUser question: " +
+            (context ? "Article context:\n" + context + "\n\n" : "") +
+            "User question:\n" +
             q,
-          max_output_tokens: 500,
+          tools: [{ type: "web_search" }],
+          reasoning: { effort: "low" },
+          max_output_tokens: 700,
         }),
-        signal: AbortSignal.timeout(15000),
+        signal: AbortSignal.timeout(20000),
       });
 
       const data = await response.json();
@@ -53,20 +62,26 @@ export async function POST(request: Request) {
           .join(" ");
 
       if (response.ok && answer) {
-        return NextResponse.json({ answer, mode: "ai", source: { type: "model" } });
+        return NextResponse.json({
+          answer,
+          mode: "ai",
+          source: { type: "model", model },
+        });
       }
     } catch {
-      // Fall back to the local knowledge index when the external AI request fails.
+      // Use local knowledge fallbacks below.
     }
   }
 
   const normalized = q.toLowerCase();
   const exact = entries.find((entry) =>
-    (entry.title + " " + entry.description + " " + entry.category).toLowerCase().includes(normalized)
+    (entry.title + " " + entry.description + " " + entry.category)
+      .toLowerCase()
+      .includes(normalized)
   );
   const tokenMatch = entries.find((entry) =>
     normalized.split(/\s+/).some(
-      (word: string) =>
+      (word) =>
         word.length > 3 &&
         (entry.title + " " + entry.description).toLowerCase().includes(word)
     )
@@ -75,13 +90,7 @@ export async function POST(request: Request) {
 
   if (article) {
     return NextResponse.json({
-      answer:
-        article.title +
-        "\n\n" +
-        article.description +
-        "\n\nCategory: " +
-        article.category +
-        ". Open the full GlobalPedia article for the longer explanation.",
+      answer: article.description,
       mode: "knowledge",
       source: { type: "article", slug: article.slug, title: article.title },
     });
@@ -92,10 +101,7 @@ export async function POST(request: Request) {
       "https://restcountries.com/v3.1/name/" +
         encodeURIComponent(q) +
         "?fields=name,capital,region,population,languages,currencies",
-      {
-        cache: "no-store",
-        signal: AbortSignal.timeout(6000),
-      }
+      { cache: "no-store", signal: AbortSignal.timeout(6000) }
     );
 
     if (response.ok) {
@@ -103,7 +109,8 @@ export async function POST(request: Request) {
       const country = data[0];
 
       if (country) {
-        const languages = Object.values(country.languages || {}).join(", ") || "—";
+        const languages =
+          Object.values(country.languages || {}).join(", ") || "—";
         const currencies =
           Object.values(country.currencies || {})
             .map((value) => value.name || "")
@@ -130,12 +137,12 @@ export async function POST(request: Request) {
       }
     }
   } catch {
-    // Fall back to the search response when the country service is unavailable.
+    // The country service is optional.
   }
 
   return NextResponse.json({
     answer:
-      "I couldn't find a direct match in the current GlobalPedia index. Try a country name, article title, category, or configure the AI provider key for broader answers.",
+      "I could not find a direct answer in the current GlobalPedia index. Ask a more specific question or enable the AI provider for broader answers.",
     mode: "search",
   });
 }

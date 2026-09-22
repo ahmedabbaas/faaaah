@@ -329,6 +329,18 @@ export default function WorldKnowledgeHub({ initialTab = "atlas" }: { initialTab
               </a>
             ))}
           </div>
+          <div className="gameNewsGrid">
+            {gameNews.slice(0, 6).map((item) => (
+              <a className="gameNewsCard" href={item.link} target="_blank" rel="noreferrer" key={item.id}>
+                <img src={item.image || ""} alt="" loading="lazy" />
+                <div>
+                  <span>{item.topic || "GAMES"}</span>
+                  <strong>{item.title}</strong>
+                  <small>{item.source}</small>
+                </div>
+              </a>
+            ))}
+          </div>
           <div className="newsStrip">
             {gameNews.map((item) => (
               <a href={item.link} target="_blank" rel="noreferrer" key={item.id}>

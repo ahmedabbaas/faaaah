@@ -310,12 +310,13 @@ export default function GlobalPediaHome() {
         </div>
         <div className="platformGrid">
           {[
+            ["Global Engine","Search the whole world in one place.","/engine","⌕"],
             ["Universal Search","Search countries, articles and live signals.","/search","⌕"],
             ["Compare Countries","Put two country profiles side by side.","/compare","⇄"],
             ["World Tools","Clocks, units, age and currency reference.","/tools","◷"],
             ["Live Trends","See which topics are active in the current feed.","/trends","↗"],
             ["Daily Quiz","Five questions. One score. Zero excuses.","/quiz","?"],
-            ["AI Explorer","Ask GlobalPedia about the world.","/ai","AI"],
+            ["Global AI","Ask one precise question and get one precise answer.","/ai","AI"],
             ["World Timeline","Travel through major eras and turning points.","/timeline","↳"],
           ].map(([title,description,href,icon]) => (
             <Link className="platformCard" href={href} key={href}>
@@ -358,8 +359,11 @@ export default function GlobalPediaHome() {
                 rel="noreferrer"
                 key={item.id}
               >
-                <span className="topNewsSource">{item.source}</span>
-                <strong>{item.title}</strong>
+                {item.image && <img className="topNewsThumb" src={item.image} alt="" loading="lazy" />}
+                <div className="topNewsCopy">
+                  <span className="topNewsSource">{item.source}</span>
+                  <strong>{item.title}</strong>
+                </div>
                 <span className="topNewsArrow">↗</span>
               </a>
             ))

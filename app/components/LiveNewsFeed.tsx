@@ -29,8 +29,6 @@ export default function LiveNewsFeed({
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState("");
-  const [secondsUntilRefresh, setSecondsUntilRefresh] = useState(600);
-  const [refreshNotice, setRefreshNotice] = useState("");
   const itemsRef = useRef<NewsItem[]>([]);
 
   const load = useCallback(async (manual = false) => {
@@ -41,15 +39,9 @@ export default function LiveNewsFeed({
       if (!response.ok) throw new Error("feed");
       const data = (await response.json()) as { news?: NewsItem[]; updatedAt?: string };
       const nextItems = Array.isArray(data.news) ? data.news : [];
-      setRefreshNotice(
-        manual
-          ? `${nextItems.filter((item) => !itemsRef.current.some((old) => old.id === item.id)).length} new ${nextItems.length === 1 ? "story" : "stories"} found`
-          : ""
-      );
       itemsRef.current = nextItems;
       setItems(nextItems);
       setUpdatedAt(data.updatedAt || new Date().toISOString());
-      setSecondsUntilRefresh(600);
     } catch {
       setError("Live feed is temporarily unavailable.");
     } finally {
@@ -62,21 +54,6 @@ export default function LiveNewsFeed({
     void load();
   }, [load]);
 
-  useEffect(() => {
-    const timer = window.setInterval(() => {
-      setSecondsUntilRefresh((previous) => {
-        if (previous <= 1) {
-          void load();
-          return 600;
-        }
-        return previous - 1;
-      });
-    }, 1000);
-
-    return () => window.clearInterval(timer);
-  }, [load]);
-
-  const countdown = `${String(Math.floor(secondsUntilRefresh / 60)).padStart(2, "0")}:${String(secondsUntilRefresh % 60).padStart(2, "0")}`;
 
   return (
     <section className="liveFeedSection sectionWrap">
@@ -88,8 +65,7 @@ export default function LiveNewsFeed({
         </div>
         <div className="liveFeedControls">
           <span>{updatedAt ? `Updated ${new Date(updatedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}` : "Updating..."}</span>
-          <span className="liveCountdown" aria-live="polite">Next update <strong>{countdown}</strong></span>
-          {refreshNotice && <span className="liveRefreshNotice">{refreshNotice}</span>}
+                    {refreshNotice && <span className="liveRefreshNotice">{refreshNotice}</span>}
           <button onClick={() => void load(true)} disabled={refreshing}>
             {refreshing ? "Refreshing…" : "↻ Refresh"}
           </button>
