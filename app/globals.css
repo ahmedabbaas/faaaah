@@ -2120,3 +2120,432 @@ html[data-theme="light"] .timelineControls span{color:#766c61;border-color:rgba(
   .timelineDate{grid-column:2;text-align:left;padding-top:0;margin-top:-2px}
   .timelineCard{grid-column:2}
 }
+
+/* GLOBALPEDIA UI 2026 · ATLAS COMMAND CENTER */
+:root{
+  --atlas-bg:#151311;
+  --atlas-panel:#1e1a16;
+  --atlas-panel-2:#251f19;
+  --atlas-gold:#d7a15f;
+  --atlas-text:#f4ecdf;
+  --atlas-muted:#918578;
+  --atlas-line:rgba(230,213,188,.12);
+}
+
+body{
+  background:
+    radial-gradient(900px 520px at 48% -10%,rgba(215,161,95,.08),transparent 65%),
+    radial-gradient(700px 500px at 100% 60%,rgba(107,87,64,.07),transparent 65%),
+    var(--atlas-bg);
+}
+
+main{
+  padding-left:248px;
+  overflow:hidden;
+}
+
+.topbar{
+  position:fixed;
+  left:18px;
+  top:18px;
+  bottom:18px;
+  right:auto;
+  width:210px;
+  height:auto;
+  z-index:60;
+  border-radius:22px;
+  border:1px solid var(--atlas-line);
+  background:linear-gradient(180deg,rgba(31,26,22,.96),rgba(22,20,18,.96));
+  box-shadow:0 24px 70px rgba(0,0,0,.3);
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:0;
+  padding:18px 14px;
+  backdrop-filter:blur(24px);
+}
+
+.brand{
+  padding:8px 8px 18px;
+  border-bottom:1px solid var(--atlas-line);
+  justify-content:flex-start;
+}
+
+.navLabel{
+  margin:18px 8px 8px;
+  color:#746a5f;
+  font-size:8px;
+  font-weight:800;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+}
+
+.navCenter{
+  width:100%;
+  margin:0;
+  display:block;
+}
+
+.topnav{
+  display:grid;
+  gap:4px;
+  width:100%;
+  margin:0;
+  font-size:10px;
+}
+
+.topnav > a,
+.moreMenu > .moreTrigger{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  width:100%;
+  padding:11px 11px;
+  border-radius:10px;
+  color:#8d8174;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+
+.topnav > a:hover,
+.topnav > a.active,
+.moreMenu > .moreTrigger:hover,
+.moreMenu > .moreTrigger.active{
+  color:#f0e5d6;
+  background:rgba(215,161,95,.075);
+}
+
+.topnav a.active:after{display:none}
+
+.moreMenu{width:100%}
+.moreDropdown{
+  position:static;
+  width:100%;
+  margin-top:3px;
+  box-shadow:none;
+  border-radius:10px;
+  background:#171411;
+}
+
+.headerSearchButton{
+  width:100%;
+  justify-content:flex-start;
+  padding:10px 11px;
+  border-radius:10px;
+}
+.headerSearchButton small{display:block}
+.headerSearchButton kbd{margin-left:auto}
+
+.railRule{
+  height:1px;
+  width:100%;
+  background:var(--atlas-line);
+  margin:15px 0 12px;
+}
+
+.topbarActions{
+  margin-top:auto;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:8px;
+}
+
+.topbarActions .themeToggle,
+.topbarActions .iconButton,
+.topbarActions .signButton,
+.topbarActions .menuButton{
+  width:100%;
+}
+
+.topbarActions .menuButton{display:none}
+
+.heroMain{
+  min-height:780px;
+  height:calc(100vh - 28px);
+  max-height:none;
+  margin:14px 18px 0;
+  border-radius:30px;
+  border:1px solid var(--atlas-line);
+  overflow:hidden;
+  box-shadow:0 30px 90px rgba(0,0,0,.28);
+}
+
+.heroImage{
+  left:auto;
+  right:0;
+  width:61%;
+  object-position:center;
+  clip-path:polygon(17% 0,100% 0,100% 100%,0 100%);
+  filter:saturate(.6) sepia(.22) contrast(1.1) brightness(.6);
+}
+
+.heroOverlay{
+  background:
+    linear-gradient(90deg,#151210 0%,#151210 30%,rgba(21,18,16,.92) 43%,rgba(21,18,16,.45) 62%,rgba(21,18,16,.25) 100%),
+    linear-gradient(0deg,rgba(16,14,12,.76),transparent 50%);
+}
+
+.heroContent{
+  width:min(650px,64%);
+  padding:150px 0 70px 7%;
+}
+
+.heroContent h1{
+  max-width:590px;
+  font-size:clamp(82px,8vw,126px);
+  line-height:.84;
+}
+
+.heroContent h2{
+  max-width:470px;
+  font-size:25px;
+  margin-top:16px;
+}
+
+.heroContent>p{
+  max-width:510px;
+  font-size:13px;
+}
+
+.heroSearch{
+  width:min(560px,100%);
+  margin-top:28px;
+}
+
+.heroAside{
+  top:auto;
+  right:6%;
+  bottom:10%;
+  padding:16px 18px;
+  border:1px solid rgba(231,215,192,.13);
+  border-radius:16px;
+  background:rgba(22,19,16,.55);
+  backdrop-filter:blur(16px);
+}
+.heroAside p{
+  margin:0;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:19px;
+}
+
+.categorySection{
+  padding:18px 28px 14px;
+  margin:0 18px;
+  border:1px solid var(--atlas-line);
+  border-radius:22px;
+}
+
+.categoryGrid{
+  grid-template-columns:repeat(8,minmax(0,1fr));
+  gap:6px;
+}
+
+.categoryCard{
+  min-height:110px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  padding:14px 10px;
+  border-radius:13px;
+}
+
+.platformShelf,
+.liveNewsSection,
+.contentSection,
+.regionSection,
+.aboutSection{
+  margin:18px;
+  border:1px solid var(--atlas-line);
+  border-radius:22px;
+}
+
+.sectionWrap{padding:30px}
+.sectionHeading{margin-bottom:20px}
+
+.platformGrid{
+  grid-template-columns:repeat(6,minmax(0,1fr));
+}
+
+.platformCard{
+  min-height:150px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:16px;
+  padding:18px;
+  border-radius:14px;
+}
+
+.platformIcon{
+  width:42px;
+  height:42px;
+  border-radius:12px;
+}
+
+.liveNewsSection .newsGrid{
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+}
+
+.liveNewsCard{
+  border-radius:14px;
+}
+
+.contentColumns{
+  grid-template-columns:minmax(0,1fr) 300px;
+}
+
+.articleGrid{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+
+.articleCard{
+  border-radius:16px;
+}
+
+.regionGrid{
+  grid-template-columns:repeat(6,minmax(0,1fr));
+}
+
+.aboutSection{
+  min-height:430px;
+}
+
+.footer{
+  margin-left:18px;
+  margin-right:18px;
+  border:1px solid var(--atlas-line);
+  border-bottom:0;
+  border-radius:18px 18px 0 0;
+}
+
+.pageHero,
+.aboutPageHero{
+  margin:14px 18px 0;
+  border:1px solid var(--atlas-line);
+  border-radius:26px;
+  min-height:470px;
+  padding-left:7%;
+  padding-right:7%;
+}
+
+.articlePage{
+  padding-left:248px;
+}
+.articleHeader{
+  margin:14px 18px 0;
+  border:1px solid var(--atlas-line);
+  border-radius:18px;
+}
+.articleHero{
+  margin:14px 18px 0;
+  border:1px solid var(--atlas-line);
+  border-radius:24px;
+}
+.articleRead{
+  max-width:860px;
+}
+
+.featureResults,
+.comparePage,
+.toolsGrid,
+.trendPage,
+.quizPage,
+.todayPage,
+.bookmarkPage,
+.aiPage,
+.timelineShell{
+  margin-left:18px;
+  margin-right:18px;
+  border:1px solid var(--atlas-line);
+  border-radius:22px;
+}
+
+.timelineHero{margin-top:14px}
+
+@media(max-width:1100px){
+  main{padding-left:220px}
+  .topbar{width:180px}
+  .heroMain{margin-left:14px;margin-right:14px}
+  .categorySection,.platformShelf,.liveNewsSection,.contentSection,.regionSection,.aboutSection,
+  .featureResults,.comparePage,.toolsGrid,.trendPage,.quizPage,.todayPage,.bookmarkPage,.aiPage,.timelineShell{margin-left:14px;margin-right:14px}
+  .platformGrid{grid-template-columns:repeat(3,1fr)}
+  .liveNewsSection .newsGrid{grid-template-columns:repeat(2,1fr)}
+  .regionGrid{grid-template-columns:repeat(3,1fr)}
+}
+
+@media(max-width:760px){
+  body{background:var(--atlas-bg)}
+  main,.articlePage{padding-left:0}
+  .topbar{
+    left:10px;
+    right:10px;
+    top:10px;
+    bottom:auto;
+    width:auto;
+    height:58px;
+    border-radius:16px;
+    padding:7px 10px;
+    flex-direction:row;
+    align-items:center;
+  }
+  .brand{
+    padding:0;
+    border:0;
+  }
+  .navLabel,.railRule{display:none}
+  .navCenter{
+    position:absolute;
+    top:70px;
+    left:0;
+    right:0;
+  }
+  .topnav{
+    display:none;
+  }
+  .topnav.open{display:grid}
+  .topbarActions{
+    margin-left:auto;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .topbarActions .headerSearchButton{width:auto}
+  .topbarActions .menuButton{display:block;width:40px}
+  .topbarActions .themeToggle{width:auto}
+  .heroMain{
+    margin:0 10px;
+    min-height:850px;
+    height:auto;
+    border-radius:22px;
+  }
+  .heroImage{
+    width:100%;
+    height:52%;
+    top:auto;
+    bottom:0;
+    clip-path:polygon(0 10%,100% 0,100% 100%,0 100%);
+  }
+  .heroContent{
+    width:auto;
+    padding:130px 8vw 390px;
+  }
+  .heroContent h1{font-size:64px}
+  .heroAside{display:none}
+  .categorySection,.platformShelf,.liveNewsSection,.contentSection,.regionSection,.aboutSection,
+  .featureResults,.comparePage,.toolsGrid,.trendPage,.quizPage,.todayPage,.bookmarkPage,.aiPage,.timelineShell{
+    margin-left:10px;
+    margin-right:10px;
+    border-radius:18px;
+  }
+  .sectionWrap{padding:24px 18px}
+  .categoryGrid{grid-template-columns:repeat(2,1fr)}
+  .platformGrid{grid-template-columns:1fr}
+  .liveNewsSection .newsGrid{grid-template-columns:1fr}
+  .articleGrid{grid-template-columns:1fr}
+  .regionGrid{grid-template-columns:repeat(2,1fr)}
+  .pageHero,.aboutPageHero{margin:10px 10px 0;padding:110px 8vw 50px}
+  .articleHeader{margin:10px 10px 0}
+  .articleHero{margin:10px 10px 0}
+  .footer{margin-left:10px;margin-right:10px}
+}
