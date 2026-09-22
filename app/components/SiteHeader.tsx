@@ -14,6 +14,7 @@ const links = [
   ["Countries", "/countries"],
   ["Sports", "/sports"],
   ["Games", "/games"],
+  ["Learn", "/learn"],
 ] as const;
 
 const moreLinks = [
@@ -32,6 +33,9 @@ const moreLinks = [
   ["Today in History", "/history-today"],
   ["My Dashboard", "/dashboard"],
   ["3D Earth Explorer", "/earth"],
+  ["World Atlas", "/atlas"],
+  ["World Data", "/data"],
+  ["Knowledge Graph", "/graph"],
 ] as const;
 
 export default function SiteHeader() {

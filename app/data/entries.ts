@@ -11,7 +11,7 @@ export type Entry = {
   body: string[];
 };
 
-export const categories = ["All", "Countries", "History", "Science", "Technology", "Culture", "Nature", "Health", "Arts"];
+export const categories = ["All", "Countries", "History", "Science", "Technology", "Culture", "Nature", "Health", "Arts", "Sports"];
 
 export const entries: Entry[] = [
   {

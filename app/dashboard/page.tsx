@@ -12,12 +12,14 @@ export default function DashboardPage() {
   const [bookmarks, setBookmarks] = useState<Saved[]>([]);
   const [history, setHistory] = useState<History[]>([]);
   const [following, setFollowing] = useState<string[]>([]);
+  const [learning, setLearning] = useState<Record<string, number>>({});
 
   const load = () => {
     try {
       setBookmarks(JSON.parse(localStorage.getItem("globalpedia_bookmarks") || "[]"));
       setHistory(JSON.parse(localStorage.getItem("globalpedia_reading_history") || "[]"));
       setFollowing(JSON.parse(localStorage.getItem("globalpedia_following") || "[]"));
+      setLearning(JSON.parse(localStorage.getItem("globalpedia_learning_progress") || "{}"));
     } catch {
       setBookmarks([]);
       setHistory([]);
@@ -52,10 +54,20 @@ export default function DashboardPage() {
           <div><span>Saved</span><strong>{bookmarks.length}</strong><small>articles</small></div>
           <div><span>History</span><strong>{history.length}</strong><small>recent reads</small></div>
           <div><span>Following</span><strong>{following.length}</strong><small>topics</small></div>
+          <div><span>Learning</span><strong>{Object.keys(learning).length}</strong><small>tracks</small></div>
         </div>
 
         <div className="dashboardColumns">
           <section className="dashboardPanel">
+          <div className="dashboardHeading"><span>KEEP BUILDING</span><Link href="/learn">Learning hub ↗</Link></div>
+          <div className="dashboardRecommendations">
+            <Link href="/learn#history"><span>HISTORY</span><h3>Build a history track</h3><p>Short modules, key dates and quick quizzes for steady progress.</p><b>Start ↗</b></Link>
+            <Link href="/learn#science"><span>SCIENCE</span><h3>Explore a science track</h3><p>Move from concepts to interactive questions without leaving GlobalPedia.</p><b>Start ↗</b></Link>
+            <Link href="/data"><span>DATA</span><h3>Compare the world</h3><p>Inspect country indicators and save the places you want to revisit.</p><b>Open ↗</b></Link>
+          </div>
+        </section>
+
+        <section className="dashboardPanel">
             <div className="dashboardHeading"><span>RECENTLY READ</span><Link href="/bookmarks">My Library ↗</Link></div>
             {history.length ? (
               <div className="dashboardList">

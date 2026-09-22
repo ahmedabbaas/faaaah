@@ -9,8 +9,11 @@ export default function SiteFooter() {
           Global<span className="brandBlue">Pedia</span>
         </span>
       </Link>
-      <div>
-        <span>ONE WORLD · ENDLESS KNOWLEDGE</span>
+      <div className="footerLinks">
+        <Link href="/learn">Learn</Link>
+        <Link href="/atlas">Atlas</Link>
+        <Link href="/data">World Data</Link>
+        <Link href="/graph">Knowledge Graph</Link>
         <span>© 2026 GLOBALPEDIA</span>
       </div>
     </footer>
