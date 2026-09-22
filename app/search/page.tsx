@@ -47,14 +47,16 @@ export default function SearchPage() {
     fetch("/api/countries", { cache: "no-store" })
       .then((r) => r.json())
       .then((d) => setCountries(Array.isArray(d.countries) ? d.countries : []))
-      .catch(() => {});
+      .catch(() => { /* Keep search usable when an auxiliary feed is unavailable. */ });
     fetch("/api/news", { cache: "no-store" })
       .then((r) => r.json())
       .then((d) => setNews(Array.isArray(d.news) ? d.news : []))
-      .catch(() => {});
+      .catch(() => { /* Keep search usable when an auxiliary feed is unavailable. */ });
     try {
       setRecent(JSON.parse(localStorage.getItem("globalpedia_search_history") || "[]"));
-    } catch {}
+    } catch {
+      // Ignore malformed local search history and start fresh.
+    }
   }, []);
 
   useEffect(() => {
