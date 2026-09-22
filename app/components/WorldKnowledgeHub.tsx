@@ -101,6 +101,7 @@ export default function WorldKnowledgeHub({ initialTab = "atlas" }: { initialTab
   const [query, setQuery] = useState("");
   const [region, setRegion] = useState("All");
   const [selected, setSelected] = useState<Country | null>(null);
+  const [sort, setSort] = useState<"name" | "population" | "area">("name");
   const [tab, setTab] = useState<"atlas" | "sports" | "games">(initialTab);
   const [sportsNews, setSportsNews] = useState<NewsItem[]>([]);
   const [gameNews, setGameNews] = useState<NewsItem[]>([]);
@@ -137,7 +138,7 @@ export default function WorldKnowledgeHub({ initialTab = "atlas" }: { initialTab
 
   const filtered = useMemo(() => {
     const term = query.trim().toLowerCase();
-    return countries
+    const filteredCountries = countries
       .filter((country) => region === "All" || country.region === region)
       .filter((country) =>
         !term
@@ -145,9 +146,16 @@ export default function WorldKnowledgeHub({ initialTab = "atlas" }: { initialTab
           : (country.name + " " + country.capital + " " + country.subregion)
               .toLowerCase()
               .includes(term)
-      )
-      .slice(0, 18);
-  }, [countries, query, region]);
+      );
+
+    return filteredCountries
+      .sort((a, b) => {
+        if (sort === "population") return b.population - a.population;
+        if (sort === "area") return b.area - a.area;
+        return a.name.localeCompare(b.name);
+      })
+      .slice(0, 24);
+  }, [countries, query, region, sort]);
 
   return (
     <section className="knowledgeHub" id="hub">
@@ -332,14 +340,17 @@ export default function WorldKnowledgeHub({ initialTab = "atlas" }: { initialTab
               <div>
                 <span>{selected.region} · {selected.subregion}</span>
                 <h3>{selected.name}</h3>
-                <small>{selected.capital}</small>
+                <small>{selected.capital} · {selected.code}</small>
               </div>
             </div>
 
             <div className="countryStats">
               <div><span>Population</span><strong>{selected.population ? new Intl.NumberFormat("en").format(selected.population) : "—"}</strong></div>
+              <div><span>Area</span><strong>{selected.area ? new Intl.NumberFormat("en").format(selected.area) + " km²" : "—"}</strong></div>
+              <div><span>Population density</span><strong>{selected.area && selected.population ? new Intl.NumberFormat("en", { maximumFractionDigits: 1 }).format(selected.population / selected.area) + " / km²" : "—"}</strong></div>
               <div><span>Currency</span><strong>{selected.currencies.join(" · ") || "—"}</strong></div>
               <div><span>Languages</span><strong>{selected.languages.join(" · ") || "—"}</strong></div>
+              <div><span>Continent</span><strong>{selected.continents.join(" · ") || selected.region || "—"}</strong></div>
             </div>
 
             <div className="countryTimeGrid">
