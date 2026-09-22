@@ -5,6 +5,15 @@ import Link from "next/link";
 import PageChrome from "../components/PageChrome";
 import { categories, entries } from "../data/entries";
 
+
+const dailyFacts = [
+  "A day on Venus is longer than its year.",
+  "The human brain contains billions of neurons connected by trillions of synapses.",
+  "The Pacific Ocean covers more area than all of Earth's land combined.",
+  "Honey can remain stable for extremely long periods when sealed and stored properly.",
+  "Lightning can heat the surrounding air to temperatures hotter than the surface of the Sun."
+];
+
 export default function TodayPage() {
   const today = new Date();
   const dateKey = today.getFullYear() * 1000 + today.getMonth() * 31 + today.getDate();
@@ -64,6 +73,14 @@ export default function TodayPage() {
               </button>
             ))}
           </div>
+        </div>
+
+        <div className="todayFactStrip">
+          <div>
+            <span>DAILY KNOWLEDGE</span>
+            <strong>{dailyFacts[dateKey % dailyFacts.length]}</strong>
+          </div>
+          <Link href="/history-today">Today in history ↗</Link>
         </div>
 
         {focus && (
