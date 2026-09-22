@@ -167,7 +167,7 @@ function parseItem(item: string, topic: string) {
     title: sourceParts.length > 1 ? sourceParts.slice(0, -1).join(" - ") : rawTitle,
     description: description.slice(0, 360),
     link,
-    source: getTag(item, "source") || (sourceParts.length > 1 ? sourceParts.at(-1) : "News"),
+    source: getTag(item, "source") || (sourceParts.length > 1 ? sourceParts[sourceParts.length - 1] : "News"),
     publishedAt: getTag(item, "pubDate") || getTag(item, "dc:date"),
     category: "Live News",
     topic,
