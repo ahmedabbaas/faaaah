@@ -11,6 +11,8 @@ type Country = {
   region: string;
   subregion: string;
   population: number;
+  area: number;
+  continents: string[];
   timezones: string[];
   languages: string[];
   currencies: string[];
