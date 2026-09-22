@@ -124,8 +124,6 @@ export default function GlobalPediaHome() {
   const [newsLoading, setNewsLoading] = useState(true);
   const [newsRefreshing, setNewsRefreshing] = useState(false);
   const [newsError, setNewsError] = useState("");
-  const [secondsUntilRefresh, setSecondsUntilRefresh] = useState(600);
-  const [newsRefreshNotice, setNewsRefreshNotice] = useState("");
   const [showWelcome, setShowWelcome] = useState(true);
   const liveNewsRef = useRef<NewsItem[]>([]);
 
@@ -141,15 +139,9 @@ export default function GlobalPediaHome() {
         updatedAt?: string;
       };
       const nextNews = Array.isArray(data.news) ? data.news : [];
-      setNewsRefreshNotice(
-        manual
-          ? `${nextNews.filter((item) => !liveNewsRef.current.some((old) => old.id === item.id)).length} new ${nextNews.length === 1 ? "story" : "stories"} found`
-          : ""
-      );
       liveNewsRef.current = nextNews;
       setLiveNews(nextNews);
       setNewsUpdatedAt(data.updatedAt || new Date().toISOString());
-      setSecondsUntilRefresh(600);
     } catch {
       setNewsError("Live news is temporarily unavailable.");
     } finally {
@@ -166,19 +158,12 @@ export default function GlobalPediaHome() {
 
   useEffect(() => {
     const timer = window.setInterval(() => {
-      setSecondsUntilRefresh((previous) => {
-        if (previous <= 1) {
-          void loadLiveNews();
-          return 600;
-        }
-        return previous - 1;
-      });
-    }, 1000);
+      void loadLiveNews();
+    }, 600000);
 
     return () => window.clearInterval(timer);
   }, []);
 
-  const newsCountdown = `${String(Math.floor(secondsUntilRefresh / 60)).padStart(2, "0")}:${String(secondsUntilRefresh % 60).padStart(2, "0")}`;
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "/" && document.activeElement?.tagName !== "INPUT") {
