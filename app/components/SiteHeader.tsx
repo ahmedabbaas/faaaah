@@ -5,9 +5,11 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import ThemeToggle from "./ThemeToggle";
 import AccountHud from "./AccountHud";
+import LanguageSelector from "./LanguageSelector";
 
 const links = [
   ["Home", "/"],
+  ["News", "/news"],
   ["Explore", "/explore"],
   ["Countries", "/countries"],
   ["Sports", "/sports"],
@@ -87,6 +89,7 @@ export default function SiteHeader() {
           <span>⌕</span><small>Search</small><kbd>/</kbd>
         </Link>
         <AccountHud />
+        <LanguageSelector />
         <ThemeToggle />
         <button className="menuButton" onClick={() => setMenuOpen((open) => !open)} aria-expanded={menuOpen} aria-label="Toggle navigation">
           <span /><span /><span />

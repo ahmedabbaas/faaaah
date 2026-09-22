@@ -35,16 +35,19 @@ const eras = ["All", "Ancient", "Classical", "Early Modern", "Scientific Revolut
 
 export default function TimelinePage() {
   const [era, setEra] = useState("All");
+  const [topic, setTopic] = useState("All");
   const [query, setQuery] = useState("");
 
+  const topics = ["All", ...Array.from(new Set(timeline.map((item) => item.topic)))];
   const filtered = useMemo(() => {
     const term = query.trim().toLowerCase();
     return timeline.filter((item) => {
       const eraMatch = era === "All" || item.era === era;
+      const topicMatch = topic === "All" || item.topic === topic;
       const text = (item.year + " " + item.topic + " " + item.title + " " + item.text).toLowerCase();
-      return eraMatch && (!term || text.includes(term));
+      return eraMatch && topicMatch && (!term || text.includes(term));
     });
-  }, [era, query]);
+  }, [era, query, topic]);
 
   return (
     <PageChrome>
@@ -75,6 +78,14 @@ export default function TimelinePage() {
           ))}
         </div>
 
+        <div className="timelineFilters timelineTopicFilters" aria-label="Filter timeline by topic">
+          {topics.map((item) => (
+            <button key={item} className={topic === item ? "active" : ""} onClick={() => setTopic(item)}>
+              {item}
+            </button>
+          ))}
+        </div>
+
         <div className="timelineRail">
           {filtered.map((item, index) => (
             <article className="timelineItem" key={item.year + item.title}>
@@ -92,6 +103,7 @@ export default function TimelinePage() {
               </div>
             </article>
           ))}
+          {!filtered.length && <div className="timelineEmpty">No milestones match these filters.</div>}
         </div>
       </section>
     </PageChrome>

@@ -3,84 +3,106 @@ import { NextResponse } from "next/server";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const baseFeeds: [string, string][] = [
-  ["World", "https://news.google.com/rss/search?q=world+news&hl=en-US&gl=US&ceid=US:en"],
-  ["Pakistan", "https://news.google.com/rss/search?q=Pakistan+latest+news&hl=en-US&gl=US&ceid=US:en"],
-  ["Technology", "https://news.google.com/rss/search?q=technology+AI+news&hl=en-US&gl=US&ceid=US:en"],
-  ["Science", "https://news.google.com/rss/search?q=science+space+research+news&hl=en-US&gl=US&ceid=US:en"],
-  ["Sports", "https://news.google.com/rss/search?q=global+sports+news&hl=en-US&gl=US&ceid=US:en"],
-  ["Games", "https://news.google.com/rss/search?q=video+games+gaming+news&hl=en-US&gl=US&ceid=US:en"],
+type Feed = [string, string];
+
+const commonQuery = (query: string) =>
+  "https://news.google.com/rss/search?q=" +
+  encodeURIComponent(query) +
+  "&hl=en-US&gl=US&ceid=US:en";
+
+const baseFeeds: Feed[] = [
+  ["World", commonQuery("world latest news")],
+  ["Pakistan", commonQuery("Pakistan latest news")],
+  ["Technology", commonQuery("technology latest news")],
+  ["Science", commonQuery("science research latest news")],
+  ["Business", commonQuery("business markets latest news")],
+  ["Sports", commonQuery("global sports latest news")],
+  ["Games", commonQuery("video games gaming latest news")],
+  ["Culture", commonQuery("culture arts latest news")],
 ];
 
-const sportsFeeds: [string, string][] = [
-  ["Football", "https://news.google.com/rss/search?q=football+soccer+news&hl=en-US&gl=US&ceid=US:en"],
-  ["Cricket", "https://news.google.com/rss/search?q=cricket+news&hl=en-US&gl=US&ceid=US:en"],
-  ["Sports", "https://news.google.com/rss/search?q=global+sports+news&hl=en-US&gl=US&ceid=US:en"],
+const sportsFeeds: Feed[] = [
+  ["Football", commonQuery("football soccer latest news")],
+  ["Cricket", commonQuery("cricket latest news")],
+  ["Sports", commonQuery("global sports latest news")],
+  ["Tennis", commonQuery("tennis latest news")],
+  ["Formula 1", commonQuery("Formula 1 latest news")],
 ];
 
-const gameFeeds: [string, string][] = [
-  ["GTA VI", "https://news.google.com/rss/search?q=GTA+VI+news&hl=en-US&gl=US&ceid=US:en"],
-  ["Upcoming Games", "https://news.google.com/rss/search?q=upcoming+games+2026+release+date&hl=en-US&gl=US&ceid=US:en"],
-  ["Nintendo", "https://news.google.com/rss/search?q=Nintendo+game+announcements+2026&hl=en-US&gl=US&ceid=US:en"],
-  ["PlayStation", "https://news.google.com/rss/search?q=PlayStation+game+announcements+2026&hl=en-US&gl=US&ceid=US:en"],
-  ["Xbox", "https://news.google.com/rss/search?q=Xbox+game+announcements+2026&hl=en-US&gl=US&ceid=US:en"],
-  ["PC Gaming", "https://news.google.com/rss/search?q=PC+gaming+new+games+2026&hl=en-US&gl=US&ceid=US:en"],
+const gameFeeds: Feed[] = [
+  ["GTA VI", commonQuery("GTA VI latest news")],
+  ["Upcoming Games", commonQuery("upcoming video games 2026 2027 release")],
+  ["Nintendo", commonQuery("Nintendo latest game news")],
+  ["PlayStation", commonQuery("PlayStation latest game news")],
+  ["Xbox", commonQuery("Xbox latest game news")],
+  ["PC Gaming", commonQuery("PC gaming latest news")],
+  ["Mobile Games", commonQuery("mobile games latest news")],
+  ["Indie Games", commonQuery("indie games latest news")],
 ];
 
-const categoryFeeds: Record<string, [string, string][]> = {
-  categories: [
-    ["World", "https://news.google.com/rss/search?q=world+news+international&hl=en-US&gl=US&ceid=US:en"],
-    ["Science", "https://news.google.com/rss/search?q=science+research+news&hl=en-US&gl=US&ceid=US:en"],
-    ["Technology", "https://news.google.com/rss/search?q=technology+AI+news&hl=en-US&gl=US&ceid=US:en"],
-    ["Culture", "https://news.google.com/rss/search?q=culture+arts+heritage+news&hl=en-US&gl=US&ceid=US:en"],
-  ],
+const categoryFeeds: Record<string, Feed[]> = {
   countries: [
-    ["World", "https://news.google.com/rss/search?q=international+country+news+geopolitics&hl=en-US&gl=US&ceid=US:en"],
-    ["Pakistan", "https://news.google.com/rss/search?q=Pakistan+latest+news&hl=en-US&gl=US&ceid=US:en"],
-    ["Asia", "https://news.google.com/rss/search?q=Asia+latest+news&hl=en-US&gl=US&ceid=US:en"],
-    ["Europe", "https://news.google.com/rss/search?q=Europe+latest+news&hl=en-US&gl=US&ceid=US:en"],
+    ["Pakistan", commonQuery("Pakistan latest news")],
+    ["Asia", commonQuery("Asia latest news")],
+    ["Europe", commonQuery("Europe latest news")],
+    ["Middle East", commonQuery("Middle East latest news")],
+    ["Americas", commonQuery("Americas latest news")],
+    ["Africa", commonQuery("Africa latest news")],
   ],
   history: [
-    ["History", "https://news.google.com/rss/search?q=history+archaeology+museum+discoveries&hl=en-US&gl=US&ceid=US:en"],
-    ["Heritage", "https://news.google.com/rss/search?q=cultural+heritage+archaeology&hl=en-US&gl=US&ceid=US:en"],
+    ["History", commonQuery("history archaeology latest discoveries")],
+    ["Archaeology", commonQuery("archaeology latest discoveries museum")],
+    ["Heritage", commonQuery("cultural heritage latest news")],
   ],
   science: [
-    ["Science", "https://news.google.com/rss/search?q=science+research+space+discovery&hl=en-US&gl=US&ceid=US:en"],
-    ["Space", "https://news.google.com/rss/search?q=space+NASA+astronomy+news&hl=en-US&gl=US&ceid=US:en"],
+    ["Science", commonQuery("science research latest news")],
+    ["Space", commonQuery("space NASA astronomy latest news")],
+    ["Environment", commonQuery("environment climate latest news")],
+    ["Medicine", commonQuery("medical health research latest news")],
   ],
   technology: [
-    ["Technology", "https://news.google.com/rss/search?q=technology+AI+software+news&hl=en-US&gl=US&ceid=US:en"],
-    ["AI", "https://news.google.com/rss/search?q=artificial+intelligence+AI+news&hl=en-US&gl=US&ceid=US:en"],
+    ["Technology", commonQuery("technology latest news")],
+    ["AI", commonQuery("artificial intelligence latest news")],
+    ["Cybersecurity", commonQuery("cybersecurity latest news")],
+    ["Mobile", commonQuery("smartphone mobile technology latest news")],
   ],
   culture: [
-    ["Culture", "https://news.google.com/rss/search?q=culture+traditions+society+news&hl=en-US&gl=US&ceid=US:en"],
-    ["Arts", "https://news.google.com/rss/search?q=arts+music+film+culture+news&hl=en-US&gl=US&ceid=US:en"],
+    ["Culture", commonQuery("culture society latest news")],
+    ["Arts", commonQuery("arts museum design latest news")],
+    ["Film", commonQuery("film cinema latest news")],
+    ["Music", commonQuery("music latest news")],
   ],
   nature: [
-    ["Nature", "https://news.google.com/rss/search?q=nature+wildlife+environment+news&hl=en-US&gl=US&ceid=US:en"],
-    ["Climate", "https://news.google.com/rss/search?q=climate+environment+news&hl=en-US&gl=US&ceid=US:en"],
+    ["Nature", commonQuery("nature wildlife latest news")],
+    ["Environment", commonQuery("environment climate latest news")],
+    ["Climate", commonQuery("climate science latest news")],
   ],
   health: [
-    ["Health", "https://news.google.com/rss/search?q=health+medical+science+news&hl=en-US&gl=US&ceid=US:en"],
-    ["Medicine", "https://news.google.com/rss/search?q=medicine+public+health+news&hl=en-US&gl=US&ceid=US:en"],
+    ["Health", commonQuery("health medical latest news")],
+    ["Medicine", commonQuery("medicine clinical research latest news")],
+    ["Public Health", commonQuery("public health latest news")],
   ],
   arts: [
-    ["Arts", "https://news.google.com/rss/search?q=arts+design+museum+news&hl=en-US&gl=US&ceid=US:en"],
-    ["Culture", "https://news.google.com/rss/search?q=film+music+literature+arts+news&hl=en-US&gl=US&ceid=US:en"],
+    ["Arts", commonQuery("arts design museum latest news")],
+    ["Culture", commonQuery("culture literature latest news")],
+    ["Film", commonQuery("film cinema latest news")],
+  ],
+  business: [
+    ["Business", commonQuery("business markets latest news")],
+    ["Markets", commonQuery("stock markets latest news")],
+    ["Technology", commonQuery("technology business latest news")],
   ],
   explore: [
-    ["World", "https://news.google.com/rss/search?q=world+breaking+news&hl=en-US&gl=US&ceid=US:en"],
-    ["Technology", "https://news.google.com/rss/search?q=technology+science+news&hl=en-US&gl=US&ceid=US:en"],
-    ["Pakistan", "https://news.google.com/rss/search?q=Pakistan+latest+news&hl=en-US&gl=US&ceid=US:en"],
+    ...baseFeeds,
+    ["Space", commonQuery("space astronomy latest news")],
+    ["Environment", commonQuery("environment climate latest news")],
   ],
   random: [
-    ["World", "https://news.google.com/rss/search?q=world+news+interesting+stories&hl=en-US&gl=US&ceid=US:en"],
-    ["Science", "https://news.google.com/rss/search?q=science+interesting+discoveries&hl=en-US&gl=US&ceid=US:en"],
+    ["World", commonQuery("interesting world stories latest news")],
+    ["Science", commonQuery("interesting science discoveries latest news")],
+    ["Culture", commonQuery("interesting culture stories latest news")],
   ],
-  about: [
-    ["World", "https://news.google.com/rss/search?q=world+news+international&hl=en-US&gl=US&ceid=US:en"],
-    ["Global", "https://news.google.com/rss/search?q=global+affairs+news&hl=en-US&gl=US&ceid=US:en"],
-  ],
+  about: baseFeeds,
 };
 
 function decodeEntities(value: string) {
@@ -88,11 +110,12 @@ function decodeEntities(value: string) {
     .replace(/<!\[CDATA\[|\]\]>/g, "")
     .replace(/&amp;/g, "&")
     .replace(/&quot;/g, '"')
-    .replace(/&#39;|&apos;/g, "'")
-    .replace(/&#x27;/g, "'")
+    .replace(/&#39;|&apos;|&#x27;/g, "'")
     .replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">")
-    .replace(/<[^>]+>/g, "")
+    .replace(/&#x([0-9a-f]+);/gi, (_, code) => String.fromCodePoint(parseInt(code, 16)))
+    .replace(/&#([0-9]+);/g, (_, code) => String.fromCodePoint(Number(code)))
+    .replace(/<[^>]+>/g, " ")
     .replace(/\s+/g, " ")
     .trim();
 }
@@ -103,12 +126,10 @@ function getTag(xml: string, tag: string) {
 }
 
 function getAttr(xml: string, tag: string, attr: string) {
-  const match = xml.match(new RegExp(`<${tag}[^>]*\\s${attr}=["']([^"']+)["'][^>]*>`, "i"));
-  return match ? match[1] : "";
-}
-
-function getSource(xml: string) {
-  return getTag(xml, "source") || "Google News";
+  const match = xml.match(
+    new RegExp(`<${tag}[^>]*\\s${attr}=["']([^"']+)["'][^>]*>`, "i")
+  );
+  return match ? decodeEntities(match[1]) : "";
 }
 
 function extractImage(xml: string) {
@@ -119,73 +140,34 @@ function extractImage(xml: string) {
 
   if (direct) return direct.startsWith("//") ? `https:${direct}` : direct;
 
-  const description = xml.match(/<description[\s\S]*?<img[^>]+src=["']([^"']+)["']/i)?.[1];
-  if (description) return description.startsWith("//") ? `https:${description}` : description;
+  const embedded =
+    xml.match(/<description[\s\S]*?<img[^>]+src=["']([^"']+)["']/i)?.[1] ||
+    xml.match(/<content:encoded[\s\S]*?<img[^>]+src=["']([^"']+)["']/i)?.[1];
 
-  const content = xml.match(/<content:encoded[\s\S]*?<img[^>]+src=["']([^"']+)["']/i)?.[1];
-  if (content) return content.startsWith("//") ? `https:${content}` : content;
-
-  return ""; 
+  if (!embedded) return "";
+  return embedded.startsWith("//") ? `https:${embedded}` : embedded;
 }
 
-function fallbackImage(topic: string) {
-  const fallback: Record<string, string> = {
-    World: "https://images.unsplash.com/photo-1521292270410-a8c4d7166c7c?auto=format&fit=crop&q=82&w=1000",
-    Pakistan: "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&q=82&w=1000",
-    Technology: "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=82&w=1000",
-    Science: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&q=82&w=1000",
-    Football: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?auto=format&fit=crop&q=82&w=1000",
-    Cricket: "https://images.unsplash.com/photo-1531415074968-036ba1b575da?auto=format&fit=crop&q=82&w=1000",
-    Sports: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&q=82&w=1000",
-    Games: "https://images.unsplash.com/photo-1542751110-97427bbecf20?auto=format&fit=crop&q=82&w=1000",
-    "GTA VI": "https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&q=82&w=1000",
-    "Upcoming Games": "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&q=82&w=1000",
-    Nintendo: "https://images.unsplash.com/photo-1578303512597-81e6cc155b3e?auto=format&fit=crop&q=82&w=1000",
-    PlayStation: "https://images.unsplash.com/photo-1605901309584-818e25960a8f?auto=format&fit=crop&q=82&w=1000",
-    Xbox: "https://images.unsplash.com/photo-1621259182978-fbf93132d53d?auto=format&fit=crop&q=82&w=1000",
-    "PC Gaming": "https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?auto=format&fit=crop&q=82&w=1000",
-  };
-
-  return fallback[topic] || fallback.Games;
-}
-
-async function resolveArticleImage(link: string, fallback: string) {
-  if (!link) return fallback;
-
+function cleanUrl(value: string, base?: string) {
   try {
-    const response = await fetch(link, {
-      cache: "no-store",
-      redirect: "follow",
-      signal: AbortSignal.timeout(3500),
-      headers: { "user-agent": "GlobalPedia/1.0 thumbnail resolver" },
-    });
-    if (!response.ok) return fallback;
-
-    const html = await response.text();
-    const image =
-      html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)?.[1] ||
-      html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i)?.[1] ||
-      html.match(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i)?.[1];
-
-    if (!image) return fallback;
-    return image.startsWith("//") ? `https:${image}` : image;
+    return new URL(value, base).toString();
   } catch {
-    return fallback;
+    return value;
   }
 }
 
 function parseItem(item: string, topic: string) {
   const rawTitle = getTag(item, "title");
-  const titleParts = rawTitle.split(" - ");
-  const descriptionHtml = getTag(item, "description");
-  const link = getTag(item, "link") || getTag(item, "guid");
+  const sourceParts = rawTitle.split(" - ");
+  const link = cleanUrl(getTag(item, "link") || getTag(item, "guid"));
+  const description = getTag(item, "description");
 
   return {
     id: link || rawTitle,
-    title: titleParts.length > 1 ? titleParts.slice(0, -1).join(" - ") : rawTitle,
-    description: descriptionHtml.slice(0, 220),
+    title: sourceParts.length > 1 ? sourceParts.slice(0, -1).join(" - ") : rawTitle,
+    description: description.slice(0, 360),
     link,
-    source: getSource(item) || (titleParts.length > 1 ? titleParts[titleParts.length - 1] : "News"),
+    source: getTag(item, "source") || (sourceParts.length > 1 ? sourceParts.at(-1) : "News"),
     publishedAt: getTag(item, "pubDate") || getTag(item, "dc:date"),
     category: "Live News",
     topic,
@@ -193,51 +175,105 @@ function parseItem(item: string, topic: string) {
   };
 }
 
+async function resolvePublisherImage(link: string) {
+  if (!link) return "";
+
+  try {
+    const response = await fetch(link, {
+      cache: "no-store",
+      redirect: "follow",
+      signal: AbortSignal.timeout(2500),
+      headers: {
+        "user-agent": "GlobalPedia/1.0 (+live-news-thumbnail)",
+        accept: "text/html,application/xhtml+xml",
+      },
+    });
+
+    if (!response.ok) return "";
+    const finalUrl = response.url || link;
+    const html = await response.text();
+
+    const metaTags = [...html.matchAll(/<meta\b[^>]*>/gi)].map((match) => match[0]);
+    for (const tag of metaTags) {
+      const property =
+        tag.match(/property=["']([^"']+)["']/i)?.[1]?.toLowerCase() ||
+        tag.match(/name=["']([^"']+)["']/i)?.[1]?.toLowerCase() ||
+        "";
+      if (property !== "og:image" && property !== "twitter:image") continue;
+      const content = tag.match(/content=["']([^"']+)["']/i)?.[1];
+      if (content) return cleanUrl(content, finalUrl);
+    }
+  } catch {
+    // Publisher pages can block server-side requests. Keep the feed image if one exists.
+  }
+
+  return "";
+}
+
 export async function GET(request: Request) {
-  const mode = new URL(request.url).searchParams.get("mode");
+  const requestUrl = new URL(request.url);
+  const mode = requestUrl.searchParams.get("mode") || "global";
   const feeds =
-    (mode && categoryFeeds[mode]) ||
+    categoryFeeds[mode] ||
     (mode === "sports" ? sportsFeeds : mode === "games" ? gameFeeds : baseFeeds);
 
   const results = await Promise.allSettled(
     feeds.map(async ([topic, url]) => {
-      const freshUrl = `${url}${url.includes("?") ? "&" : "?"}_gp_ts=${Date.now()}`;
-      const response = await fetch(freshUrl, {
-        cache: "no-store",
-        signal: AbortSignal.timeout(6500),
-        headers: {
-          "user-agent": "GlobalPedia/1.0 news aggregator",
-          "cache-control": "no-cache",
-        },
-      });
+      const response = await fetch(
+        `${url}${url.includes("?") ? "&" : "?"}_gp_ts=${Date.now()}`,
+        {
+          cache: "no-store",
+          signal: AbortSignal.timeout(6500),
+          headers: {
+            "user-agent": "GlobalPedia/1.0 live news aggregator",
+            "cache-control": "no-cache",
+          },
+        }
+      );
 
       if (!response.ok) throw new Error(`Feed error: ${response.status}`);
       const xml = await response.text();
 
-      const parsed = [...xml.matchAll(/<item>([\s\S]*?)<\/item>/gi)]
-        .slice(0, 12)
+      return [...xml.matchAll(/<item>([\s\S]*?)<\/item>/gi)]
+        .slice(0, 10)
         .map((match) => parseItem(match[1], topic))
         .filter((item) => item.id && item.title);
-
-      return Promise.all(
-        parsed.map(async (item, index) => {
-          if (item.image) return item;
-          const fallback = fallbackImage(topic);
-          if (index >= 4) return { ...item, image: fallback };
-          return { ...item, image: await resolveArticleImage(item.link, fallback) };
-        })
-      );
     })
   );
 
-  const news = results
+  let news = results
     .flatMap((result) => (result.status === "fulfilled" ? result.value : []))
-    .filter((item, index, array) => array.findIndex((x) => x.id === item.id) === index)
-    .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
-    .slice(0, 36);
+    .filter((item, index, array) => array.findIndex((candidate) => candidate.id === item.id) === index)
+    .sort(
+      (a, b) =>
+        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+    );
+
+  const imageCandidates = news.filter((item) => !item.image).slice(0, 20);
+  const resolvedImages = await Promise.all(
+    imageCandidates.map(async (item) => [item.id, await resolvePublisherImage(item.link)] as const)
+  );
+  const imageMap = new Map(resolvedImages);
+
+  news = news
+    .map((item) => {
+      const publisherImage = imageMap.get(item.id) || "";
+      return {
+        ...item,
+        image: item.image || publisherImage,
+        imageSource: item.image ? "feed" : publisherImage ? "publisher" : "none",
+      };
+    })
+    .slice(0, 90);
 
   return NextResponse.json(
-    { news, updatedAt: new Date().toISOString(), mode: mode || "global" },
+    {
+      news,
+      updatedAt: new Date().toISOString(),
+      mode,
+      count: news.length,
+      note: "Live Google News RSS headlines. Summaries are feed metadata; full reporting stays with the original publisher.",
+    },
     { headers: { "Cache-Control": "no-store" } }
   );
 }
