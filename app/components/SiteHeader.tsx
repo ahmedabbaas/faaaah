@@ -31,6 +31,7 @@ const moreLinks = [
   ["People Encyclopedia", "/people"],
   ["Today in History", "/history-today"],
   ["My Dashboard", "/dashboard"],
+  ["3D Earth Explorer", "/earth"],
 ] as const;
 
 export default function SiteHeader() {

@@ -318,6 +318,7 @@ export default function GlobalPediaHome() {
             ["Daily Quiz","Five questions. One score. Zero excuses.","/quiz","?"],
             ["Global AI","Ask one precise question and get one precise answer.","/ai","AI"],
             ["World Timeline","Travel through major eras and turning points.","/timeline","↳"],
+            ["3D Earth","Rotate the planet and zoom from countries to cities.","/earth","◎"],
           ].map(([title,description,href,icon]) => (
             <Link className="platformCard" href={href} key={href}>
               <span className="platformIcon">{icon}</span>

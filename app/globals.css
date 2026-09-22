@@ -4819,3 +4819,426 @@ html[data-theme="dark"] .languageSelector select{background:#1a2430;border-color
   .personFacts{grid-template-columns:1fr}
   .languageSelector>span{display:none}
 }
+
+
+/* GLOBALPEDIA · THEME NORMALIZATION + 3D EARTH */
+
+html[data-theme="light"]{
+  --surface-0:#f4f7fb;
+  --surface-1:#ffffff;
+  --surface-2:#edf1f6;
+  --text-strong:#172033;
+  --text-body:#46546a;
+  --text-muted:#718096;
+  --border-soft:#dfe5ed;
+  --accent-ui:#5f71d3;
+}
+html[data-theme="dark"]{
+  --surface-0:#070c13;
+  --surface-1:#111923;
+  --surface-2:#182330;
+  --text-strong:#eef3f8;
+  --text-body:#c3ceda;
+  --text-muted:#93a1b2;
+  --border-soft:#2a3747;
+  --accent-ui:#8294ff;
+}
+html[data-theme="light"] body,
+html[data-theme="light"] .sitePage{
+  background:var(--surface-0)!important;
+  color:var(--text-strong)!important;
+}
+html[data-theme="dark"] body,
+html[data-theme="dark"] .sitePage{
+  background:var(--surface-0)!important;
+  color:var(--text-strong)!important;
+}
+html[data-theme="light"] .sectionWrap,
+html[data-theme="light"] .dashboardPanel,
+html[data-theme="light"] .engineCard,
+html[data-theme="light"] .engineCountry,
+html[data-theme="light"] .engineNews,
+html[data-theme="light"] .peopleSearch,
+html[data-theme="light"] .peopleFilters button,
+html[data-theme="light"] .todayFactStrip{
+  border-color:var(--border-soft)!important;
+}
+html[data-theme="dark"] .sectionWrap,
+html[data-theme="dark"] .dashboardPanel,
+html[data-theme="dark"] .engineCard,
+html[data-theme="dark"] .engineCountry,
+html[data-theme="dark"] .engineNews,
+html[data-theme="dark"] .peopleSearch,
+html[data-theme="dark"] .peopleFilters button,
+html[data-theme="dark"] .todayFactStrip{
+  border-color:var(--border-soft)!important;
+}
+html[data-theme="light"] .dashboardPanel,
+html[data-theme="light"] .engineCard,
+html[data-theme="light"] .engineCountry,
+html[data-theme="light"] .engineNews,
+html[data-theme="light"] .peopleSearch,
+html[data-theme="light"] .todayFactStrip{
+  background:var(--surface-1)!important;
+  color:var(--text-strong)!important;
+}
+html[data-theme="dark"] .dashboardPanel,
+html[data-theme="dark"] .engineCard,
+html[data-theme="dark"] .engineCountry,
+html[data-theme="dark"] .engineNews,
+html[data-theme="dark"] .peopleSearch,
+html[data-theme="dark"] .todayFactStrip{
+  background:var(--surface-1)!important;
+  color:var(--text-strong)!important;
+}
+html[data-theme="light"] .engineCard h3,
+html[data-theme="light"] .engineCountry strong,
+html[data-theme="light"] .engineNews h3,
+html[data-theme="light"] .dashboardPanel strong,
+html[data-theme="light"] .dashboardPanel h3,
+html[data-theme="light"] .peopleSearch input{
+  color:var(--text-strong)!important;
+}
+html[data-theme="dark"] .engineCard h3,
+html[data-theme="dark"] .engineCountry strong,
+html[data-theme="dark"] .engineNews h3,
+html[data-theme="dark"] .dashboardPanel strong,
+html[data-theme="dark"] .dashboardPanel h3,
+html[data-theme="dark"] .peopleSearch input{
+  color:var(--text-strong)!important;
+}
+html[data-theme="light"] .engineCard p,
+html[data-theme="light"] .engineCountry span,
+html[data-theme="light"] .engineNews small,
+html[data-theme="light"] .dashboardPanel span,
+html[data-theme="light"] .dashboardPanel small,
+html[data-theme="light"] .peopleSearch{
+  color:var(--text-muted)!important;
+}
+html[data-theme="dark"] .engineCard p,
+html[data-theme="dark"] .engineCountry span,
+html[data-theme="dark"] .engineNews small,
+html[data-theme="dark"] .dashboardPanel span,
+html[data-theme="dark"] .dashboardPanel small{
+  color:var(--text-muted)!important;
+}
+html[data-theme="light"] input,
+html[data-theme="light"] select{
+  color:var(--text-strong);
+}
+html[data-theme="dark"] input,
+html[data-theme="dark"] select{
+  color:var(--text-strong);
+}
+
+.earthExplorer{
+  width:min(1440px,calc(100% - 32px));
+  margin:92px auto 44px;
+}
+.earthExplorerHead{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap:24px;
+  margin-bottom:18px;
+}
+.earthExplorerHead>div:first-child>span{
+  color:var(--accent-ui);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.14em;
+}
+.earthExplorerHead h2{
+  margin:7px 0 6px;
+  color:var(--text-strong);
+  font-size:clamp(32px,4vw,58px);
+  line-height:1;
+  letter-spacing:-.045em;
+}
+.earthExplorerHead h2 em{font-style:normal;color:var(--accent-ui)}
+.earthExplorerHead p{
+  margin:0;
+  color:var(--text-body);
+  font-size:14px;
+  line-height:1.6;
+}
+.earthStatus{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  max-width:370px;
+  padding:10px 12px;
+  border:1px solid var(--border-soft);
+  border-radius:11px;
+  background:var(--surface-1);
+  color:var(--text-muted);
+  font-size:10px;
+}
+.earthStatus strong{color:var(--text-body);font-weight:700}
+.earthLiveDot{
+  width:7px;height:7px;border-radius:50%;background:#35c88a;box-shadow:0 0 0 5px rgba(53,200,138,.1)
+}
+.earthWorkspace{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 310px;
+  min-height:650px;
+  overflow:hidden;
+  border:1px solid var(--border-soft);
+  border-radius:22px;
+  background:var(--surface-1);
+  box-shadow:0 18px 60px rgba(18,29,47,.10);
+}
+.earthStage{
+  position:relative;
+  min-width:0;
+  min-height:650px;
+  overflow:hidden;
+  background:radial-gradient(circle at 50% 48%,#153a59 0,#091523 42%,#040911 82%);
+}
+html[data-theme="light"] .earthStage{
+  background:radial-gradient(circle at 50% 48%,#dcecff 0,#afc7e1 40%,#718ba7 82%);
+}
+.earthCanvas{position:absolute;inset:0}
+.earthCanvas canvas{display:block;outline:0}
+.earthLoading{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  padding:10px 13px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:10px;
+  background:rgba(4,9,16,.72);
+  color:#e6eef7;
+  font-size:11px;
+  font-weight:700;
+  backdrop-filter:blur(12px);
+}
+html[data-theme="light"] .earthLoading{
+  background:rgba(255,255,255,.82);
+  border-color:rgba(39,66,103,.15);
+  color:#27364c;
+}
+.earthControlsHint{
+  position:absolute;
+  left:16px;
+  bottom:16px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+  pointer-events:none;
+}
+.earthControlsHint span{
+  padding:7px 9px;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:8px;
+  background:rgba(4,10,17,.56);
+  color:#cad5e0;
+  font-size:9px;
+  backdrop-filter:blur(10px);
+}
+.earthControlsHint span:first-child{color:#8da1ff}
+html[data-theme="light"] .earthControlsHint span{
+  background:rgba(255,255,255,.72);
+  border-color:rgba(42,67,101,.12);
+  color:#43536b;
+}
+.earthHoverCard,
+.earthZoomBadge{
+  position:absolute;
+  top:16px;
+  padding:9px 11px;
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:10px;
+  background:rgba(4,10,17,.62);
+  color:#d8e3ed;
+  backdrop-filter:blur(12px);
+}
+.earthHoverCard{left:16px;display:grid;gap:3px}
+.earthZoomBadge{right:16px;display:grid;gap:3px}
+.earthHoverCard small,.earthZoomBadge span{
+  color:#8798aa;
+  font-size:8px;
+  font-weight:800;
+  letter-spacing:.12em;
+}
+.earthHoverCard strong,.earthZoomBadge strong{font-size:13px;color:#f0f5f9}
+.earthZoomBadge small{color:#9cabb9;font-size:9px}
+html[data-theme="light"] .earthHoverCard,
+html[data-theme="light"] .earthZoomBadge{
+  background:rgba(255,255,255,.82);
+  border-color:rgba(42,67,101,.12);
+  color:#27364c;
+}
+html[data-theme="light"] .earthHoverCard strong,
+html[data-theme="light"] .earthZoomBadge strong{color:#172033}
+html[data-theme="light"] .earthHoverCard small,
+html[data-theme="light"] .earthZoomBadge span{color:#687790}
+html[data-theme="light"] .earthZoomBadge small{color:#738095}
+.earthSidePanel{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  padding:17px;
+  border-left:1px solid var(--border-soft);
+  background:var(--surface-1);
+}
+.earthSearch{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  min-height:43px;
+  padding:0 11px;
+  border:1px solid var(--border-soft);
+  border-radius:11px;
+  background:var(--surface-2);
+}
+.earthSearch>span{color:var(--accent-ui);font-size:20px}
+.earthSearch input{
+  width:100%;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:var(--text-strong);
+  font-size:13px;
+}
+.earthIntroPanel{
+  padding:15px;
+  border:1px solid var(--border-soft);
+  border-radius:13px;
+  background:var(--surface-2);
+}
+.earthIntroPanel>span,.earthCountryPanel>span{
+  color:var(--accent-ui);
+  font-size:8px;
+  font-weight:800;
+  letter-spacing:.12em;
+}
+.earthIntroPanel h3,.earthCountryPanel h3{
+  margin:7px 0 5px;
+  color:var(--text-strong);
+  font-size:22px;
+}
+.earthIntroPanel p,.earthCountryPanel p{
+  margin:0;
+  color:var(--text-body);
+  font-size:11px;
+  line-height:1.55;
+}
+.earthQuickSteps{display:grid;gap:7px;margin-top:14px}
+.earthQuickSteps>div{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  padding-top:7px;
+  border-top:1px solid var(--border-soft);
+}
+.earthQuickSteps b{color:var(--accent-ui);font-size:9px}
+.earthQuickSteps span{color:var(--text-muted);font-size:10px}
+.earthCountryResults{
+  display:grid;
+  gap:5px;
+  max-height:270px;
+  overflow:auto;
+}
+.earthCountryResults button{
+  display:grid;
+  gap:3px;
+  width:100%;
+  padding:10px 11px;
+  border:1px solid var(--border-soft);
+  border-radius:10px;
+  background:var(--surface-2);
+  text-align:left;
+}
+.earthCountryResults button:hover{border-color:var(--accent-ui);transform:translateY(-1px)}
+.earthCountryResults strong{color:var(--text-strong);font-size:12px}
+.earthCountryResults span{color:var(--text-muted);font-size:9px}
+.earthNoResult{padding:12px;color:var(--text-muted);font-size:10px}
+.earthCountryPanel{
+  display:grid;
+  gap:3px;
+  padding:16px;
+  border:1px solid rgba(99,116,218,.25);
+  border-radius:14px;
+  background:linear-gradient(145deg,rgba(107,124,232,.12),var(--surface-2));
+}
+.earthStats{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
+.earthStats>div{
+  padding:9px;
+  border:1px solid var(--border-soft);
+  border-radius:9px;
+  background:var(--surface-1);
+}
+.earthStats span{display:block;color:var(--text-muted);font-size:8px;font-weight:700}
+.earthStats strong{display:block;margin-top:3px;color:var(--text-strong);font-size:11px}
+.earthResetButton{
+  margin-top:8px;
+  min-height:35px;
+  border:1px solid var(--border-soft);
+  border-radius:9px;
+  background:var(--surface-1);
+  color:var(--accent-ui);
+  font-size:10px;
+  font-weight:800;
+}
+.earthSourceNote{
+  margin-top:auto;
+  padding-top:10px;
+  border-top:1px solid var(--border-soft);
+  color:var(--text-muted);
+  font-size:8px;
+  line-height:1.5;
+}
+.earthCountryLabel,
+.earthCityLabel{
+  padding:5px 7px;
+  border-radius:7px;
+  background:rgba(10,18,28,.78);
+  border:1px solid rgba(142,164,255,.5);
+  color:#f3f7fb;
+  font-size:10px;
+  font-weight:800;
+  white-space:nowrap;
+  box-shadow:0 7px 20px rgba(0,0,0,.24);
+  pointer-events:auto;
+  cursor:pointer;
+}
+.earthCityLabel{
+  padding:4px 6px;
+  background:rgba(13,22,32,.72);
+  border-color:rgba(114,208,255,.28);
+  color:#d8eef9;
+  font-size:9px;
+}
+.earthCountryLabel:before,
+.earthCityLabel:before{
+  content:"";
+  display:inline-block;
+  width:5px;height:5px;
+  margin-right:5px;
+  border-radius:50%;
+  background:#7c92ff;
+  box-shadow:0 0 0 4px rgba(124,146,255,.12);
+}
+.earthCityLabel:before{background:#6edcff;box-shadow:0 0 0 3px rgba(110,220,255,.1)}
+html[data-theme="light"] .earthCountryLabel,
+html[data-theme="light"] .earthCityLabel{
+  background:rgba(255,255,255,.9);
+  border-color:rgba(72,93,155,.3);
+  color:#24334b;
+  box-shadow:0 7px 20px rgba(35,52,76,.16);
+}
+html[data-theme="light"] .earthCityLabel{color:#34465e}
+@media(max-width:1000px){
+  .earthWorkspace{grid-template-columns:1fr}
+  .earthSidePanel{border-left:0;border-top:1px solid var(--border-soft)}
+}
+@media(max-width:680px){
+  .earthExplorer{width:min(100% - 16px,1440px);margin-top:80px}
+  .earthExplorerHead{align-items:flex-start;flex-direction:column}
+  .earthWorkspace{border-radius:16px}
+  .earthStage{min-height:520px}
+  .earthCanvas{min-height:520px}
+  .earthControlsHint span:nth-child(n+3){display:none}
+}
