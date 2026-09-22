@@ -25,6 +25,9 @@ const moreLinks = [
   ["AI Explorer", "/ai"],
   ["Following", "/following"],
   ["World Timeline", "/timeline"],
+  ["People Encyclopedia", "/people"],
+  ["Today in History", "/history-today"],
+  ["My Dashboard", "/dashboard"],
 ] as const;
 
 export default function SiteHeader() {
