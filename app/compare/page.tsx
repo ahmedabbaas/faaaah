@@ -26,8 +26,10 @@ export default function ComparePage() {
   const rows = [
     ["Population", left ? fmt(left.population) : "—", right ? fmt(right.population) : "—"],
     ["Area", left ? fmt(left.area) + " km²" : "—", right ? fmt(right.area) + " km²" : "—"],
+    ["Population density", left?.area && left.population ? (left.population / left.area).toFixed(1) + " / km²" : "—", right?.area && right.population ? (right.population / right.area).toFixed(1) + " / km²" : "—"],
     ["Capital", left?.capital || "—", right?.capital || "—"],
     ["Region", left?.region || "—", right?.region || "—"],
+    ["Subregion", left?.subregion || "—", right?.subregion || "—"],
     ["Languages", left?.languages.join(" · ") || "—", right?.languages.join(" · ") || "—"],
     ["Currency", left?.currencies.join(" · ") || "—", right?.currencies.join(" · ") || "—"],
     ["Time zones", left?.timezones.length ? left.timezones.join(" · ") : "—", right?.timezones.length ? right.timezones.join(" · ") : "—"],
@@ -44,6 +46,7 @@ export default function ComparePage() {
       <section className="comparePage sectionWrap">
         <div className="compareSelectors">
           <label><span>Country A</span><select value={a} onChange={e=>setA(e.target.value)}>{countries.map(c=><option value={c.code} key={c.code}>{c.name}</option>)}</select></label>
+          <button className="compareSwap" onClick={() => { const next = a; setA(b); setB(next); }} aria-label="Swap countries">⇄</button>
           <label><span>Country B</span><select value={b} onChange={e=>setB(e.target.value)}>{countries.map(c=><option value={c.code} key={c.code}>{c.name}</option>)}</select></label>
         </div>
 
@@ -60,6 +63,7 @@ export default function ComparePage() {
 
         <div className="comparePopulation">
           <div><span>{left?.name || "A"}</span><strong>{compact(left?.population || 0)}</strong><small>population</small></div>
+          <div className="compareDelta"><span>Population gap</span><strong>{left && right ? compact(Math.abs(left.population - right.population)) : "—"}</strong><small>absolute difference</small></div>
           <div><span>{right?.name || "B"}</span><strong>{compact(right?.population || 0)}</strong><small>population</small></div>
         </div>
       </section>
