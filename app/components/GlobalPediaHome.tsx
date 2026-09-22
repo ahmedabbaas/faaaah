@@ -6,6 +6,7 @@ import { categories, entries, regions } from "../data/entries";
 import WorldKnowledgeHub from "./WorldKnowledgeHub";
 import SiteHeader from "./SiteHeader";
 import SiteFooter from "./SiteFooter";
+import WelcomeScreen from "./WelcomeScreen";
 
 type IconName =
   | "countries"
@@ -125,6 +126,8 @@ export default function GlobalPediaHome() {
   const [newsError, setNewsError] = useState("");
   const [secondsUntilRefresh, setSecondsUntilRefresh] = useState(600);
   const [newsRefreshNotice, setNewsRefreshNotice] = useState("");
+  const [showWelcome, setShowWelcome] = useState(true);
+  const liveNewsRef = useRef<NewsItem[]>([]);
 
   const loadLiveNews = async (manual = false) => {
     try {
@@ -140,9 +143,10 @@ export default function GlobalPediaHome() {
       const nextNews = Array.isArray(data.news) ? data.news : [];
       setNewsRefreshNotice(
         manual
-          ? `${nextNews.filter((item) => !liveNews.some((old) => old.id === item.id)).length} new ${nextNews.length === 1 ? "story" : "stories"} found`
+          ? `${nextNews.filter((item) => !liveNewsRef.current.some((old) => old.id === item.id)).length} new ${nextNews.length === 1 ? "story" : "stories"} found`
           : ""
       );
+      liveNewsRef.current = nextNews;
       setLiveNews(nextNews);
       setNewsUpdatedAt(data.updatedAt || new Date().toISOString());
       setSecondsUntilRefresh(600);
@@ -155,6 +159,8 @@ export default function GlobalPediaHome() {
   };
 
   useEffect(() => {
+    const seen = window.sessionStorage.getItem("gp-welcome-seen");
+    if (seen === "1") setShowWelcome(false);
     void loadLiveNews();
   }, []);
 
@@ -202,6 +208,17 @@ export default function GlobalPediaHome() {
   }, [active, query]);
 
   const featured = filtered.length ? filtered.slice(0, 3) : entries.slice(0, 3);
+
+  if (showWelcome) {
+    return (
+      <WelcomeScreen
+        onEnter={() => {
+          window.sessionStorage.setItem("gp-welcome-seen", "1");
+          setShowWelcome(false);
+        }}
+      />
+    );
+  }
 
   return (
     <main>
@@ -327,80 +344,48 @@ export default function GlobalPediaHome() {
         </div>
       </section>
 
-      <section id="latest-news" className="liveNewsSection sectionWrap">
-        <div className="sectionHeading">
-          <div className="liveNewsTitle">
-            <span className="sectionKicker livePulse">●</span>
-            <h2>Latest News</h2>
-            <span className="liveBadge">LIVE</span>
-          </div>
-          <div className="newsControls">
-            <span>
+      <section className="topNewsPanel" aria-label="Live news updates">
+        <div className="topNewsIntro">
+          <div>
+            <span className="liveDot" />
+            <strong>Live updates</strong>
+            <span className="topNewsUpdated">
               {newsUpdatedAt
                 ? `Updated ${new Date(newsUpdatedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`
                 : "Updating..."}
             </span>
-            <span className="liveCountdown" aria-live="polite">
-              Next update <strong>{newsCountdown}</strong>
-            </span>
-            {newsRefreshNotice && <span className="liveRefreshNotice">{newsRefreshNotice}</span>}
-            <button
-              onClick={() => void loadLiveNews(true)}
-              disabled={newsRefreshing}
-              aria-label="Refresh latest news"
-            >
-              {newsRefreshing ? "Refreshing…" : "↻ Refresh"}
-            </button>
           </div>
+          <button
+            className="iphoneButton compact"
+            onClick={() => void loadLiveNews(true)}
+            disabled={newsRefreshing}
+          >
+            {newsRefreshing ? "Refreshing…" : "Refresh"}
+          </button>
         </div>
-
-        {newsError ? (
-          <div className="newsState">{newsError}</div>
-        ) : newsLoading ? (
-          <div className="newsGrid">
-            {[1, 2, 3, 4, 5, 6].map((item) => (
-              <div className="newsSkeleton" key={item} />
-            ))}
-          </div>
-        ) : liveNews.length ? (
-          <div className="newsGrid">
-            {liveNews.slice(0, 12).map((item) => (
+        <div className="topNewsItems">
+          {newsLoading ? (
+            <div className="topNewsLoading">Loading current stories…</div>
+          ) : liveNews.length ? (
+            liveNews.slice(0, 4).map((item) => (
               <a
-                className="liveNewsCard"
+                className="topNewsItem"
                 href={item.link}
                 target="_blank"
                 rel="noreferrer"
                 key={item.id}
               >
-                <div className="liveNewsImage">
-                  <img
-                    src={item.image || "https://images.unsplash.com/photo-1521292270410-a8c4d7166c7c?auto=format&fit=crop&q=82&w=1000"}
-                    alt=""
-                    loading="lazy"
-                  />
-                </div>
-                <div className="liveNewsTop">
-                  <span className="liveNewsCategory">LIVE NEWS · {item.source}</span>
-                  <span className="liveNewsTime">
-                    {new Date(item.publishedAt).toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </span>
-                </div>
-                <h3>{item.title}</h3>
-                <p>{item.description}</p>
-                <div className="liveNewsBottom">
-                  <span>GlobalPedia brief · {item.topic || "World"}</span>
-                  <span>Read source ↗</span>
-                </div>
+                <span className="topNewsSource">{item.source}</span>
+                <strong>{item.title}</strong>
+                <span className="topNewsArrow">↗</span>
               </a>
-            ))}
-          </div>
-        ) : (
-          <div className="newsState">No live stories available right now.</div>
-        )}
+            ))
+          ) : (
+            <div className="topNewsLoading">{newsError || "No live stories available right now."}</div>
+          )}
+        </div>
       </section>
+
       <section id="featured" className="contentSection sectionWrap">
         <div className="sectionHeading">
           <div>
