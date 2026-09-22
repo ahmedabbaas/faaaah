@@ -58,6 +58,10 @@ export default function LiveNewsFeed({
 
   useEffect(() => {
     void load();
+    const timer = window.setInterval(() => {
+      void load();
+    }, 600000);
+    return () => window.clearInterval(timer);
   }, [load]);
 
   const displayItems = useMemo(() => {

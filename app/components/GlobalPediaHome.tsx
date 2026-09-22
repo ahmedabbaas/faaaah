@@ -27,7 +27,8 @@ type IconName =
   | "culture"
   | "nature"
   | "health"
-  | "arts";
+  | "arts"
+  | "sports";
 
 type NewsItem = {
   id: string;
@@ -86,6 +87,13 @@ const iconMap: Record<IconName, ReactNode> = {
   health: (
     <path d="M20 8.5C20 14 12 20 12 20S4 14 4 8.5A4.5 4.5 0 0 1 12 6a4.5 4.5 0 0 1 8 2.5Z" />
   ),
+  sports: (
+    <>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M7.5 7.5l9 9M16.5 7.5l-9 9" />
+      <path d="M5.5 12h13M12 5.5v13" />
+    </>
+  ),
   arts: (
     <>
       <circle cx="12" cy="12" r="8.5" />
@@ -121,6 +129,7 @@ const categoryCards: {
   { label: "Nature", sub: "Our planet", icon: "nature", tone: "teal" },
   { label: "Health", sub: "Live better", icon: "health", tone: "red" },
   { label: "Arts", sub: "Creativity & more", icon: "arts", tone: "purple" },
+  { label: "Sports", sub: "Live & latest", icon: "sports", tone: "green" },
 ];
 
 const heroImage =
@@ -290,7 +299,13 @@ export default function GlobalPediaHome() {
             <button
               key={item.label}
               className={`categoryCard tone-${item.tone}`}
-              onClick={() => setActive(item.label)}
+              onClick={() => {
+                if (item.label === "Sports") {
+                  window.location.href = "/news?mode=sports";
+                  return;
+                }
+                setActive(item.label);
+              }}
               aria-pressed={active === item.label}
             >
               <span className="categoryIcon">
@@ -310,6 +325,18 @@ export default function GlobalPediaHome() {
             </button>
           ))}
         </div>
+      </section>
+      <section className="earthCategoryPanel sectionWrap" aria-label="3D Earth category panel">
+        <div className="earthCategoryHeader">
+          <div>
+            <span className="sectionKicker">◎</span>
+            <span className="heroTag">GLOBALPEDIA · INTERACTIVE EARTH</span>
+            <h2>Explore the world in <em>3D.</em></h2>
+            <p>Rotate the planet, click a country, then zoom closer to discover cities.</p>
+          </div>
+          <Link href="/earth" className="earthHomeLink">Open full Earth Explorer ↗</Link>
+        </div>
+        <EarthExplorer compact />
       </section>
       <section className="platformShelf sectionWrap">
         <div className="sectionHeading">
@@ -338,19 +365,6 @@ export default function GlobalPediaHome() {
             </Link>
           ))}
         </div>
-      </section>
-
-      <section className="earthHomeSection sectionWrap" aria-label="3D Earth preview">
-        <div className="earthHomeHeader">
-          <div>
-            <span className="sectionKicker">◎</span>
-            <span className="heroTag">GLOBALPEDIA · INTERACTIVE EARTH</span>
-            <h2>Explore the world in <em>3D.</em></h2>
-            <p>Rotate the planet, click a country and zoom closer until its cities appear.</p>
-          </div>
-          <Link href="/earth" className="earthHomeLink">Open full Earth Explorer ↗</Link>
-        </div>
-        <EarthExplorer compact />
       </section>
 
       <section className="topNewsPanel" aria-label="Live news updates">

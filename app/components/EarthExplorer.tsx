@@ -29,8 +29,10 @@ type Feature = {
 
 type GlobeInstance = {
   backgroundColor(value: string): GlobeInstance;
+  backgroundImageUrl(value: string | null): GlobeInstance;
   globeImageUrl(value: string): GlobeInstance;
   bumpImageUrl(value: string): GlobeInstance;
+  globeMaterial(): { bumpScale: number; specular?: unknown; shininess?: number };
   showAtmosphere(value: boolean): GlobeInstance;
   atmosphereColor(value: string): GlobeInstance;
   atmosphereAltitude(value: number): GlobeInstance;
@@ -76,6 +78,7 @@ const GEO_URL = "https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-110m.j
 const CITIES_URL = "https://raw.githubusercontent.com/joelacus/world-cities/main/world_cities_15000.json";
 const EARTH_IMAGE = "https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-blue-marble.jpg";
 const BUMP_IMAGE = "https://cdn.jsdelivr.net/npm/three-globe/example/img/earth-topology.png";
+const NIGHT_SKY = "https://cdn.jsdelivr.net/npm/three-globe/example/img/night-sky.png";
 
 const normalize = (value: string) =>
   value
@@ -92,7 +95,9 @@ export default function EarthExplorer({ compact = false }: { compact?: boolean }
   const cityCacheRef = useRef<City[]>([]);
   const selectedRef = useRef<Country | null>(null);
   const focusRef = useRef({ lat: 20, lng: 0 });
-  const [scriptReady, setScriptReady] = useState(false);
+  const [globeScriptReady, setGlobeScriptReady] = useState(false);
+  const [topoScriptReady, setTopoScriptReady] = useState(false);
+  const scriptReady = globeScriptReady && topoScriptReady;
   const [countries, setCountries] = useState<Country[]>([]);
   const [selected, setSelected] = useState<Country | null>(null);
   const [selectedCity, setSelectedCity] = useState("");
@@ -234,13 +239,18 @@ export default function EarthExplorer({ compact = false }: { compact?: boolean }
     world
       .globeImageUrl(EARTH_IMAGE)
       .bumpImageUrl(BUMP_IMAGE)
+      .backgroundImageUrl(theme === "dark" ? NIGHT_SKY : null)
       .showAtmosphere(true)
-      .atmosphereAltitude(0.16)
+      .atmosphereAltitude(0.18)
       .polygonsTransitionDuration(260);
+
+    const material = world.globeMaterial();
+    material.bumpScale = 12;
+    if ("shininess" in material) material.shininess = 18;
 
     const controls = world.controls();
     controls.autoRotate = true;
-    controls.autoRotateSpeed = 0.35;
+    controls.autoRotateSpeed = 0.22;
     controls.enableZoom = true;
     controls.zoomSpeed = 0.7;
     controls.minDistance = 115;
@@ -330,6 +340,7 @@ export default function EarthExplorer({ compact = false }: { compact?: boolean }
     };
 
     window.addEventListener("resize", resize);
+    world.pointOfView({ lat: 18, lng: 0, altitude: compact ? 2.1 : 2.6 }, 0);
     resize();
 
     return () => {
@@ -344,7 +355,8 @@ export default function EarthExplorer({ compact = false }: { compact?: boolean }
     if (!globe) return;
     globe
       .backgroundColor(theme === "light" ? "#f5f7fb" : "#070d16")
-      .atmosphereColor(theme === "light" ? "#84a9d4" : "#4e84c6");
+      .backgroundImageUrl(theme === "dark" ? NIGHT_SKY : null)
+      .atmosphereColor(theme === "light" ? "#84a9d4" : "#5b8fd0");
 
     if (dataReady) {
       const base = theme === "light" ? "#ffffff" : "#15263a";
@@ -369,12 +381,14 @@ export default function EarthExplorer({ compact = false }: { compact?: boolean }
       <Script
         src="https://cdn.jsdelivr.net/npm/globe.gl@2.46.2/dist/globe.gl.min.js"
         strategy="afterInteractive"
-        onLoad={() => setScriptReady(true)}
+        onLoad={() => setGlobeScriptReady(true)}
+        onError={() => setStatus("3D engine could not be loaded. Refresh to retry.")}
       />
       <Script
         src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"
         strategy="afterInteractive"
-        onLoad={() => setScriptReady(true)}
+        onLoad={() => setTopoScriptReady(true)}
+        onError={() => setStatus("Country geometry engine could not be loaded. Refresh to retry.")}
       />
 
       <section className={"earthExplorer" + (compact ? " earthExplorerCompact" : "")} aria-label="Interactive 3D Earth Explorer">
@@ -472,8 +486,8 @@ export default function EarthExplorer({ compact = false }: { compact?: boolean }
                   setSelectedCity("");
                   selectedRef.current = null;
                   setCities([]);
-                  setAltitude(2.6);
-                  globeRef.current?.pointOfView({ lat: 20, lng: 0, altitude: 2.6 }, 900);
+                  setAltitude(compact ? 2.1 : 2.6);
+                  globeRef.current?.pointOfView({ lat: 18, lng: 0, altitude: compact ? 2.1 : 2.6 }, 900);
                 }}>
                   Reset to world
                 </button>
