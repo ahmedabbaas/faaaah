@@ -115,7 +115,12 @@ export default function LiveNewsFeed({
               <p>{item.description}</p>
               <div className="liveFeedSource">
                 <span>{item.source}</span>
-                <span>Read source ↗</span>
+                <span className="liveSourceActions">
+                  <span>Read source ↗</span>
+                  <a href={"/search?q=" + encodeURIComponent(item.title)} onClick={(event) => event.stopPropagation()}>
+                    Explore context
+                  </a>
+                </span>
               </div>
             </a>
           ))}
