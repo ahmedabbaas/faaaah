@@ -222,6 +222,16 @@ export default function WorldKnowledgeHub({ initialTab = "atlas" }: { initialTab
               placeholder="Search any country..."
               aria-label="Search any country"
             />
+            <select
+              className="atlasSort"
+              value={sort}
+              onChange={(event) => setSort(event.target.value as typeof sort)}
+              aria-label="Sort countries"
+            >
+              <option value="name">A–Z</option>
+              <option value="population">Population</option>
+              <option value="area">Area</option>
+            </select>
             <div className="regionFilters">
               {regions.slice(0, 7).map((item) => (
                 <button
