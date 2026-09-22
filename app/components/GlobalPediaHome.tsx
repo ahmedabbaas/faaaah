@@ -316,6 +316,7 @@ export default function GlobalPediaHome() {
             ["Live Trends","See which topics are active in the current feed.","/trends","↗"],
             ["Daily Quiz","Five questions. One score. Zero excuses.","/quiz","?"],
             ["AI Explorer","Ask GlobalPedia about the world.","/ai","AI"],
+            ["World Timeline","Travel through major eras and turning points.","/timeline","↳"],
           ].map(([title,description,href,icon]) => (
             <Link className="platformCard" href={href} key={href}>
               <span className="platformIcon">{icon}</span>

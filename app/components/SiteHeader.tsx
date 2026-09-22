@@ -27,6 +27,7 @@ const moreLinks = [
   ["My Library", "/bookmarks"],
   ["AI Explorer", "/ai"],
   ["Following", "/following"],
+  ["World Timeline", "/timeline"],
 ] as const;
 
 export default function SiteHeader() {
