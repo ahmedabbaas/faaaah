@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
@@ -37,22 +38,64 @@ const rank = (value: string, term: string) => {
   return 0;
 };
 
+const editDistance = (a: string, b: string) => {
+  const row = Array.from({ length: b.length + 1 }, (_, index) => index);
+  for (let i = 1; i <= a.length; i += 1) {
+    let previous = row[0];
+    row[0] = i;
+    for (let j = 1; j <= b.length; j += 1) {
+      const saved = row[j];
+      row[j] = a[i - 1] === b[j - 1]
+        ? previous
+        : Math.min(previous + 1, row[j - 1] + 1, saved + 1);
+      previous = saved;
+    }
+  }
+  return row[b.length];
+};
+
 export default function GlobalEnginePage() {
   const [query, setQuery] = useState("");
   const [filter, setFilter] = useState<EngineFilter>("all");
   const [countries, setCountries] = useState<Country[]>([]);
   const [news, setNews] = useState<News[]>([]);
+  const [recent, setRecent] = useState<string[]>([]);
 
   useEffect(() => {
     const q = new URLSearchParams(window.location.search).get("q");
     if (q) setQuery(q);
+
+    try {
+      setRecent(JSON.parse(window.localStorage.getItem("globalpedia_engine_recent") || "[]"));
+    } catch {
+      setRecent([]);
+    }
+
     void Promise.all([
-      fetch("/api/countries", { cache: "no-store" }).then((r) => r.json()).then((data) => setCountries(Array.isArray(data.countries) ? data.countries : [])),
-      fetch("/api/news", { cache: "no-store" }).then((r) => r.json()).then((data) => setNews(Array.isArray(data.news) ? data.news : [])),
+      fetch("/api/countries", { cache: "no-store" })
+        .then((response) => response.json())
+        .then((data) => setCountries(Array.isArray(data.countries) ? data.countries : [])),
+      fetch("/api/news", { cache: "no-store" })
+        .then((response) => response.json())
+        .then((data) => setNews(Array.isArray(data.news) ? data.news : [])),
     ]).catch(() => {
       setCountries([]);
       setNews([]);
     });
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "/" && !["INPUT", "TEXTAREA"].includes((event.target as HTMLElement).tagName)) {
+        event.preventDefault();
+        document.getElementById("global-engine-input")?.focus();
+      }
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+        event.preventDefault();
+        document.getElementById("global-engine-input")?.focus();
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
   const term = query.trim().toLowerCase();
@@ -60,9 +103,12 @@ export default function GlobalEnginePage() {
   const knowledge = useMemo(
     () =>
       entries
-        .map((item) => ({ item, score: rank(item.title, term) + rank(item.category, term) + rank(item.description, term) }))
+        .map((item) => ({
+          item,
+          score: rank(item.title, term) + rank(item.category, term) + rank(item.description, term),
+        }))
         .filter(({ score }) => !term || score > 0)
-        .sort((a, b) => b.score - a.score)
+        .sort((a, b) => b.score - a.score || a.item.title.localeCompare(b.item.title))
         .slice(0, 12)
         .map(({ item }) => item),
     [term]
@@ -76,7 +122,7 @@ export default function GlobalEnginePage() {
           score: rank(item.name, term) + rank(item.capital, term) + rank(item.region, term),
         }))
         .filter(({ score }) => !term || score > 0)
-        .sort((a, b) => b.score - a.score)
+        .sort((a, b) => b.score - a.score || a.item.name.localeCompare(b.item.name))
         .slice(0, 12)
         .map(({ item }) => item),
     [countries, term]
@@ -85,15 +131,65 @@ export default function GlobalEnginePage() {
   const newsResults = useMemo(
     () =>
       news
-        .map((item) => ({ item, score: rank(item.title, term) + rank(item.topic || "", term) + rank(item.source, term) }))
+        .map((item) => ({
+          item,
+          score: rank(item.title, term) + rank(item.topic || "", term) + rank(item.source, term),
+        }))
         .filter(({ score }) => !term || score > 0)
-        .sort((a, b) => b.score - a.score || new Date(b.item.publishedAt).getTime() - new Date(a.item.publishedAt).getTime())
+        .sort(
+          (a, b) =>
+            b.score - a.score ||
+            new Date(b.item.publishedAt).getTime() - new Date(a.item.publishedAt).getTime()
+        )
         .slice(0, 12)
         .map(({ item }) => item),
     [news, term]
   );
 
+  const recentSuggestions = term
+    ? []
+    : recent.slice(0, 5);
+
+  const autocomplete = term
+    ? Array.from(
+        new Set(
+          [
+            ...entries.map((item) => item.title),
+            ...entries.map((item) => item.category),
+            ...countries.map((item) => item.name),
+            ...countries.map((item) => item.capital),
+            ...news.slice(0, 20).map((item) => item.title),
+          ]
+            .filter(Boolean)
+            .filter((value) => value.toLowerCase().includes(term))
+        )
+      ).slice(0, 7)
+    : [];
+
+  const candidates = [
+    ...entries.map((item) => item.title),
+    ...countries.map((item) => item.name),
+    ...countries.map((item) => item.capital),
+  ];
+
+  const didYouMean = term && knowledge.length + countryResults.length + newsResults.length === 0
+    ? candidates
+        .map((value) => ({ value, score: editDistance(term, value.toLowerCase()) }))
+        .filter(({ value }) => value.toLowerCase() !== term && value.length > 2)
+        .sort((a, b) => a.score - b.score)
+        .find(({ score }) => score <= Math.max(2, Math.floor(term.length * 0.35)))?.value
+    : "";
+
   const total = knowledge.length + countryResults.length + newsResults.length;
+
+  const commitSearch = (value: string) => {
+    const clean = value.trim();
+    if (!clean) return;
+    const next = [clean, ...recent.filter((item) => item.toLowerCase() !== clean.toLowerCase())].slice(0, 8);
+    setRecent(next);
+    window.localStorage.setItem("globalpedia_engine_recent", JSON.stringify(next));
+    window.history.replaceState(null, "", "/engine?q=" + encodeURIComponent(clean));
+  };
 
   return (
     <PageChrome>
@@ -101,11 +197,40 @@ export default function GlobalEnginePage() {
         <span className="heroTag">GLOBALPEDIA · GLOBAL ENGINE</span>
         <h1>Search the whole world <em>fast.</em></h1>
         <p>One engine across GlobalPedia knowledge, countries and live Google News signals.</p>
+
         <div className="engineSearch">
           <span>⌕</span>
-          <input autoFocus value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Try GTA VI, Pakistan, space, history..." aria-label="Global Engine search" />
-          <kbd>/</kbd>
+          <input
+            id="global-engine-input"
+            autoFocus
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") commitSearch(query);
+              if (event.key === "Escape") setQuery("");
+            }}
+            placeholder="Try GTA VI, Pakistan, space, history..."
+            aria-label="Global Engine search"
+          />
+          <kbd>⌘K</kbd>
         </div>
+
+        {autocomplete.length > 0 && (
+          <div className="engineAutocomplete">
+            {autocomplete.map((suggestion) => (
+              <button
+                key={suggestion}
+                onClick={() => {
+                  setQuery(suggestion);
+                  commitSearch(suggestion);
+                }}
+              >
+                <span>⌕</span>{suggestion}
+              </button>
+            ))}
+          </div>
+        )}
+
         <div className="engineFilters">
           {([
             ["all", "All"],
@@ -121,6 +246,22 @@ export default function GlobalEnginePage() {
       </section>
 
       <section className="enginePage sectionWrap">
+        {!term && recentSuggestions.length > 0 && (
+          <div className="engineRecent">
+            <div>
+              <span>RECENT SEARCHES</span>
+              <strong>Continue where you left off</strong>
+            </div>
+            <div className="engineRecentList">
+              {recentSuggestions.map((item) => (
+                <button key={item} onClick={() => { setQuery(item); commitSearch(item); }}>
+                  {item}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="engineStats">
           <span>{term ? `Results for “${query}”` : "Start typing to search the world"}</span>
           <strong>{term ? total : "∞"}</strong>
@@ -165,7 +306,11 @@ export default function GlobalEnginePage() {
               {newsResults.map((item) => (
                 <a href={item.link} target="_blank" rel="noreferrer" className="engineNews" key={item.id}>
                   <img src={item.image || ""} alt="" loading="lazy" />
-                  <div><span>{item.topic || "World"} · {item.source}</span><h3>{item.title}</h3><small>{new Date(item.publishedAt).toLocaleString()}</small></div>
+                  <div>
+                    <span>{item.topic || "World"} · {item.source}</span>
+                    <h3>{item.title}</h3>
+                    <small>{new Date(item.publishedAt).toLocaleString()}</small>
+                  </div>
                 </a>
               ))}
             </div>
@@ -175,7 +320,16 @@ export default function GlobalEnginePage() {
         {term && total === 0 && (
           <div className="engineEmpty">
             <strong>No direct match.</strong>
-            <span>Try a wider phrase or open Global AI for a direct answer.</span>
+            {didYouMean && (
+              <span>
+                Did you mean{" "}
+                <button className="engineDidYouMean" onClick={() => { setQuery(didYouMean); commitSearch(didYouMean); }}>
+                  {didYouMean}
+                </button>
+                ?
+              </span>
+            )}
+            <span>Try a wider phrase or ask Global AI for a direct answer.</span>
             <Link href={"/ai?topic=" + encodeURIComponent(query)}>Ask Global AI ↗</Link>
           </div>
         )}

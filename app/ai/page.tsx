@@ -1,10 +1,23 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import PageChrome from "../components/PageChrome";
 
-type Msg = { role: "user" | "assistant"; text: string };
+type Source = {
+  type?: string;
+  title?: string;
+  name?: string;
+  model?: string;
+  slug?: string;
+};
+
+type Msg = {
+  role: "user" | "assistant";
+  text: string;
+  source?: Source;
+};
 
 export default function AiPage() {
   const [input, setInput] = useState("");
@@ -12,7 +25,7 @@ export default function AiPage() {
   const [messages, setMessages] = useState<Msg[]>([
     {
       role: "assistant",
-      text: "I can search GlobalPedia's indexed knowledge and explain the result. Ask about a country, topic, article or current signal.",
+      text: "Ask one clear question. Global AI will focus on that question instead of wandering off into the digital bushes.",
     },
   ]);
   const [loading, setLoading] = useState(false);
@@ -41,7 +54,11 @@ export default function AiPage() {
       const data = await response.json();
       setMessages((current) => [
         ...current,
-        { role: "assistant", text: data.answer || "No answer available." },
+        {
+          role: "assistant",
+          text: data.answer || "No answer available.",
+          source: data.source,
+        },
       ]);
     } catch {
       setMessages((current) => [
@@ -55,24 +72,24 @@ export default function AiPage() {
 
   const prompts = [
     "Explain this topic simply",
-    "Give me the key facts",
-    "What is the historical context?",
-    "What should I explore next?",
+    "What are the key facts?",
+    "What is the latest news?",
+    "Compare two things",
   ];
 
   return (
     <PageChrome>
       <section className="pageHero compactHero aiHeroUpgrade">
-        <span className="heroTag">GLOBALPEDIA · AI EXPLORER</span>
-        <h1>Ask the world <em>anything.</em></h1>
+        <span className="heroTag">GLOBALPEDIA · GLOBAL AI</span>
+        <h1>Ask one thing. Get <em>one answer.</em></h1>
         <p>
-          A research assistant connected to GlobalPedia's indexed knowledge,
-          country data and article context.
+          Global AI uses GlobalPedia knowledge first and current web information
+          when the question needs an up-to-date answer.
         </p>
         {context && (
           <div className="aiContextChip">
             <span>ARTICLE CONTEXT</span>
-            <strong>{context}</strong>
+            <strong>{context.slice(0, 180)}{context.length > 180 ? "…" : ""}</strong>
           </div>
         )}
       </section>
@@ -83,13 +100,29 @@ export default function AiPage() {
             {messages.map((message, index) => (
               <div className={"aiMessage " + message.role} key={index}>
                 <span>{message.role === "assistant" ? "GP" : "YOU"}</span>
-                <p>{message.text}</p>
+                <div>
+                  <p>{message.text}</p>
+                  {message.role === "assistant" && message.source && (
+                    <div className="aiSource">
+                      <small>SOURCE</small>
+                      {message.source.slug ? (
+                        <Link href={"/articles/" + message.source.slug}>
+                          {message.source.title || "GlobalPedia article"} ↗
+                        </Link>
+                      ) : (
+                        <span>
+                          {message.source.name || message.source.title || message.source.model || "GlobalPedia"}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </div>
               </div>
             ))}
             {loading && (
               <div className="aiMessage assistant">
                 <span>GP</span>
-                <p>Thinking…</p>
+                <p>Checking the right context…</p>
               </div>
             )}
           </div>
@@ -111,7 +144,7 @@ export default function AiPage() {
               onKeyDown={(event) => {
                 if (event.key === "Enter") void ask();
               }}
-              placeholder="Ask: What is Pakistan's capital? Explain transformers..."
+              placeholder="Ask a specific question..."
               aria-label="Ask GlobalPedia AI"
             />
             <button onClick={() => void ask()} disabled={loading}>
@@ -120,8 +153,8 @@ export default function AiPage() {
           </div>
 
           <div className="aiFooter">
-            <span>Answers can be incomplete. Check source material for important claims.</span>
-            <Link href="/search">Search the index ↗</Link>
+            <span>Current questions use web search when the AI provider is configured.</span>
+            <Link href="/engine">Open Global Engine ↗</Link>
           </div>
         </div>
       </section>
