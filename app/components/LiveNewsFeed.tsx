@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type NewsItem = {
   id: string;
@@ -31,6 +31,7 @@ export default function LiveNewsFeed({
   const [error, setError] = useState("");
   const [secondsUntilRefresh, setSecondsUntilRefresh] = useState(600);
   const [refreshNotice, setRefreshNotice] = useState("");
+  const itemsRef = useRef<NewsItem[]>([]);
 
   const load = useCallback(async (manual = false) => {
     try {
@@ -42,9 +43,10 @@ export default function LiveNewsFeed({
       const nextItems = Array.isArray(data.news) ? data.news : [];
       setRefreshNotice(
         manual
-          ? `${nextItems.filter((item) => !items.some((old) => old.id === item.id)).length} new ${nextItems.length === 1 ? "story" : "stories"} found`
+          ? `${nextItems.filter((item) => !itemsRef.current.some((old) => old.id === item.id)).length} new ${nextItems.length === 1 ? "story" : "stories"} found`
           : ""
       );
+      itemsRef.current = nextItems;
       setItems(nextItems);
       setUpdatedAt(data.updatedAt || new Date().toISOString());
       setSecondsUntilRefresh(600);
