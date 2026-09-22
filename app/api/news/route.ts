@@ -5,9 +5,11 @@ export const dynamic = "force-dynamic";
 
 const baseFeeds: [string, string][] = [
   ["World", "https://news.google.com/rss/search?q=world+news&hl=en-US&gl=US&ceid=US:en"],
-  ["Pakistan", "https://news.google.com/rss/search?q=Pakistan+news&hl=en-US&gl=US&ceid=US:en"],
-  ["Technology", "https://news.google.com/rss/search?q=technology+news&hl=en-US&gl=US&ceid=US:en"],
-  ["Science", "https://news.google.com/rss/search?q=science+news&hl=en-US&gl=US&ceid=US:en"],
+  ["Pakistan", "https://news.google.com/rss/search?q=Pakistan+latest+news&hl=en-US&gl=US&ceid=US:en"],
+  ["Technology", "https://news.google.com/rss/search?q=technology+AI+news&hl=en-US&gl=US&ceid=US:en"],
+  ["Science", "https://news.google.com/rss/search?q=science+space+research+news&hl=en-US&gl=US&ceid=US:en"],
+  ["Sports", "https://news.google.com/rss/search?q=global+sports+news&hl=en-US&gl=US&ceid=US:en"],
+  ["Games", "https://news.google.com/rss/search?q=video+games+gaming+news&hl=en-US&gl=US&ceid=US:en"],
 ];
 
 const sportsFeeds: [string, string][] = [
