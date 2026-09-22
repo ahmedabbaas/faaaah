@@ -103,26 +103,26 @@ export default function LiveNewsFeed({
       ) : items.length ? (
         <div className="liveFeedGrid">
           {items.slice(0, limit).map((item) => (
-            <a className="liveFeedCard" href={item.link} target="_blank" rel="noreferrer" key={item.id}>
-              <div className="liveFeedImage">
-                <img src={item.image} alt="" loading="lazy" />
-              </div>
-              <div className="liveFeedMeta">
-                <span>LIVE · {item.topic || "WORLD"}</span>
-                <time>{new Date(item.publishedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</time>
-              </div>
-              <h3>{item.title}</h3>
-              <p>{item.description}</p>
+            <div className="liveFeedCard" key={item.id}>
+              <a className="liveFeedCardMain" href={item.link} target="_blank" rel="noreferrer">
+                <div className="liveFeedImage">
+                  <img src={item.image} alt="" loading="lazy" />
+                </div>
+                <div className="liveFeedMeta">
+                  <span>LIVE · {item.topic || "WORLD"}</span>
+                  <time>{new Date(item.publishedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</time>
+                </div>
+                <h3>{item.title}</h3>
+                <p>{item.description}</p>
+              </a>
               <div className="liveFeedSource">
                 <span>{item.source}</span>
                 <span className="liveSourceActions">
-                  <span>Read source ↗</span>
-                  <a href={"/search?q=" + encodeURIComponent(item.title)} onClick={(event) => event.stopPropagation()}>
-                    Explore context
-                  </a>
+                  <a href={item.link} target="_blank" rel="noreferrer">Read source ↗</a>
+                  <a href={"/search?q=" + encodeURIComponent(item.title)}>Explore context</a>
                 </span>
               </div>
-            </a>
+            </div>
           ))}
         </div>
       ) : (
