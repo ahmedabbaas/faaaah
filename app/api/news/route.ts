@@ -86,13 +86,14 @@ const categoryFeeds: Record<string, [string, string][]> = {
 function decodeEntities(value: string) {
   return value
     .replace(/<!\[CDATA\[|\]\]>/g, "")
-    .replace(/<[^>]+>/g, "")
     .replace(/&amp;/g, "&")
     .replace(/&quot;/g, '"')
     .replace(/&#39;|&apos;/g, "'")
     .replace(/&#x27;/g, "'")
     .replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">")
+    .replace(/<[^>]+>/g, "")
+    .replace(/\s+/g, " ")
     .trim();
 }
 
@@ -110,7 +111,7 @@ function getSource(xml: string) {
   return getTag(xml, "source") || "Google News";
 }
 
-function extractImage(xml: string, topic: string) {
+function extractImage(xml: string) {
   const direct =
     getAttr(xml, "media:content", "url") ||
     getAttr(xml, "media:thumbnail", "url") ||
@@ -124,6 +125,10 @@ function extractImage(xml: string, topic: string) {
   const content = xml.match(/<content:encoded[\s\S]*?<img[^>]+src=["']([^"']+)["']/i)?.[1];
   if (content) return content.startsWith("//") ? `https:${content}` : content;
 
+  return ""; 
+}
+
+function fallbackImage(topic: string) {
   const fallback: Record<string, string> = {
     World: "https://images.unsplash.com/photo-1521292270410-a8c4d7166c7c?auto=format&fit=crop&q=82&w=1000",
     Pakistan: "https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&q=82&w=1000",
@@ -144,6 +149,35 @@ function extractImage(xml: string, topic: string) {
   return fallback[topic] || fallback.Games;
 }
 
+async function resolveArticleImage(link: string, fallback: string) {
+  if (!link) return fallback;
+
+  try {
+    const response = await fetch(link, {
+      cache: "no-store",
+      redirect: "follow",
+      signal: AbortSignal.timeout(3500),
+      headers: { "user-agent": "GlobalPedia/1.0 thumbnail resolver" },
+    });
+    if (!response.ok) return fallback;
+
+    const html = await response.text();
+    const image =
+      html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)?.[1] ||
+      html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i)?.[1] ||
+      html.match(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i)?.[1];
+
+    if (!image) return fallback;
+    return image.startsWith("//") ? `https:${image}` : image;
+  } catch {
+    return fallback;
+  }
+}
+
+function matchImageSource(item: { image?: string }) {
+  return item.image || "";
+}
+
 function parseItem(item: string, topic: string) {
   const rawTitle = getTag(item, "title");
   const titleParts = rawTitle.split(" - ");
@@ -159,7 +193,7 @@ function parseItem(item: string, topic: string) {
     publishedAt: getTag(item, "pubDate") || getTag(item, "dc:date"),
     category: "Live News",
     topic,
-    image: extractImage(item, topic),
+    image: extractImage(item) || fallbackImage(topic),
   };
 }
 
@@ -184,10 +218,20 @@ export async function GET(request: Request) {
       if (!response.ok) throw new Error(`Feed error: ${response.status}`);
       const xml = await response.text();
 
-      return [...xml.matchAll(/<item>([\s\S]*?)<\/item>/gi)]
+      const parsed = [...xml.matchAll(/<item>([\s\S]*?)<\/item>/gi)]
         .slice(0, 12)
         .map((match) => parseItem(match[1], topic))
         .filter((item) => item.id && item.title);
+
+      return Promise.all(
+        parsed.map(async (item, index) => {
+          const hasFeedImage = /(?:media:content|media:thumbnail|enclosure|<img[^>]+src=)/i.test(
+            matchImageSource(item)
+          );
+          if (index >= 4 || hasFeedImage) return item;
+          return { ...item, image: await resolveArticleImage(item.link, item.image || fallbackImage(topic)) };
+        })
+      );
     })
   );
 
