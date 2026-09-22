@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { categories, entries, regions } from "../data/entries";
+import { entries, regions } from "../data/entries";
 import WorldKnowledgeHub from "./WorldKnowledgeHub";
 import SiteHeader from "./SiteHeader";
 import SiteFooter from "./SiteFooter";
@@ -125,7 +125,6 @@ export default function GlobalPediaHome() {
   const [newsRefreshing, setNewsRefreshing] = useState(false);
   const [newsError, setNewsError] = useState("");
   const [showWelcome, setShowWelcome] = useState(true);
-  const liveNewsRef = useRef<NewsItem[]>([]);
 
   const loadLiveNews = async (manual = false) => {
     try {
@@ -139,7 +138,6 @@ export default function GlobalPediaHome() {
         updatedAt?: string;
       };
       const nextNews = Array.isArray(data.news) ? data.news : [];
-      liveNewsRef.current = nextNews;
       setLiveNews(nextNews);
       setNewsUpdatedAt(data.updatedAt || new Date().toISOString());
     } catch {
