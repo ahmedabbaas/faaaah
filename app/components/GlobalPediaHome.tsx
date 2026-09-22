@@ -357,6 +357,10 @@ export default function GlobalPediaHome() {
             ["Global AI","Ask one precise question and get one precise answer.","/ai","AI"],
             ["World Timeline","Travel through major eras and turning points.","/timeline","↳"],
             ["3D Earth","Rotate the planet and zoom from countries to cities.","/earth","◎"],
+            ["Learn","Build short subject tracks and keep local progress.","/learn","✦"],
+            ["World Atlas","Move from planet to cities and place profiles.","/atlas","⌖"],
+            ["World Data","Search and compare country indicators.","/data","▦"],
+            ["Knowledge Graph","Follow connections between places and ideas.","/graph","◌"],
           ].map(([title,description,href,icon]) => (
             <Link className="platformCard" href={href} key={href}>
               <span className="platformIcon">{icon}</span>

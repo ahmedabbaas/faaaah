@@ -13,6 +13,7 @@ export default function DashboardPage() {
   const [history, setHistory] = useState<History[]>([]);
   const [following, setFollowing] = useState<string[]>([]);
   const [learning, setLearning] = useState<Record<string, number>>({});
+  const [places, setPlaces] = useState<string[]>([]);
 
   const load = () => {
     try {
@@ -20,6 +21,7 @@ export default function DashboardPage() {
       setHistory(JSON.parse(localStorage.getItem("globalpedia_reading_history") || "[]"));
       setFollowing(JSON.parse(localStorage.getItem("globalpedia_following") || "[]"));
       setLearning(JSON.parse(localStorage.getItem("globalpedia_learning_progress") || "{}"));
+      setPlaces((localStorage.getItem("globalpedia_places") || "").split("|").filter(Boolean));
     } catch {
       setBookmarks([]);
       setHistory([]);
@@ -54,7 +56,8 @@ export default function DashboardPage() {
           <div><span>Saved</span><strong>{bookmarks.length}</strong><small>articles</small></div>
           <div><span>History</span><strong>{history.length}</strong><small>recent reads</small></div>
           <div><span>Following</span><strong>{following.length}</strong><small>topics</small></div>
-          <div><span>Learning</span><strong>{Object.keys(learning).length}</strong><small>tracks</small></div>
+          <div><span>Learning</span><strong>{Object.keys(learning).length}</strong><small>lessons</small></div>
+          <div><span>Places</span><strong>{places.length}</strong><small>saved</small></div>
         </div>
 
         <div className="dashboardColumns">
@@ -93,6 +96,11 @@ export default function DashboardPage() {
             )}
           </section>
         </div>
+
+        <section className="dashboardPanel">
+          <div className="dashboardHeading"><span>MY PLACES</span><Link href="/atlas">Explore Atlas ↗</Link></div>
+          {places.length ? <div className="dashboardTopics">{places.map(place=><Link className="dashboardPlaceLink" href={"/places/"+place} key={place}>{place.replace("-", " ")}</Link>)}</div> : <div className="dashboardEmpty">Save cities from a place profile and they will stay here.</div>}
+        </section>
 
         <section className="dashboardPanel">
           <div className="dashboardHeading"><span>CONTINUE EXPLORING</span><Link href="/today">Today's shelf ↗</Link></div>

@@ -25,7 +25,8 @@ export default function LearnPage(){
     <section className="learnPage sectionWrap">
       <div className="learnIntro"><div><span>HOW IT WORKS</span><h2>Learn in small, useful steps.</h2><p>Open a track, mark lessons complete and your progress stays on this device.</p></div><Link href="/quiz">Daily Quiz ↗</Link></div>
       <div className="learnGrid">{tracks.map(track=>{
-        const done=progress[track.id]||0;
+        const lessonValues = track.lessons.map((_,index)=>progress[track.id+"-"+index]||0);
+        const done = Math.round(lessonValues.reduce((sum,value)=>sum+value,0)/track.lessons.length);
         return <article className="learnCard" id={track.id} key={track.id}>
           <div className="learnCardHead"><span>TRACK</span><strong>{done}%</strong></div>
           <h2>{track.title}</h2><p>{track.desc}</p>

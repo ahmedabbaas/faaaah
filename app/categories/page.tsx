@@ -12,6 +12,7 @@ const descriptions: Record<string, string> = {
   Nature: "Landscapes, ecosystems, wildlife and the planet we all share.",
   Health: "Accessible background knowledge about health, biology and wellbeing.",
   Arts: "Creative expression across visual art, performance and imagination.",
+  Sports: "Live sports headlines, context and global sporting activity.",
 };
 
 export default function CategoriesPage() {
@@ -34,7 +35,7 @@ export default function CategoriesPage() {
             const count = entries.filter((entry) => entry.category === category).length;
             return (
               <Link
-                href={`/explore?category=${encodeURIComponent(category)}`}
+                href={category === "Sports" ? "/sports" : `/explore?category=${encodeURIComponent(category)}`}
                 className="categoryIndexCard"
                 key={category}
               >
