@@ -241,9 +241,15 @@ export async function GET(request: Request) {
     })
   );
 
+  const freshnessCutoff = Date.now() - 30 * 24 * 60 * 60 * 1000;
+
   let news = results
     .flatMap((result) => (result.status === "fulfilled" ? result.value : []))
     .filter((item, index, array) => array.findIndex((candidate) => candidate.id === item.id) === index)
+    .filter((item) => {
+      const published = new Date(item.publishedAt).getTime();
+      return Number.isFinite(published) && published >= freshnessCutoff;
+    })
     .sort(
       (a, b) =>
         new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
@@ -272,6 +278,7 @@ export async function GET(request: Request) {
       updatedAt: new Date().toISOString(),
       mode,
       count: news.length,
+      freshness: "last-30-days",
       note: "Live Google News RSS headlines. Summaries are feed metadata; full reporting stays with the original publisher.",
     },
     { headers: { "Cache-Control": "no-store" } }
