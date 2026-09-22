@@ -174,10 +174,6 @@ async function resolveArticleImage(link: string, fallback: string) {
   }
 }
 
-function matchImageSource(item: { image?: string }) {
-  return item.image || "";
-}
-
 function parseItem(item: string, topic: string) {
   const rawTitle = getTag(item, "title");
   const titleParts = rawTitle.split(" - ");
@@ -193,7 +189,7 @@ function parseItem(item: string, topic: string) {
     publishedAt: getTag(item, "pubDate") || getTag(item, "dc:date"),
     category: "Live News",
     topic,
-    image: extractImage(item) || fallbackImage(topic),
+    image: extractImage(item),
   };
 }
 
@@ -225,11 +221,10 @@ export async function GET(request: Request) {
 
       return Promise.all(
         parsed.map(async (item, index) => {
-          const hasFeedImage = /(?:media:content|media:thumbnail|enclosure|<img[^>]+src=)/i.test(
-            matchImageSource(item)
-          );
-          if (index >= 4 || hasFeedImage) return item;
-          return { ...item, image: await resolveArticleImage(item.link, item.image || fallbackImage(topic)) };
+          if (item.image) return item;
+          const fallback = fallbackImage(topic);
+          if (index >= 4) return { ...item, image: fallback };
+          return { ...item, image: await resolveArticleImage(item.link, fallback) };
         })
       );
     })
