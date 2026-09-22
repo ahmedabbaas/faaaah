@@ -1,14 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import PageChrome from "../components/PageChrome";
 
 type Msg = { role: "user" | "assistant"; text: string };
 
 export default function AiPage() {
-  const params = useSearchParams();
   const [input, setInput] = useState("");
   const [context, setContext] = useState("");
   const [messages, setMessages] = useState<Msg[]>([
@@ -20,17 +18,18 @@ export default function AiPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
     const topic = params.get("topic");
     const articleContext = params.get("context");
     if (topic) setInput(topic);
     if (articleContext) setContext(articleContext);
-  }, [params]);
+  }, []);
 
   const ask = async () => {
     if (!input.trim() || loading) return;
     const q = input.trim();
     setInput("");
-    setMessages((messages) => [...messages, { role: "user", text: q }]);
+    setMessages((current) => [...current, { role: "user", text: q }]);
     setLoading(true);
 
     try {
@@ -40,13 +39,13 @@ export default function AiPage() {
         body: JSON.stringify({ question: q, context }),
       });
       const data = await response.json();
-      setMessages((messages) => [
-        ...messages,
+      setMessages((current) => [
+        ...current,
         { role: "assistant", text: data.answer || "No answer available." },
       ]);
     } catch {
-      setMessages((messages) => [
-        ...messages,
+      setMessages((current) => [
+        ...current,
         { role: "assistant", text: "The assistant is unavailable right now." },
       ]);
     } finally {
