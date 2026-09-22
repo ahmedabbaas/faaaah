@@ -399,8 +399,8 @@ export default function GlobalPediaHome() {
                   <h3>{entry.title}</h3>
                   <p>{entry.description}</p>
                   <div className="articleMeta">
-                    <span>â—· {entry.meta.split(" Â· ")[0]}</span>
-                    <span>â—´ {entry.meta.split(" Â· ")[1]}</span>
+                    <span>◷ {entry.meta.split("  ·  ")[0]}</span>
+                    <span>◴ {entry.meta.split("  ·  ")[1]}</span>
                   </div>
                 </div>
               </Link>
@@ -426,7 +426,7 @@ export default function GlobalPediaHome() {
         </div>
         <div className="worldPanel">
           <div>
-            <span className="sectionKicker">â—ˆ</span>
+            <span className="sectionKicker">◎</span>
             <h3>Explore the World</h3>
             <p>Jump from one corner of the planet to another.</p>
           </div>
