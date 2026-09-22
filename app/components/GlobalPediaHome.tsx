@@ -223,7 +223,7 @@ export default function GlobalPediaHome() {
         <div className="starField" aria-hidden="true" />
         <div className="heroContent" id="main-content">
           <div className="heroTag">
-            ONE WORLD <span>â€¢</span> ENDLESS KNOWLEDGE
+            ONE WORLD <span>•</span> ENDLESS KNOWLEDGE
           </div>
           <h1>
             Global<span>Pedia</span>
@@ -235,7 +235,7 @@ export default function GlobalPediaHome() {
             science and technology.
           </p>
           <div className="heroSearch">
-            <span className="searchGlyph">âŒ•</span>
+            <span className="searchGlyph">⌕</span>
             <input
               ref={inputRef}
               value={query}
@@ -244,7 +244,7 @@ export default function GlobalPediaHome() {
               aria-label="Search GlobalPedia"
             />
             <span className="slashHint">/</span>
-            <button aria-label="Search">â†’</button>
+            <button aria-label="Search">→</button>
           </div>
           <div className="popular">
             <span>Popular:</span>
@@ -330,7 +330,7 @@ export default function GlobalPediaHome() {
       <section id="latest-news" className="liveNewsSection sectionWrap">
         <div className="sectionHeading">
           <div className="liveNewsTitle">
-            <span className="sectionKicker livePulse">â—</span>
+            <span className="sectionKicker livePulse">●</span>
             <h2>Latest News</h2>
             <span className="liveBadge">LIVE</span>
           </div>
@@ -349,7 +349,7 @@ export default function GlobalPediaHome() {
               disabled={newsRefreshing}
               aria-label="Refresh latest news"
             >
-              {newsRefreshing ? "Refreshingâ€¦" : "â†» Refresh"}
+              {newsRefreshing ? "Refreshing…" : "↻ Refresh"}
             </button>
           </div>
         </div>
@@ -404,7 +404,7 @@ export default function GlobalPediaHome() {
       <section id="featured" className="contentSection sectionWrap">
         <div className="sectionHeading">
           <div>
-            <span className="sectionKicker">âœ¦</span>
+            <span className="sectionKicker">✦</span>
             <h2>Featured Articles</h2>
           </div>
           <Link href="/explore">View All →</Link>
@@ -436,7 +436,7 @@ export default function GlobalPediaHome() {
           </div>
           <aside className="factsPanel">
             <div className="panelHeader">
-              <span>âœ¦</span>
+              <span>✦</span>
               <h3>Quick Facts</h3>
             </div>
             {[
@@ -485,7 +485,7 @@ export default function GlobalPediaHome() {
       <WorldKnowledgeHub />\n\n      <section id="about" className="aboutSection sectionWrap">
         <div className="aboutCopy">
           <span className="heroTag">
-            GLOBALPEDIA <span>â€¢</span> THE IDEA
+            GLOBALPEDIA <span>•</span> THE IDEA
           </span>
           <h2>
             Knowledge should feel
