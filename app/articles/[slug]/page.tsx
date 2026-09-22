@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { entries, getEntry } from "../../data/entries";
 import BookmarkButton from "../../components/BookmarkButton";
+import ReadingTracker from "../../components/ReadingTracker";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -35,6 +36,7 @@ export default async function ArticlePage({ params }: Props) {
 
   return (
     <main className="articlePage">
+      <ReadingTracker slug={entry.slug} title={entry.title} category={entry.category} />
       <header className="articleHeader">
         <Link className="brand" href="/">
           <span className="brandMark globeMark">◎</span>
@@ -71,6 +73,20 @@ export default async function ArticlePage({ params }: Props) {
           <button>◌ 12</button>
           <button>⌁ Share</button>
         </div>
+
+        <section className="knowledgeGraph">
+          <div>
+            <span>KNOWLEDGE GRAPH</span>
+            <h2>Where this topic leads next</h2>
+          </div>
+          <div className="knowledgeGraphLinks">
+            {[entry.category, ...related.map((item) => item.category)].filter((value, index, array) => array.indexOf(value) === index).map((topic) => (
+              <Link href={"/search?type=articles&q=" + encodeURIComponent(topic)} key={topic}>{topic} ↗</Link>
+            ))}
+            <Link href="/timeline">Timeline ↗</Link>
+            <Link href="/people">People ↗</Link>
+          </div>
+        </section>
 
         <section className="relatedArticles">
           <div>
