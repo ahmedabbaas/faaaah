@@ -16,7 +16,7 @@ export default function LearnPage(){
   const [progress,setProgress]=useState<Record<string,number>>({});
   useEffect(()=>{ try{setProgress(JSON.parse(localStorage.getItem("globalpedia_learning_progress")||"{}"));}catch{setProgress({});}},[]);
   const setLesson=(id:string)=>{
-    const next={...progress,[id:Math.min(100,(progress[id]||0)+25)]};
+    const next={...progress,[id]:Math.min(100,(progress[id]||0)+25)};
     setProgress(next);
     localStorage.setItem("globalpedia_learning_progress",JSON.stringify(next));
   };
