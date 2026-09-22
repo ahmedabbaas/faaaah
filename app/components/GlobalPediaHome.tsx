@@ -300,6 +300,32 @@ export default function GlobalPediaHome() {
           ))}
         </div>
       </section>
+      <section className="platformShelf sectionWrap">
+        <div className="sectionHeading">
+          <div>
+            <span className="sectionKicker">✦</span>
+            <h2>Explore the platform</h2>
+          </div>
+          <Link href="/search">Open universal search →</Link>
+        </div>
+        <div className="platformGrid">
+          {[
+            ["Universal Search","Search countries, articles and live signals.","/search","⌕"],
+            ["Compare Countries","Put two country profiles side by side.","/compare","⇄"],
+            ["World Tools","Clocks, units, age and currency reference.","/tools","◷"],
+            ["Live Trends","See which topics are active in the current feed.","/trends","↗"],
+            ["Daily Quiz","Five questions. One score. Zero excuses.","/quiz","?"],
+            ["AI Explorer","Ask GlobalPedia about the world.","/ai","AI"],
+          ].map(([title,description,href,icon]) => (
+            <Link className="platformCard" href={href} key={href}>
+              <span className="platformIcon">{icon}</span>
+              <div><h3>{title}</h3><p>{description}</p></div>
+              <b>↗</b>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       <section id="latest-news" className="liveNewsSection sectionWrap">
         <div className="sectionHeading">
           <div className="liveNewsTitle">

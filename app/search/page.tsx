@@ -51,10 +51,12 @@ export default function SearchPage() {
           <div className="resultHeading"><span>01</span><h2>Articles</h2></div>
           <div className="resultGrid">
             {articleResults.map((item) => (
-              <Link className="resultCard" href={"/articles/" + item.slug} key={item.slug}>
-                <div><span>{item.category}</span><h3>{item.title}</h3><p>{item.description}</p></div>
+              <div className="resultCard" key={item.slug}>
+                <Link className="resultCardLink" href={"/articles/" + item.slug}>
+                  <div><span>{item.category}</span><h3>{item.title}</h3><p>{item.description}</p></div>
+                </Link>
                 <BookmarkButton id={"article:" + item.slug} title={item.title} />
-              </Link>
+              </div>
             ))}
           </div>
         </div>

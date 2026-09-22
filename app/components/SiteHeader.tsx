@@ -17,13 +17,26 @@ const links = [
   ["About", "/about"],
 ] as const;
 
+const moreLinks = [
+  ["Universal Search", "/search"],
+  ["Compare Countries", "/compare"],
+  ["World Tools", "/tools"],
+  ["Live Trends", "/trends"],
+  ["Daily Quiz", "/quiz"],
+  ["Today", "/today"],
+  ["My Library", "/bookmarks"],
+  ["AI Explorer", "/ai"],
+  ["Following", "/following"],
+] as const;
+
 export default function SiteHeader() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
 
   const isActive = (href: string) => {
     if (href === "/") return pathname === "/";
-    return pathname === href || pathname.startsWith(`${href}/`);
+    return pathname === href || pathname.startsWith(href + "/");
   };
 
   return (
@@ -38,10 +51,7 @@ export default function SiteHeader() {
       </Link>
 
       <div className="navCenter">
-        <nav
-          className={`topnav ${menuOpen ? "open" : ""}`}
-          aria-label="Main navigation"
-        >
+        <nav className={"topnav " + (menuOpen ? "open" : "")} aria-label="Main navigation">
           {links.map(([label, href]) => (
             <Link
               className={isActive(href) ? "active" : ""}
@@ -53,26 +63,31 @@ export default function SiteHeader() {
               <span>{label}</span>
             </Link>
           ))}
+          <div className="moreMenu">
+            <button className={"moreTrigger " + (moreOpen ? "active" : "")} onClick={() => setMoreOpen((v) => !v)} aria-expanded={moreOpen}>
+              More <span>⌄</span>
+            </button>
+            {moreOpen && (
+              <div className="moreDropdown">
+                {moreLinks.map(([label, href]) => (
+                  <Link key={href} href={href} className={isActive(href) ? "active" : ""} onClick={() => { setMoreOpen(false); setMenuOpen(false); }}>
+                    <span>{label}</span><small>↗</small>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
         </nav>
       </div>
 
       <div className="topbarActions">
-        <Link className="headerSearchButton" href="/explore#search" aria-label="Search GlobalPedia" title="Search">
-          <span>⌕</span>
-          <small>Search</small>
-          <kbd>/</kbd>
+        <Link className="headerSearchButton" href="/search" aria-label="Search GlobalPedia" title="Search">
+          <span>⌕</span><small>Search</small><kbd>/</kbd>
         </Link>
         <AccountHud />
         <ThemeToggle />
-        <button
-          className="menuButton"
-          onClick={() => setMenuOpen((open) => !open)}
-          aria-expanded={menuOpen}
-          aria-label="Toggle navigation"
-        >
-          <span />
-          <span />
-          <span />
+        <button className="menuButton" onClick={() => setMenuOpen((open) => !open)} aria-expanded={menuOpen} aria-label="Toggle navigation">
+          <span /><span /><span />
         </button>
       </div>
     </header>

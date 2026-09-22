@@ -12,6 +12,7 @@ type ApiCountry = {
   region?: string;
   subregion?: string;
   population?: number;
+  area?: number;
   timezones?: string[];
   languages?: Record<string, string>;
   currencies?: Record<string, { name?: string }>;
@@ -30,7 +31,7 @@ const fallback = [
 export async function GET() {
   try {
     const response = await fetch(
-      "https://restcountries.com/v3.1/all?fields=name,cca2,cca3,flags,capital,region,subregion,population,timezones,languages,currencies,continents",
+      "https://restcountries.com/v3.1/all?fields=name,cca2,cca3,flags,capital,region,subregion,population,area,timezones,languages,currencies,continents",
       { cache: "no-store", signal: AbortSignal.timeout(7000) }
     );
 
@@ -52,6 +53,7 @@ export async function GET() {
         region: c.region ?? "—",
         subregion: c.subregion ?? "—",
         population: c.population ?? 0,
+        area: c.area ?? 0,
         timezones: c.timezones ?? [],
         languages: Object.values(c.languages ?? {}).slice(0, 4),
         currencies: Object.values(c.currencies ?? {})
@@ -80,6 +82,7 @@ export async function GET() {
         region,
         subregion: "—",
         population: 0,
+        area: 0,
         timezones: [],
         languages: [],
         currencies: [],
