@@ -182,7 +182,7 @@ async function resolvePublisherImage(link: string) {
     const response = await fetch(link, {
       cache: "no-store",
       redirect: "follow",
-      signal: AbortSignal.timeout(2500),
+      signal: AbortSignal.timeout(1600),
       headers: {
         "user-agent": "GlobalPedia/1.0 (+live-news-thumbnail)",
         accept: "text/html,application/xhtml+xml",
@@ -255,7 +255,7 @@ export async function GET(request: Request) {
         new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
     );
 
-  const imageCandidates = news.filter((item) => !item.image).slice(0, 20);
+  const imageCandidates = news.filter((item) => !item.image).slice(0, 40);
   const resolvedImages = await Promise.all(
     imageCandidates.map(async (item) => [item.id, await resolvePublisherImage(item.link)] as const)
   );
