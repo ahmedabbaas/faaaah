@@ -7,7 +7,7 @@ export default function ThemeToggle() {
 
   useEffect(() => {
     const saved = window.localStorage.getItem("gp-theme");
-    const next = saved === "light";
+    const next = saved === null ? true : saved === "light";
     document.documentElement.dataset.theme = next ? "light" : "dark";
     setLight(next);
   }, []);
