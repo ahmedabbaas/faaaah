@@ -63,7 +63,6 @@ export default function LiveNewsFeed({
         </div>
         <div className="liveFeedControls">
           <span>{updatedAt ? `Updated ${new Date(updatedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}` : "Updating..."}</span>
-                    {refreshNotice && <span className="liveRefreshNotice">{refreshNotice}</span>}
           <button onClick={() => void load(true)} disabled={refreshing}>
             {refreshing ? "Refreshing…" : "↻ Refresh"}
           </button>
