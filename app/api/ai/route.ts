@@ -35,7 +35,9 @@ export async function POST(request: Request) {
       const data = await response.json();
       const answer = data.output_text || (data.output || []).flatMap((x:{content?:{text?:string}[]})=>x.content || []).map((x:{text?:string})=>x.text || "").join(" ");
       if (response.ok && answer) return NextResponse.json({answer,mode:"ai"});
-    } catch {}
+    } catch {
+      // Fall back to the local knowledge index when the external AI request fails.
+    }
   }
 
   const normalized = q.toLowerCase();
@@ -60,12 +62,14 @@ export async function POST(request: Request) {
       const c = data[0];
       if (c) {
         return NextResponse.json({
-          answer:(c.name || q)+" is in "+(c.region || "—")+". Capital: "+(c.capital?.[0] || "—")+". Population: "+new Intl.NumberFormat("en").format(c.population || 0)+". Languages: "+Object.values(c.languages || {}).join(", " || "—")+". Currency: "+Object.values(c.currencies || {}).map(x=>x.name || "").filter(Boolean).join(", ")+" .",
+          answer:(c.name || q)+" is in "+(c.region || "—")+". Capital: "+(c.capital?.[0] || "—")+". Population: "+new Intl.NumberFormat("en").format(c.population || 0)+". Languages: "+Object.values(c.languages || {}).join(", ") || "—"+". Currency: "+Object.values(c.currencies || {}).map(x=>x.name || "").filter(Boolean).join(", ")+" .",
           mode:"country"
         });
       }
     }
-  } catch {}
+  } catch {
+    // Fall back to the search response when the country service is unavailable.
+  }
 
   return NextResponse.json({
     answer:"I couldn't find a direct match in the current GlobalPedia index. Try a country name, article title, category, or configure the AI provider key for broader answers.",
